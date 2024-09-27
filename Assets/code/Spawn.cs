@@ -21,12 +21,10 @@ public class Spawn : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // ƒLƒƒƒ‰ƒNƒ^[‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
             GameObject characterInstance = Instantiate(characterPrefab, new Vector3(-10, 1, 0), Quaternion.identity);
 
-            // ‘¬“x‚ğİ’è (—á: 5f)
-            Villager movementScript = characterInstance.GetComponent<Villager>();
-            movementScript.Initialize(1, 5f, 1, 1, 1, 5);  // ‘¬“x‚ğ5‚Éİ’è
+            Unit movementScript = characterInstance.GetComponent<Unit>();
+            movementScript.Initialize(1, 5f, 1, 100.0f, 1, 5); //æ”»æ’ƒåŠ›,ç´ æ—©ã•,åå¿œé€Ÿåº¦,æ”»æ’ƒé »åº¦,å¤§ãã•,æ”»æ’ƒç¯„å›²
         }
 
         

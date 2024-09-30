@@ -42,7 +42,7 @@ public class Boss : MonoBehaviour
         {
             if (attack.CompareTag("Attack")) // 攻撃オブジェクトのタグを"Attack"に設定
             {
-                Debug.Log("敵が攻撃を受けました！");
+                //Debug.Log("敵が攻撃を受けました！");
                 // 敵がダメージを受ける処理をここに書く
                 // 例えば、体力を減らす、敵を破壊するなど
                 //Destroy(gameObject); // 敵を破壊する例
@@ -54,7 +54,7 @@ public class Boss : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            Debug.Log("Boss have damaged!");
+            //Debug.Log("Boss have damaged!");
         }
     }
 

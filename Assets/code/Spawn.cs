@@ -24,7 +24,7 @@ public class Spawn : MonoBehaviour
             GameObject characterInstance = Instantiate(characterPrefab, new Vector3(-10, 1, 0), Quaternion.identity);
 
             Unit movementScript = characterInstance.GetComponent<Unit>();
-            movementScript.Initialize(1, 5f, 1, 100.0f, 1, 5); //攻撃力,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲
+            movementScript.Initialize(1, 5f, 0.1f, 10.0f, 1, 5); //攻撃力,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲
         }
 
         

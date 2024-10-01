@@ -23,8 +23,9 @@ public class Unit : MonoBehaviour
     private int currentAttackIndex = 0;//パターン管理変数
     private bool isPerformingAction = true;
     GameObject boss;//ボス用変数
-    GameObject AO;
+    GameObject AO;//攻撃用オブジェクトインスタンス用変数
     public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
+    SpriteRenderer sr;//画像格納用変数
 
     public void Initialize(float c_strengh, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope)
     {
@@ -38,38 +39,27 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
+        isPerformingAction = true;
         boss = GameObject.FindWithTag("Boss");
         attack_flag = false;
+        this.sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         Vector3 enemyPosition = boss.transform.position;
 
-        if (transform.position.x + attack_scope <= boss.transform.position.x)
-        {
-            isPerformingAction = true;
-        }
-        else
-        {
-            isPerformingAction = false;
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (!isPerformingAction)
-            {
-                isPerformingAction = true; // 移動を再開
-            }
-            StartCoroutine(ChangeDirectionWithDelay(-1));
+            StartCoroutine(ChangeDirectionWithDelay_left());
+            
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (!isPerformingAction)
-            {
-                isPerformingAction = true; // 移動を再開
-            }
-            StartCoroutine(ChangeDirectionWithDelay(1));
+            StartCoroutine(ChangeDirectionWithDelay_right());
+            
         }
 
         // 方向に基づいて移動
@@ -85,6 +75,15 @@ public class Unit : MonoBehaviour
                 StartCoroutine(ExecuteAttacksequence());
                 attack_flag = true; // 攻撃後にフラグをオンにする
             }
+        }
+
+        if (transform.position.x + attack_scope < boss.transform.position.x)
+        {
+            isPerformingAction = true;
+        }
+        else
+        {
+            isPerformingAction = false;
         }
     }
 
@@ -106,7 +105,7 @@ public class Unit : MonoBehaviour
 
             case "Attack":
                 //Debug.Log("Unit is attacking...");
-                AO = Instantiate(Attack_Object, new Vector3(5, 1, 0), Quaternion.identity);
+                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope - 2, 0, 0), Quaternion.identity);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
 
@@ -122,10 +121,38 @@ public class Unit : MonoBehaviour
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
     }
 
-    IEnumerator ChangeDirectionWithDelay(int newDirection)
+    IEnumerator ChangeDirectionWithDelay()
     {
         yield return new WaitForSeconds(reaction_rate);
+        Debug.Log("wait: " + reaction_rate);
+    }
 
-        direction_flag = newDirection;
+    IEnumerator ChangeDirectionWithDelay_left()
+    {
+        
+
+        yield return new WaitForSeconds(reaction_rate);
+        Debug.Log("wait: " + reaction_rate);
+
+        sr.flipX = true;
+        direction_flag = -1; // 方向を即時変更
+        if (!isPerformingAction)
+        {
+            Destroy(AO);
+            isPerformingAction = true; // 移動を再開
+        }
+    }
+    IEnumerator ChangeDirectionWithDelay_right()
+    {
+        yield return new WaitForSeconds(reaction_rate);
+        Debug.Log("wait: " + reaction_rate);
+
+        sr.flipX = false;
+        direction_flag = 1; // 方向を即時変更
+        if (!isPerformingAction)
+        {
+            Destroy(AO);
+            isPerformingAction = true; // 移動を再開
+        }
     }
 }

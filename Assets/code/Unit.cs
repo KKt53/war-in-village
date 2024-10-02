@@ -47,10 +47,6 @@ public class Unit : MonoBehaviour
 
     void Update()
     {
-        Vector3 enemyPosition = boss.transform.position;
-
-        
-
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             StartCoroutine(ChangeDirectionWithDelay_left());
@@ -77,14 +73,24 @@ public class Unit : MonoBehaviour
             }
         }
 
-        if (transform.position.x + attack_scope < boss.transform.position.x)
+        if (boss)
         {
-            isPerformingAction = true;
+            if (transform.position.x + attack_scope < boss.transform.position.x)
+            {
+                isPerformingAction = true;
+            }
+            else
+            {
+                isPerformingAction = false;
+            }
         }
         else
         {
-            isPerformingAction = false;
+            Destroy(AO);
+            attack_flag = false;
+            isPerformingAction = true;
         }
+        
     }
 
 
@@ -105,7 +111,7 @@ public class Unit : MonoBehaviour
 
             case "Attack":
                 //Debug.Log("Unit is attacking...");
-                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope - 2, 0, 0), Quaternion.identity);
+                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope, 0, 0), Quaternion.identity);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
 

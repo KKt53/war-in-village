@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Boss : MonoBehaviour
@@ -11,6 +12,8 @@ public class Boss : MonoBehaviour
     public BossAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
     private bool isPerformingAction = true;
+
+    private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
 
     void Start()
     {
@@ -24,49 +27,45 @@ public class Boss : MonoBehaviour
     
     void Update()
     {
-        
+
 
         // if (attackPattern != null && attackPattern.b_attacksequence.Count > 0)
         // {
         //     StartCoroutine(ExecuteAttacksequence());
         // }
+        
         CheckForAttacks();
     }
 
     private void CheckForAttacks()
     {
         // 敵の周囲に攻撃オブジェクトが存在するかチェック
-        Collider2D[] hitAttacks = Physics2D.OverlapCircleAll(transform.position, 2);
-        
-        foreach (Collider2D attack in hitAttacks)
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, 2);
+        foreach (Collider2D attackCollider in hitColliders)
         {
-            if (attack.CompareTag("Attack")) // 攻撃オブジェクトのタグを"Attack"に設定
+            // 攻撃オブジェクトかどうか確認
+            if (attackCollider.CompareTag("Attack"))
             {
-                //Debug.Log("敵が攻撃を受けました！");
-                // 敵がダメージを受ける処理をここに書く
-                // 例えば、体力を減らす、敵を破壊するなど
-                //Destroy(gameObject); // 敵を破壊する例
+                GameObject attackObject = attackCollider.gameObject;
+
+                // まだこの攻撃オブジェクトにヒットしていない場合のみ処理を実行
+                if (!hitAttacks.Contains(attackObject))
+                {
+                    this.hp = this.hp - 1;
+                    Debug.Log("Boss hp:" + this.hp);
+
+                    // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
+                    hitAttacks.Add(attackObject);
+                }
             }
         }
-    }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Attack"))
+        if (this.hp <=0)
         {
-            //Debug.Log("Boss have damaged!");
+            Destroy(this.gameObject);
         }
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        
-        
-        // if (collision.gameObject.CompareTag("Attack"))
-        // {
-        //     Debug.Log("Boss have damaged!");
-        // }
-    }
 
     IEnumerator ExecuteAttacksequence()
     {

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Boss
   - Attack
+  - B_Attack
   layers:
   - Default
   - TransparentFX

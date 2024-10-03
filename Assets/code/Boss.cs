@@ -11,16 +11,18 @@ public class Boss : MonoBehaviour
     private float attack_scope;//攻撃範囲
     public BossAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
-    private bool isPerformingAction = true;
 
+    private bool attack_flag;
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
+    GameObject AO;//攻撃用オブジェクトインスタンス用変数
+    public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
 
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        hp = 10;
+        hp = 1000;
         strengh = 1;
-        attack_frequency = 1;
+        attack_frequency = 2;
         attack_scope = 5;
     }
 
@@ -28,12 +30,16 @@ public class Boss : MonoBehaviour
     void Update()
     {
 
+        if (!attack_flag)
+        {
+            if (attackPattern != null && attackPattern.b_attacksequence.Count > 0)
+            {
+                //Debug.Log("Attack pattern initialized with " + attackPattern.b_attacksequence.Count + " actions.");
+                
+            }
+            StartCoroutine(ExecuteAttacksequence());
+        }
 
-        // if (attackPattern != null && attackPattern.b_attacksequence.Count > 0)
-        // {
-        //     StartCoroutine(ExecuteAttacksequence());
-        // }
-        
         CheckForAttacks();
     }
 
@@ -51,8 +57,8 @@ public class Boss : MonoBehaviour
                 // まだこの攻撃オブジェクトにヒットしていない場合のみ処理を実行
                 if (!hitAttacks.Contains(attackObject))
                 {
-                    this.hp = this.hp - 1;
-                    Debug.Log("Boss hp:" + this.hp);
+                    //this.hp = this.hp - 1;
+                    //Debug.Log("Boss hp:" + this.hp);
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
@@ -69,29 +75,38 @@ public class Boss : MonoBehaviour
 
     IEnumerator ExecuteAttacksequence()
     {
-        isPerformingAction = true;
+        attack_flag = true;
 
-        if (attackPattern != null && attackPattern.b_attacksequence.Count > 0)
+        // 現在の行動を取得
+        string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
+        switch (currentAction)
         {
-            // 現在の行動を取得
-            string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
-            //Debug.Log("Unit is performing: " + currentAction);
-
-            // 行動に応じた処理を実行
-            PerformAction(currentAction);
-
-            // 次の行動に進む
-            currentAttackIndex = (currentAttackIndex + 1) % attackPattern.b_attacksequence.Count;
-
-            if(currentAction == "Rest"){
+            case "Rest":
+                //Debug.Log("Unit is resting...");
+                //Debug.Log(currentAction);
+                Destroy(AO);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                yield return new WaitForSeconds(attack_frequency);
-            }else if(currentAction == "Attack"){
+                yield return new WaitForSeconds(10.0f / attack_frequency);
+
+                break;
+
+            case "Attack":
+                //Debug.Log("Unit is attacking...");
+                //Debug.Log(currentAction);
+                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                yield return new WaitForSeconds(5.0f);
-            }
+                yield return new WaitForSeconds(1.0f);
+
+                break;
+
+            default:
+                //Debug.Log("Unknown action: ");
+                break;
         }
-        isPerformingAction = false;
+        
+        // 次の行動に進む
+        currentAttackIndex = (currentAttackIndex + 1) % attackPattern.b_attacksequence.Count;
+        attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
     }
 
     void PerformAction(string action)

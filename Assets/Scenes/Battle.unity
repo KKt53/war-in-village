@@ -663,8 +663,8 @@ Transform:
   m_GameObject: {fileID: 1159270505}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.2483, z: 0}
-  m_LocalScale: {x: 25, y: 6.4967, z: 1}
+  m_LocalPosition: {x: 0, y: -0.2841, z: 0}
+  m_LocalScale: {x: 25, y: 0.56846124, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -814,6 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPattern: {fileID: 11400000, guid: 4d53b8dc77a311c44ac4e51ab44abb3e, type: 2}
+  Attack_Object: {fileID: 8367158299481033596, guid: 058a8a04632e67c4a9d054b3858f3f98, type: 3}
 --- !u!50 &1510452353
 Rigidbody2D:
   serializedVersion: 4
@@ -1153,6 +1154,7 @@ GameObject:
   - component: {fileID: 1701682421}
   - component: {fileID: 1701682420}
   - component: {fileID: 1701682419}
+  - component: {fileID: 1701682423}
   m_Layer: 5
   m_Name: "\u753B\u9762\u4E0A\u306E\u30DC\u30BF\u30F3"
   m_TagString: Untagged
@@ -1244,6 +1246,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1701682423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701682418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6004b3a9779654aba8a0c0c4b04ec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1701682418}
+  text_r: {fileID: 1605512531}
+  text_l: {fileID: 695574820}
+  sq_r: {fileID: 6984503368259040586, guid: 350836c98c1897240870cef417c6b8bf, type: 3}
+  sq_l: {fileID: 5940066435740830535, guid: 8e4cbab656c12f541ab18c9ff0b9f4e1, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

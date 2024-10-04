@@ -57,8 +57,16 @@ public class Boss : MonoBehaviour
                 // まだこの攻撃オブジェクトにヒットしていない場合のみ処理を実行
                 if (!hitAttacks.Contains(attackObject))
                 {
-                    //this.hp = this.hp - 1;
-                    //Debug.Log("Boss hp:" + this.hp);
+                    Attack_Object attack_object = attackObject.GetComponent<Attack_Object>();
+
+                    float damage = attack_object.attack_point;
+
+                    if (attack_object != null)
+                    {
+                        this.hp = this.hp - attack_object.attack_point;
+                    }
+
+                    Debug.Log("Boss hp:" + this.hp);
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
@@ -107,31 +115,5 @@ public class Boss : MonoBehaviour
         // 次の行動に進む
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.b_attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
-    }
-
-    void PerformAction(string action)
-    {
-        // 行動に基づいてVillagerの動作を実装
-        switch (action)
-        {
-            case "Rest":
-                Debug.Log("Unit is resting...");
-                // Villagerが歩く処理を実装
-                break;
-
-            case "Attack":
-                Debug.Log("Unit is attacking...");
-                // Villagerが休む処理を実装
-                break;
-
-            case "S_Attack":
-                Debug.Log("Unit is s_attacking...");
-                // Villagerが休む処理を実装
-                break;
-
-            default:
-                Debug.Log("Unknown action: " + action);
-                break;
-        }
     }
 }

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 618183062375901470}
   - component: {fileID: 5476361642553184078}
   - component: {fileID: 5951781883935484000}
+  - component: {fileID: -3728647787306484462}
   m_Layer: 0
   m_Name: Hexagon Flat-Top
-  m_TagString: B_Attack
+  m_TagString: B_S_Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,3 +131,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.8828125}
   m_EdgeRadius: 0
+--- !u!114 &-3728647787306484462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8367158299481033596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccc80bab5c4d2f4391bd0d0e9c6508d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

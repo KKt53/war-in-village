@@ -9,12 +9,15 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class Unit : MonoBehaviour
 {
+    private float hp;//ヒットポイント
     private float strengh;//攻撃力
+    private List<string> features_point;//ダメージ増減倍率
     private float speed;//素早さ
     private float reaction_rate;//反応速度
     private float attack_frequency;//攻撃頻度
     private float size;//大きさ
     private float attack_scope;//攻撃範囲
+    private List<string> status;//かかりやすい状態
 
     private int direction_flag = 1;//反転フラグ
 
@@ -29,18 +32,24 @@ public class Unit : MonoBehaviour
     public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
     SpriteRenderer sr;//画像格納用変数
 
-    public void Initialize(float c_strengh, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope)
+    Attack_Object AO_I;
+
+    public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
+        hp = c_hp;
         strengh = c_strengh;
+        features_point = c_features_point;
         speed = c_speed;
         reaction_rate = c_reaction_rate;
         attack_frequency = c_attack_frequency;
         size = c_size;
         attack_scope = c_attack_scope;
+        status = c_status;
     }
 
     void Start()
     {
+        direction_flag = 1;
         isPerformingAction = true;
         boss = GameObject.FindWithTag("Boss");
         attack_flag = false;
@@ -149,6 +158,11 @@ public class Unit : MonoBehaviour
             case "Attack":
                 //Debug.Log("Unit is attacking...");
                 AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope, 0, 0), Quaternion.identity);
+
+                AO_I = AO.GetComponent<Attack_Object>();
+
+                AO_I.Initialize(strengh, features_point);
+
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
 

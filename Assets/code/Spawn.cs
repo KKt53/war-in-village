@@ -21,6 +21,8 @@ public class Spawn : MonoBehaviour
     {
         GameObject characterInstance;
         Unit movementScript;
+        List<string> features_point;
+        List<string> status;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -28,7 +30,11 @@ public class Spawn : MonoBehaviour
 
             movementScript = characterInstance.GetComponent<Unit>();
 
-            movementScript.Initialize(1, 5f, 0.5f, 5.0f, 1, 4); //攻撃力,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲
+            features_point = new List<string> { "大型BOSSに強い", "中型" };
+
+            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+            movementScript.Initialize(1, 1, features_point, 5f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -37,7 +43,11 @@ public class Spawn : MonoBehaviour
 
             movementScript = characterInstance.GetComponent<Unit>();
 
-            movementScript.Initialize(1, 2f, 0.8f, 1.0f, 1, 5);
+            features_point = new List<string> { "大型BOSSに強い", "中型" };
+
+            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+            movementScript.Initialize(1, 1, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
         }
 
         if (Input.GetKeyDown(KeyCode.X))
@@ -46,7 +56,11 @@ public class Spawn : MonoBehaviour
 
             movementScript = characterInstance.GetComponent<Unit>();
 
-            movementScript.Initialize(1, 8f, 0.1f, 10.0f, 1, 3);
+            features_point = new List<string> { "大型BOSSに強い", "中型" };
+
+            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+            movementScript.Initialize(1, 1, features_point, 8f, 0.1f, 10.0f, 1, 3, status);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,10 +6,17 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
+    private float hp_max;
     private float hp;//HP
     private float strengh;//攻撃力
     private float attack_frequency;//攻撃頻度
     private float attack_scope;//攻撃範囲
+    private List<string> features_point;//ダメージ増減倍率
+    private int Level_max;
+    private int Level;//レベル
+    private float experience;//経験値
+    private float experience_reference;//経験値
+
     public BossAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
 
@@ -17,13 +25,21 @@ public class Boss : MonoBehaviour
     GameObject AO;//攻撃用オブジェクトインスタンス用変数
     public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
 
+    GameObject[] Villager;
+
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
         hp = 1000;
+        hp_max = hp;
         strengh = 1;
         attack_frequency = 2;
         attack_scope = 5;
+        Level = 1;
+        Level_max = 3;
+        experience = 0;
+        experience_reference = 10;
+        features_point = new List<string> { "大型BOSSに強い", "中型" };
     }
 
     
@@ -66,7 +82,7 @@ public class Boss : MonoBehaviour
                         this.hp = this.hp - attack_object.attack_point;
                     }
 
-                    Debug.Log("Boss hp:" + this.hp);
+                    //Debug.Log("Boss hp:" + this.hp);
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
@@ -99,11 +115,22 @@ public class Boss : MonoBehaviour
                 break;
 
             case "Attack":
-                //Debug.Log("Unit is attacking...");
-                //Debug.Log(currentAction);
-                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
+                
+                AttackNearestAllyInRange();
+
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
+
+                break;
+
+            case "S_Attack":
+
+                if (Level != 1)
+                {
+                    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
+                    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                    yield return new WaitForSeconds(1.0f);
+                }
 
                 break;
 
@@ -115,5 +142,51 @@ public class Boss : MonoBehaviour
         // 次の行動に進む
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.b_attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
+    }
+
+    //ボスから１番近い敵を見つける
+    GameObject FindNearestAllyInAttackRange()
+    {
+        GameObject nearestAlly = null;
+        float shortestDistance = Mathf.Infinity;
+
+        Villager = GameObject.FindGameObjectsWithTag("Villager");
+
+        foreach (GameObject ally in Villager)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+            
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= attack_scope && distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestAlly = ally;
+            }
+        }
+
+        return nearestAlly;
+    }
+
+    //ボスの通常攻撃
+    void AttackNearestAllyInRange()
+    {
+        GameObject target = FindNearestAllyInAttackRange();
+        if (target != null)
+        {
+            // ターゲットに攻撃する処理
+            //Debug.Log("Attacking: " + target.name);
+            Destroy(target);
+            experience++;
+            Debug.Log("experience: " + experience);
+            if(experience >= experience_reference && Level < Level_max)
+            {
+                Level++;
+                experience_reference = experience_reference * 1.2f;
+                strengh = strengh * 1.2f;
+                experience = 0;
+                Debug.Log("Level: " + Level);
+            }
+        }
     }
 }

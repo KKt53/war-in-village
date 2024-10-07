@@ -8,6 +8,7 @@ TagManager:
   - Attack
   - B_Attack
   - B_S_Attack
+  - Villager
   layers:
   - Default
   - TransparentFX

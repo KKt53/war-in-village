@@ -33,7 +33,6 @@ public class Unit : MonoBehaviour
     SpriteRenderer sr;//画像格納用変数
 
     Attack_Object AO_I;
-
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
         hp = c_hp;
@@ -61,6 +60,10 @@ public class Unit : MonoBehaviour
         Moving();
 
         CheckForAttacks();
+    }
+    private void OnDestroy()
+    {
+        Destroy(AO);
     }
 
     private void Moving()

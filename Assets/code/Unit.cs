@@ -33,6 +33,11 @@ public class Unit : MonoBehaviour
     SpriteRenderer sr;//画像格納用変数
 
     Attack_Object AO_I;
+
+    private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
+    private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
+    private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
+
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
         hp = c_hp;
@@ -70,13 +75,39 @@ public class Unit : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            StartCoroutine(ChangeDirectionWithDelay_left());
+            // 現在の時間を取得
+            float currentTime = Time.time;
 
+            float total = currentTime - lastPressTime_l;
+
+            // 前回の押下からの経過時間が設定した連打時間内であれば
+            if (total >= doublePressTime)
+            {
+                Debug.Log("total_l:" + total);
+
+                StartCoroutine(ChangeDirectionWithDelay_left());
+            }
+
+            lastPressTime_l = currentTime;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            StartCoroutine(ChangeDirectionWithDelay_right());
+            // 現在の時間を取得
+            float currentTime = Time.time;
 
+            float total = currentTime - lastPressTime_r;
+
+            // 前回の押下からの経過時間が設定した連打時間内であれば
+            if (total >= doublePressTime) {
+
+                Debug.Log("total_r:" + total);
+
+                StartCoroutine(ChangeDirectionWithDelay_right());
+            }
+
+
+            lastPressTime_r = currentTime;
         }
 
         // 方向に基づいて移動
@@ -111,6 +142,7 @@ public class Unit : MonoBehaviour
             attack_flag = false;
             isPerformingAction = true;
         }
+
     }
 
     private void CheckForAttacks()
@@ -185,7 +217,7 @@ public class Unit : MonoBehaviour
     IEnumerator ChangeDirectionWithDelay_left()
     {
         yield return new WaitForSeconds(reaction_rate);
-        Debug.Log("wait: " + reaction_rate);
+        //Debug.Log("wait: " + reaction_rate);
 
         sr.flipX = true;
         direction_flag = -1; // 方向を即時変更
@@ -198,7 +230,7 @@ public class Unit : MonoBehaviour
     IEnumerator ChangeDirectionWithDelay_right()
     {
         yield return new WaitForSeconds(reaction_rate);
-        Debug.Log("wait: " + reaction_rate);
+        //Debug.Log("wait: " + reaction_rate);
 
         sr.flipX = false;
         direction_flag = 1; // 方向を即時変更

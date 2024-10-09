@@ -34,7 +34,7 @@ public class Spawn : MonoBehaviour
 
             status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-            movementScript.Initialize(1, 1, features_point, 5f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+            movementScript.Initialize(1, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -60,7 +60,7 @@ public class Spawn : MonoBehaviour
 
             status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-            movementScript.Initialize(1, 1, features_point, 8f, 0.1f, 10.0f, 1, 3, status);
+            movementScript.Initialize(1, 1, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
         }
     }
 }

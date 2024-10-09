@@ -28,15 +28,12 @@ public class Moving_Text : MonoBehaviour
 
         start_time = Time.time;
 
-        Debug.Log(start_time);
     }
 
     // Update is called once per frame
     void Update()
     {
         upd_time = Time.time - start_time;
-
-        Debug.Log(upd_time);
 
         Sin = Mathf.Sin(upd_time * frequency);
 

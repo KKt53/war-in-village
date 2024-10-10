@@ -26,7 +26,7 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, 1, 0), Quaternion.identity);
+            characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, 0, 0), Quaternion.identity);
 
             movementScript = characterInstance.GetComponent<Unit>();
 
@@ -39,7 +39,7 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, 1, 0), Quaternion.identity);
+            characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, 0, 0), Quaternion.identity);
 
             movementScript = characterInstance.GetComponent<Unit>();
 
@@ -52,7 +52,7 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, 1, 0), Quaternion.identity);
+            characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, 0, 0), Quaternion.identity);
 
             movementScript = characterInstance.GetComponent<Unit>();
 

@@ -24,6 +24,8 @@ public class Unit : MonoBehaviour
     private bool attack_flag;
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
 
+    private SpriteRenderer spriteRenderer;
+
     public UnitAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
     private bool isPerformingAction = true;
@@ -37,6 +39,12 @@ public class Unit : MonoBehaviour
     private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
     private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
     private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
+
+    public float jumpHeight = 0.8f;       // ジャンプの高さ
+    public float jumpDuration = 0.5f;     // ジャンプにかかる時間
+    private bool isJumping = false;     // ジャンプ中かどうか
+    private float jumpTime = 0f;        // ジャンプの経過時間
+    private Vector3 startPosition;      // ジャンプ開始時の位置
 
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
@@ -65,6 +73,11 @@ public class Unit : MonoBehaviour
         Moving();
 
         CheckForAttacks();
+
+        if (isJumping)
+        {
+            Jumping();
+        }
     }
     private void OnDestroy()
     {
@@ -81,9 +94,12 @@ public class Unit : MonoBehaviour
             float total = currentTime - lastPressTime_l;
 
             // 前回の押下からの経過時間が設定した連打時間内であれば
-            if (total >= doublePressTime)
+            if (total >= doublePressTime || direction_flag == 1)
             {
                 Debug.Log("total_l:" + total);
+
+                jumpTime = 0f;
+                startPosition = transform.position; // ジャンプ開始時の位置を保存
 
                 StartCoroutine(ChangeDirectionWithDelay_left());
             }
@@ -99,9 +115,13 @@ public class Unit : MonoBehaviour
             float total = currentTime - lastPressTime_r;
 
             // 前回の押下からの経過時間が設定した連打時間内であれば
-            if (total >= doublePressTime) {
+            if (total >= doublePressTime || direction_flag == -1) {
 
                 Debug.Log("total_r:" + total);
+
+                isJumping = true;
+                jumpTime = 0f;
+                startPosition = transform.position; // ジャンプ開始時の位置を保存
 
                 StartCoroutine(ChangeDirectionWithDelay_right());
             }
@@ -192,7 +212,7 @@ public class Unit : MonoBehaviour
 
             case "Attack":
                 //Debug.Log("Unit is attacking...");
-                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope, 0, 0), Quaternion.identity);
+                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope, 1, 0), Quaternion.identity);
 
                 AO_I = AO.GetComponent<Attack_Object>();
 
@@ -219,8 +239,12 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
         //Debug.Log("wait: " + reaction_rate);
 
-        sr.flipX = true;
+        sr.flipX = false;
         direction_flag = -1; // 方向を即時変更
+
+        // ジャンプ開始
+        isJumping = true;
+
         if (!isPerformingAction)
         {
             Destroy(AO);
@@ -232,12 +256,36 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
         //Debug.Log("wait: " + reaction_rate);
 
-        sr.flipX = false;
+        sr.flipX = true;
         direction_flag = 1; // 方向を即時変更
+
+        // ジャンプ開始
+        isJumping = true;
+
         if (!isPerformingAction)
         {
             Destroy(AO);
             isPerformingAction = true; // 移動を再開
         }
+    }
+
+    private void Jumping()
+    {
+        jumpTime += Time.deltaTime;
+
+        // 三角関数を使ってY軸方向の移動を計算
+        float progress = jumpTime / jumpDuration; // ジャンプの進捗
+        float yOffset = Mathf.Sin(Mathf.PI * progress) * jumpHeight; // sinカーブでY軸の移動量を決定
+
+        // Y軸にジャンプの高さを加える
+        transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
+
+        // ジャンプが終了したかどうかを確認
+        if (progress >= 1f)
+        {
+            isJumping = false; // ジャンプ終了
+            transform.position = new Vector2(transform.position.x, startPosition.y); // 元の位置に戻す
+        }
+        
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5464475499557323185}
   - component: {fileID: 4380722093778056733}
   - component: {fileID: 2726762836954224728}
+  - component: {fileID: 4833096644006856323}
   m_Layer: 0
   m_Name: Unit_2
   m_TagString: Villager
@@ -74,9 +75,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: edab86cea56466140909b6b558c2c762, type: 3}
-  m_Color: {r: 1, g: 0.930903, b: 0, a: 1}
-  m_FlipX: 0
+  m_Sprite: {fileID: 1674596270, guid: 403aaaa5c60a7a04cb723c8c22434083, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -99,3 +100,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPattern: {fileID: 11400000, guid: 24a274ea6ef3c2043831e98f8cbc8b72, type: 2}
   Attack_Object: {fileID: 2406313907750202488, guid: 6b1fa86653518594e9caadd60dbe3f37, type: 3}
+--- !u!95 &4833096644006856323
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134676488677342882}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5d39f1bb7c25de341b5645783074e3ba, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

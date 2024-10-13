@@ -175,10 +175,16 @@ public class Boss : MonoBehaviour
         if (target != null)
         {
             // ターゲットに攻撃する処理
-            //Debug.Log("Attacking: " + target.name);
-            Destroy(target);
+
+            Unit unit = target.GetComponent<Unit>();
+
+            unit.hp = unit.hp - 1;
+            unit.knockback_flag = true;
+
+            Debug.Log("unit.hp: " + unit.hp);
+
             experience++;
-            Debug.Log("experience: " + experience);
+            
             if(experience >= experience_reference && Level < Level_max)
             {
                 Level++;

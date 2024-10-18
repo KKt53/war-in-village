@@ -98,8 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf02989564a4bf747ab00add612086eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 0
+  knockback_flag: 0
   attackPattern: {fileID: 11400000, guid: 24a274ea6ef3c2043831e98f8cbc8b72, type: 2}
   Attack_Object: {fileID: 3590302015343767332, guid: 52e1503d779db1345ada86fb12aa57c2, type: 3}
+  jumpHeight: 0.8
+  jumpDuration: 0.5
+  pointA: {x: -10, y: 0}
+  pointB: {x: 10, y: 0}
 --- !u!95 &-3241787668614308865
 Animator:
   serializedVersion: 5

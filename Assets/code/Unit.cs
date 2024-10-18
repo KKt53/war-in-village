@@ -22,31 +22,33 @@ public class Unit : MonoBehaviour
     private int direction = 1;//反転方向
     private bool direction_flag = false;//反転フラグ
     public bool knockback_flag = false;//のけぞりフラグ
-
-    private bool attack_flag;
-    private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
-
-    private SpriteRenderer spriteRenderer;
-
-    public UnitAttackPattern attackPattern;//パターン格納変数
-    private int currentAttackIndex = 0;//パターン管理変数
-    private bool isPerformingAction = true;
-    GameObject boss;//ボス用変数
-    GameObject AO;//攻撃用オブジェクトインスタンス用変数
-    public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
-    SpriteRenderer sr;//画像格納用変数
-
-    Attack_Object AO_I;
-
+    private bool attack_flag;//攻撃フラグ
+    private bool isPerformingAction = true;//移動フラグ
     private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
     private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
     private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
+    private bool movement_disabled_flag = false;
+    private bool movement_r_flag = true;
+    private bool movement_l_flag = false;
+
+    public UnitAttackPattern attackPattern;//パターン格納変数
+    private int currentAttackIndex = 0;//パターン管理変数
+
+    private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();//攻撃重複チェック
+    private SpriteRenderer spriteRenderer;//画像格納用変数
+    GameObject boss;//ボス用変数
+    GameObject AO;//攻撃用オブジェクトインスタンス用変数
+    public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
+    SpriteRenderer sr;//画像格納用インスタンス
+    Attack_Object AO_I;//攻撃オブジェクト格納用インスタンス
 
     public float jumpHeight = 0.8f;       // ジャンプの高さ
     public float jumpDuration = 0.5f;     // ジャンプにかかる時間
     private bool isJumping = false;     // ジャンプ中かどうか
     private float jumpTime = 0f;        // ジャンプの経過時間
     private Vector3 startPosition;      // ジャンプ開始時の位置
+
+    private Vector2 pointA = new Vector2(-10f, 0f); // 地点Aの座標
 
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
@@ -78,6 +80,14 @@ public class Unit : MonoBehaviour
 
         CheckForAttacks();
 
+        Vector2 position = transform.position;
+
+        // x座標とy座標の範囲をClampで制限
+        position.x = Mathf.Clamp(position.x, Mathf.Min(pointA.x, boss.transform.position.x), Mathf.Max(pointA.x, boss.transform.position.x));
+
+        // 位置を更新
+        transform.position = position;
+
         if (isJumping)
         {
             Jumping();
@@ -99,53 +109,78 @@ public class Unit : MonoBehaviour
 
     private void Moving()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (!movement_disabled_flag)
         {
-            // 現在の時間を取得
-            float currentTime = Time.time;
-
-            float total = currentTime - lastPressTime_l;
-
-            // 前回の押下からの経過時間が設定した連打時間内であれば
-            if (total >= doublePressTime || direction_flag == false)
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
+                // 現在の時間を取得
+                float currentTime = Time.time;
+
+                float total = currentTime - lastPressTime_l;
+
                 Debug.Log("total_l:" + total);
 
-                jumpTime = 0f;
-                startPosition = transform.position; // ジャンプ開始時の位置を保存
+                // 前回の押下からの経過時間が設定した連打時間内であれば
+                if (total >= doublePressTime || direction_flag == false)
+                {
+                    Debug.Log("turn left");
 
-                StartCoroutine(ChangeDirectionWithDelay_left());
+                    jumpTime = 0f;
+                    startPosition = transform.position; // ジャンプ開始時の位置を保存
+
+                    StartCoroutine(ChangeDirectionWithDelay_left());
+                }
+
+                lastPressTime_l = currentTime;
             }
 
-            lastPressTime_l = currentTime;
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                // 現在の時間を取得
+                float currentTime = Time.time;
+
+                float total = currentTime - lastPressTime_r;
+
+                Debug.Log("turn right");
+
+                // 前回の押下からの経過時間が設定した連打時間内であれば
+                if (total >= doublePressTime || direction_flag == true)
+                {
+
+                    
+
+                    jumpTime = 0f;
+                    startPosition = transform.position; // ジャンプ開始時の位置を保存
+
+                    StartCoroutine(ChangeDirectionWithDelay_right());
+                }
+
+
+                lastPressTime_r = currentTime;
+            }
         }
-        
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        else
         {
-            // 現在の時間を取得
-            float currentTime = Time.time;
-
-            float total = currentTime - lastPressTime_r;
-
-            // 前回の押下からの経過時間が設定した連打時間内であれば
-            if (total >= doublePressTime || direction_flag == true) {
-
-                Debug.Log("total_r:" + total);
-
-                jumpTime = 0f;
-                startPosition = transform.position; // ジャンプ開始時の位置を保存
-
-                StartCoroutine(ChangeDirectionWithDelay_right());
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                movement_r_flag = false;
+                movement_l_flag = true;
             }
 
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                movement_r_flag = true;
+                movement_l_flag = false;
+            }
+         }
 
-            lastPressTime_r = currentTime;
-        }
+        
 
         // 方向に基づいて移動
         if (isPerformingAction) // この条件が移動制御のためのスイッチ
         {
             transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
+
         }
 
         if (!isPerformingAction && !attack_flag)
@@ -153,7 +188,6 @@ public class Unit : MonoBehaviour
             if (attackPattern != null && attackPattern.attacksequence.Count > 0)
             {
                 StartCoroutine(ExecuteAttacksequence());
-                attack_flag = true; // 攻撃後にフラグをオンにする
             }
         }
 
@@ -179,7 +213,14 @@ public class Unit : MonoBehaviour
             }
             else
             {
-                isPerformingAction = false;
+                if (direction_flag == true)
+                {
+                    isPerformingAction = true;
+                }
+                else
+                {
+                    isPerformingAction = false;
+                }
             }
         }
         else
@@ -227,6 +268,9 @@ public class Unit : MonoBehaviour
         // 現在の行動を取得
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
+        attack_flag = true; // 攻撃後にフラグをオンにする
+        movement_disabled_flag = true;
+
         switch (currentAction)
         {
             case "Rest":
@@ -245,6 +289,20 @@ public class Unit : MonoBehaviour
 
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
+                movement_disabled_flag = false;
+
+                if (movement_r_flag == true && movement_l_flag == false) {
+                    jumpTime = 0f;
+                    startPosition = transform.position; // ジャンプ開始時の位置を保存
+
+                    StartCoroutine(ChangeDirectionWithDelay_right());
+                }
+                else if (movement_l_flag == true && movement_r_flag == false) {
+                    jumpTime = 0f;
+                    startPosition = transform.position; // ジャンプ開始時の位置を保存
+
+                    StartCoroutine(ChangeDirectionWithDelay_left());
+                }
 
                 break;
 
@@ -256,6 +314,7 @@ public class Unit : MonoBehaviour
         // 次の行動に進む
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
+        movement_disabled_flag = false;
     }
 
 
@@ -264,7 +323,7 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
 
         sr.flipX = false;
-        direction_flag = true; // 方向を即時変更
+        direction_flag = true; //左
 
         // ジャンプ開始
         isJumping = true;
@@ -280,7 +339,7 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
 
         sr.flipX = true;
-        direction_flag = false; // 方向を即時変更
+        direction_flag = false; //右
 
         // ジャンプ開始
         isJumping = true;

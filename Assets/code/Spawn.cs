@@ -33,11 +33,9 @@ public class Spawn : MonoBehaviour
 
         timeBar.fillAmount = (float)limit_time;
 
-        Debug.Log(limit_time);
 
         if (Time.time >= max_time)
         {
-            Debug.Log("Done");
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

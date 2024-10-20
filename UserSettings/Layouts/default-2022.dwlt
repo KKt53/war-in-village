@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneView
+  m_Name: GameView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -220,13 +220,13 @@ MonoBehaviour:
     height: 501
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 12}
+  m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 12}
   - {fileID: 14}
   - {fileID: 15}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -273,8 +273,8 @@ MonoBehaviour:
     y: 0
     width: 384
     height: 939
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -662,9 +662,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.033735044, y: 0.92418754, z: -0.073324054}
+    m_Target: {x: 756.0108, y: 162.63309, z: -2.1696863}
     speed: 2
-    m_Value: {x: 0.033735044, y: 0.92418754, z: -0.073324054}
+    m_Value: {x: 756.0108, y: 162.63309, z: -2.1696863}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -714,9 +714,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 9.027276
+    m_Target: 347.15118
     speed: 2
-    m_Value: 9.027276
+    m_Value: 347.15118
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1085,7 +1085,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefab
+    - Assets/code
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1093,16 +1093,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Prefab
+  - Assets/code
   m_LastFoldersGridSize: 96
   m_LastProjectPath: D:\Unity\war in village
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 8c630000
-    m_LastClickedID: 25484
-    m_ExpandedIDs: 00000000686300006a6300006c6300006e63000070630000726300007463000000ca9a3b
+    m_SelectedIDs: be630000
+    m_LastClickedID: 25534
+    m_ExpandedIDs: 000000009c6300009e630000a0630000a2630000a4630000a6630000a8630000aa63000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1130,7 +1130,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000686300006a6300006c6300006e630000706300007263000074630000
+    m_ExpandedIDs: 000000009c6300009e630000a0630000a2630000a4630000a6630000a8630000aa630000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

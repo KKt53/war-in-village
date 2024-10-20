@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class Spawn : MonoBehaviour
 {
@@ -11,15 +12,36 @@ public class Spawn : MonoBehaviour
     public GameObject characterPrefab_second;
     public GameObject characterPrefab_third;
 
+    public GameObject Panel;
+
+    private bool time_switch = false;
+
     public float max_time = 160f;
 
     public Image timeBar;   // タイムゲージのImage
+
+    public Button menu_Button;
+    public Button cancel_Button;
 
     // Start is called before the first frame update
     void Start()
     {
         max_time = 10f;
         timeBar.fillAmount = 1f;
+        time_switch = false;
+
+        menu_Button.onClick.AddListener(OnButtonClick_menu);
+        cancel_Button.onClick.AddListener(OnButtonClick_cancel);
+    }
+
+    void OnButtonClick_menu()
+    {
+        time_switch = true;
+    }
+
+    void OnButtonClick_cancel()
+    {
+        time_switch = false;
     }
 
     void Update()
@@ -33,9 +55,28 @@ public class Spawn : MonoBehaviour
 
         timeBar.fillAmount = (float)limit_time;
 
-
-        if (Time.time >= max_time)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (time_switch == false)
+            {
+                time_switch = true;
+            }
+            else
+            {
+                time_switch = false;
+            }
+            
+        }
+
+        if (time_switch == true)
+        {
+            Panel.SetActive(true);
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Panel.SetActive(false);
+            Time.timeScale = 1.0f;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

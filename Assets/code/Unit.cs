@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
+using UnityEditor;
 using UnityEngine;
 using static System.Collections.Specialized.BitVector32;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -33,8 +34,6 @@ public class Unit : MonoBehaviour
 
     public UnitAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
-
-    private int line_flag = 0;//移動ラインフラグ
 
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();//攻撃重複チェック
     private SpriteRenderer spriteRenderer;//画像格納用変数
@@ -95,15 +94,36 @@ public class Unit : MonoBehaviour
         // 位置を更新
         transform.position = position;
 
-        
+        //★
         //ノックバック動作
-        if (knockback_flag)
+        if (knockback_flag == true)
         {
             //isPerformingAction = false;
 
-
-
             //Knockback();
+
+            //jumpTime = 0f;
+            //startPosition = transform.position;
+            //direction_flag = true; //左
+            //direction = -1;
+
+            //isJumping = true;
+
+            float currentTime = Time.time;
+
+            float total = currentTime - lastPressTime_l;
+
+
+            // 前回の押下からの経過時間が設定した連打時間内であれば
+            if (total >= doublePressTime || direction_flag == false)
+            {
+                StartCoroutine(Knockback());
+                Debug.Log("Attacked!");
+            }
+
+            lastPressTime_l = currentTime;
+
+            
         }
     }
     private void OnDestroy()
@@ -113,11 +133,10 @@ public class Unit : MonoBehaviour
 
     private void Moving()
     {
-
+        //攻撃してる最中じゃなかったら
         if (!movement_disabled_flag)
         {
             
-
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 // 現在の時間を取得
@@ -129,10 +148,6 @@ public class Unit : MonoBehaviour
                 // 前回の押下からの経過時間が設定した連打時間内であれば
                 if (total >= doublePressTime || direction_flag == false)
                 {
-
-                    jumpTime = 0f;
-                    startPosition = transform.position; // ジャンプ開始時の位置を保存
-
                     StartCoroutine(ChangeDirectionWithDelay_left());
                 }
 
@@ -150,34 +165,11 @@ public class Unit : MonoBehaviour
                 // 前回の押下からの経過時間が設定した連打時間内であれば
                 if (total >= doublePressTime || direction_flag == true)
                 {
-
-                    jumpTime = 0f;
-                    startPosition = transform.position; // ジャンプ開始時の位置を保存
-
                     StartCoroutine(ChangeDirectionWithDelay_right());
                 }
 
 
                 lastPressTime_r = currentTime;
-            }
-
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if (line_flag <= 3)
-                {
-                    line_flag++;
-
-                    transform.position = new Vector2(transform.position.x, (float)line_flag);
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                if (line_flag >= 0)
-                {
-                    line_flag--;
-
-                    transform.position = new Vector2(transform.position.x, (float)line_flag);
-                }
             }
         }
         else
@@ -186,6 +178,8 @@ public class Unit : MonoBehaviour
             {
                 movement_r_flag = false;
                 movement_l_flag = true;
+
+                //待機フラグON
                 moving_standby = true;
                 Debug.Log("left standby");
             }
@@ -194,6 +188,8 @@ public class Unit : MonoBehaviour
             {
                 movement_r_flag = true;
                 movement_l_flag = false;
+
+                //待機フラグON
                 moving_standby = true;
                 Debug.Log("right standby");
             }
@@ -204,9 +200,7 @@ public class Unit : MonoBehaviour
         // 方向に基づいて移動
         if (isPerformingAction) // この条件が移動制御のためのスイッチ
         {
-            Debug.Log("direction :" + direction);
-            transform.Translate(Vector2.right * direction * speed * 0.003f);
-
+            transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
         }
 
         if (!isPerformingAction && !attack_flag)
@@ -280,11 +274,13 @@ public class Unit : MonoBehaviour
                 if (!hitAttacks.Contains(attackObject))
                 {
                     this.hp = this.hp - 1;
-
+                    
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
 
-                    knockback_flag = true;
+                    //★
+                    //knockback_flag = true;
+                    
                 }
             }
         }
@@ -328,16 +324,10 @@ public class Unit : MonoBehaviour
                 {
                     if (movement_r_flag == true && movement_l_flag == false)
                     {
-                        jumpTime = 0f;
-                        startPosition = transform.position; // ジャンプ開始時の位置を保存
-
                         StartCoroutine(ChangeDirectionWithDelay_right());
                     }
                     else if (movement_l_flag == true && movement_r_flag == false)
                     {
-                        jumpTime = 0f;
-                        startPosition = transform.position; // ジャンプ開始時の位置を保存
-
                         StartCoroutine(ChangeDirectionWithDelay_left());
                     }
                 }
@@ -358,9 +348,35 @@ public class Unit : MonoBehaviour
     }
 
 
+    IEnumerator Knockback()
+    {
+        yield return new WaitForSeconds(reaction_rate);
+
+        jumpTime = 0f;
+        startPosition = transform.position; // ジャンプ開始時の位置を保存
+
+        direction_flag = true; //左
+        direction = -1;
+
+        // ジャンプ開始
+        isJumping = true;
+
+        if (!isPerformingAction)
+        {
+            Destroy(AO);
+            moving_standby = false;
+            isPerformingAction = true; // 移動を再開
+        }
+
+        
+    }
+
     IEnumerator ChangeDirectionWithDelay_left()
     {
         yield return new WaitForSeconds(reaction_rate);
+
+        jumpTime = 0f;
+        startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = false;
         direction_flag = true; //左
@@ -379,6 +395,9 @@ public class Unit : MonoBehaviour
     IEnumerator ChangeDirectionWithDelay_right()
     {
         yield return new WaitForSeconds(reaction_rate);
+
+        jumpTime = 0f;
+        startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = true;
         direction_flag = false; //右
@@ -413,43 +432,41 @@ public class Unit : MonoBehaviour
         if (progress >= 1f)
         {
             isJumping = false; // ジャンプ終了
-            transform.position = new Vector2(transform.position.x, startPosition.y); // 元の位置に戻す
-        }
-        
-    }
-
-    private void Knockback()
-    {
-        isPerformingAction = true; // 通常の動作に戻す
-
-        // のけぞり動作が開始する際に、現在位置を基準点として設定
-        if (jumpTime == 0f)
-        {
-            startPosition = transform.position; // のけぞり開始時の位置を保存
-        }
-
-        jumpTime += Time.deltaTime;
-
-        // 三角関数を使ってY軸方向の移動を計算
-        float progress = jumpTime / jumpDuration; // ジャンプの進捗
-        float yOffset = Mathf.Sin(Mathf.PI * progress) * jumpHeight; // sinカーブでY軸の移動量を決定
-
-        transform.Translate(Vector2.right * direction * speed * -1 * 0.003f);
-
-        // X軸ののけぞり移動とY軸のジャンプを同時に適用
-        transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
-
-        // ジャンプが終了したかどうかを確認
-        if (progress >= 1f)
-        {
-            // ジャンプ終了時、Y軸位置を元に戻す
-            transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
-            jumpTime = 0f; // のけぞり動作が終わったらジャンプ時間をリセット
+            //transform.position = new Vector2(transform.position.x, 0.0f); // 元の位置に戻す
             knockback_flag = false; // のけぞりフラグを解除
-
         }
 
-
-
     }
+
+    //private void Knockback()
+    //{
+    //    //isPerformingAction = true; // 通常の動作に戻す
+
+    //    Debug.Log("knocked!");
+
+    //    jumpTime += Time.deltaTime;
+
+    //    // 三角関数を使ってY軸方向の移動を計算
+    //    float progress = jumpTime / jumpDuration; // ジャンプの進捗
+    //    float yOffset = Mathf.Sin(Mathf.PI * progress) * jumpHeight; // sinカーブでY軸の移動量を決定
+
+    //    transform.Translate(Vector2.right * direction * speed * -1 * Time.deltaTime);
+
+    //    // X軸ののけぞり移動とY軸のジャンプを同時に適用
+    //    transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
+
+    //    // ジャンプが終了したかどうかを確認
+    //    if (progress >= 1f)
+    //    {
+    //        Debug.Log("knocked off!");
+    //        // ジャンプ終了時、Y軸位置を元に戻す
+    //        transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
+    //        jumpTime = 0f; // のけぞり動作が終わったらジャンプ時間をリセット
+    //        knockback_flag = false; // のけぞりフラグを解除
+
+    //    }
+
+
+
+    //}
 }

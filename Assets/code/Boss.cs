@@ -106,8 +106,6 @@ public class Boss : MonoBehaviour
         switch (currentAction)
         {
             case "Rest":
-                //Debug.Log("Unit is resting...");
-                //Debug.Log(currentAction);
                 Destroy(AO);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(10.0f / attack_frequency);
@@ -180,8 +178,6 @@ public class Boss : MonoBehaviour
 
             unit.hp = unit.hp - 1;
             unit.knockback_flag = true;
-
-            Debug.Log("unit.hp: " + unit.hp);
 
             experience++;
             

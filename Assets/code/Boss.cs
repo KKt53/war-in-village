@@ -38,7 +38,7 @@ public class Boss : MonoBehaviour
         Level = 1;
         Level_max = 3;
         experience = 0;
-        experience_reference = 10;
+        experience_reference = 3;
         features_point = new List<string> { "大型BOSSに強い", "中型" };
     }
 

@@ -50,7 +50,8 @@ public class Unit : MonoBehaviour
 
     private bool moving_standby = false; //移動待機フラグ
 
-    private Vector2 pointA = new Vector2(-10f, 0f); // 地点Aの座標
+    GameObject left_edge;
+    GameObject right_edge;
 
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
@@ -67,6 +68,7 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
+        currentAttackIndex = 0;
         moving_standby = false;
         isJumping = false;
         direction = 1;
@@ -76,6 +78,8 @@ public class Unit : MonoBehaviour
         boss = GameObject.FindWithTag("Boss");
         attack_flag = false;
         this.sr = GetComponent<SpriteRenderer>();
+        left_edge = GameObject.Find("左端");
+        right_edge = GameObject.Find("右端");
     }
 
     void Update()
@@ -87,7 +91,7 @@ public class Unit : MonoBehaviour
         Vector2 position = transform.position;
 
         // x座標とy座標の範囲をClampで制限
-        position.x = Mathf.Clamp(position.x, Mathf.Min(pointA.x, boss.transform.position.x), Mathf.Max(pointA.x, boss.transform.position.x));
+        position.x = Mathf.Clamp(position.x, Mathf.Min(left_edge.transform.position.x, right_edge.transform.position.x), Mathf.Max(left_edge.transform.position.x, right_edge.transform.position.x));
 
         // 位置を更新
         transform.position = position;
@@ -156,7 +160,6 @@ public class Unit : MonoBehaviour
 
                 //待機フラグON
                 moving_standby = true;
-                Debug.Log("left standby");
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -166,7 +169,6 @@ public class Unit : MonoBehaviour
 
                 //待機フラグON
                 moving_standby = true;
-                Debug.Log("right standby");
             }
          }
 
@@ -226,7 +228,7 @@ public class Unit : MonoBehaviour
         foreach (Collider2D attackCollider in hitColliders)
         {
             // 攻撃オブジェクトかどうか確認
-            if (attackCollider.CompareTag("B_Attack"))
+            if (attackCollider.CompareTag("B_S_Attack"))
             {
                 GameObject attackObject = attackCollider.gameObject;
 
@@ -385,7 +387,7 @@ public class Unit : MonoBehaviour
         // ジャンプが終了したかどうかを確認
         if (progress >= 1f)
         {
-            Debug.Log("knocked off!");
+            
             // ジャンプ終了時、Y軸位置を元に戻す
             transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
             knockback_flag = false; // のけぞりフラグを解除

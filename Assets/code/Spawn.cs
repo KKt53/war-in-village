@@ -26,6 +26,15 @@ public class Spawn : MonoBehaviour
 
     private int speed_switch = 1;
 
+    const int line_max = 2;
+    const float Interval = 3.0f;
+
+    public SpawnUnitTable unitTable;
+    private int unitIndex = 0;
+    private int random_value = 0;
+
+    private bool isSpawning = false;  // Track if the coroutine is running
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +42,13 @@ public class Spawn : MonoBehaviour
         timeBar.fillAmount = 1f;
         time_switch = false;
 
+        unitIndex = 0;
+
         menu_Button.onClick.AddListener(OnButtonClick_menu);
         cancel_Button.onClick.AddListener(OnButtonClick_cancel);
         speed_Button.onClick.AddListener(OnButtonClick_speed);
+
+        isSpawning = false;
     }
 
     void OnButtonClick_speed()
@@ -55,11 +68,16 @@ public class Spawn : MonoBehaviour
 
     void Update()
     {
-        GameObject characterInstance;
-        Unit movementScript;
-        List<string> features_point;
-        List<string> status;
+        Operation();
 
+        if (!isSpawning)
+        {
+            StartCoroutine(Unit_spawn());
+        }
+    }
+
+    private void Operation()
+    {
         double limit_time = Math.Floor(max_time - Time.time) / max_time;
 
         timeBar.fillAmount = (float)limit_time;
@@ -74,28 +92,24 @@ public class Spawn : MonoBehaviour
             {
                 time_switch = false;
             }
-            
+
         }
 
         if (speed_switch == 1)
         {
             Time.timeScale = 1.0f;
-            Debug.Log(Time.timeScale);
         }
         else if (speed_switch == 2)
         {
             Time.timeScale = 1.5f;
-            Debug.Log(Time.timeScale);
         }
         else if (speed_switch == 3)
         {
             Time.timeScale = 2.0f;
-            Debug.Log(Time.timeScale);
         }
         else if (speed_switch >= 4)
         {
             speed_switch = 1;
-            Debug.Log(Time.timeScale);
         }
 
         if (time_switch == true)
@@ -108,44 +122,76 @@ public class Spawn : MonoBehaviour
             Panel.SetActive(false);
             Time.timeScale = 1.0f;
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+    IEnumerator Unit_spawn()
+    {
+        isSpawning = true;
+
+        int table_max = unitTable.spawnquence.Count;
+
+        GameObject characterInstance;
+        Unit movementScript;
+        List<string> features_point;
+        List<string> status;
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        unitIndex = UnityEngine.Random.Range(0, table_max);
+        string spawnunit = unitTable.spawnquence[unitIndex];
+
+        switch (spawnunit)
         {
-            characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, 0, 0), Quaternion.identity);
+            case "Unit_1":
 
-            movementScript = characterInstance.GetComponent<Unit>();
+                characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, line, 0), Quaternion.identity);
 
-            features_point = new List<string> { "大型BOSSに強い", "中型" };
+                movementScript = characterInstance.GetComponent<Unit>();
 
-            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+                features_point = new List<string> { "大型BOSSに強い", "中型" };
 
-            movementScript.Initialize(3, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+                movementScript.Initialize(3, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+            case "Unit_2":
+
+                characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, line, 0), Quaternion.identity);
+
+                movementScript = characterInstance.GetComponent<Unit>();
+
+                features_point = new List<string> { "大型BOSSに強い", "中型" };
+
+                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+                movementScript.Initialize(3, 1, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "Unit_3":
+
+                characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, line, 0), Quaternion.identity);
+
+                movementScript = characterInstance.GetComponent<Unit>();
+
+                features_point = new List<string> { "大型BOSSに強い", "中型" };
+
+                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
+
+                movementScript.Initialize(1, 1, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, 0, 0), Quaternion.identity);
-
-            movementScript = characterInstance.GetComponent<Unit>();
-
-            features_point = new List<string> { "大型BOSSに強い", "中型" };
-
-            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
-
-            movementScript.Initialize(3, 1, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, 0, 0), Quaternion.identity);
-
-            movementScript = characterInstance.GetComponent<Unit>();
-
-            features_point = new List<string> { "大型BOSSに強い", "中型" };
-
-            status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
-
-            movementScript.Initialize(1, 1, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
-        }
+        isSpawning = false;
     }
 }

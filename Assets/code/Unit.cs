@@ -21,7 +21,6 @@ public class Unit : MonoBehaviour
     private List<string> status;//かかりやすい状態
 
     private int direction = 1;//反転方向
-    private bool direction_flag = false;//反転フラグ
     public bool knockback_flag = false;//のけぞりフラグ
     private bool attack_flag;//攻撃フラグ
     private bool isPerformingAction = true;//移動フラグ
@@ -71,7 +70,6 @@ public class Unit : MonoBehaviour
         moving_standby = false;
         isJumping = false;
         direction = 1;
-        direction_flag = false;
         direction = 1;
         knockback_flag = false;
         isPerformingAction = true;
@@ -98,32 +96,9 @@ public class Unit : MonoBehaviour
         //ノックバック動作
         if (knockback_flag == true)
         {
-            //isPerformingAction = false;
+            isPerformingAction = false;
 
-            //Knockback();
-
-            //jumpTime = 0f;
-            //startPosition = transform.position;
-            //direction_flag = true; //左
-            //direction = -1;
-
-            //isJumping = true;
-
-            float currentTime = Time.time;
-
-            float total = currentTime - lastPressTime_l;
-
-
-            // 前回の押下からの経過時間が設定した連打時間内であれば
-            if (total >= doublePressTime || direction_flag == false)
-            {
-                StartCoroutine(Knockback());
-                Debug.Log("Attacked!");
-            }
-
-            lastPressTime_l = currentTime;
-
-            
+            knockback();
         }
     }
     private void OnDestroy()
@@ -146,7 +121,7 @@ public class Unit : MonoBehaviour
 
 
                 // 前回の押下からの経過時間が設定した連打時間内であれば
-                if (total >= doublePressTime || direction_flag == false)
+                if (total >= doublePressTime || direction == 1)
                 {
                     StartCoroutine(ChangeDirectionWithDelay_left());
                 }
@@ -163,7 +138,7 @@ public class Unit : MonoBehaviour
 
 
                 // 前回の押下からの経過時間が設定した連打時間内であれば
-                if (total >= doublePressTime || direction_flag == true)
+                if (total >= doublePressTime || direction == -1)
                 {
                     StartCoroutine(ChangeDirectionWithDelay_right());
                 }
@@ -211,20 +186,6 @@ public class Unit : MonoBehaviour
             }
         }
 
-        if (knockback_flag == false)
-        {
-            if (direction_flag == false)
-            {
-                direction = 1;
-            }
-            else
-            {
-                direction = -1;
-            }
-        }
-
-
-
         if (boss)
         {
             if (transform.position.x + attack_scope < boss.transform.position.x)
@@ -234,9 +195,8 @@ public class Unit : MonoBehaviour
             }
             else
             {
-                if (direction_flag == true)
+                if (direction == -1)
                 {
-                    direction = -1;
                     isPerformingAction = true;
                 }
                 else
@@ -279,7 +239,7 @@ public class Unit : MonoBehaviour
                     hitAttacks.Add(attackObject);
 
                     //★
-                    //knockback_flag = true;
+                    knockback_flag = true;
                     
                 }
             }
@@ -332,8 +292,6 @@ public class Unit : MonoBehaviour
                     }
                 }
 
-                
-
                 break;
 
             default:
@@ -347,30 +305,6 @@ public class Unit : MonoBehaviour
         movement_disabled_flag = false;
     }
 
-
-    IEnumerator Knockback()
-    {
-        yield return new WaitForSeconds(reaction_rate);
-
-        jumpTime = 0f;
-        startPosition = transform.position; // ジャンプ開始時の位置を保存
-
-        direction_flag = true; //左
-        direction = -1;
-
-        // ジャンプ開始
-        isJumping = true;
-
-        if (!isPerformingAction)
-        {
-            Destroy(AO);
-            moving_standby = false;
-            isPerformingAction = true; // 移動を再開
-        }
-
-        
-    }
-
     IEnumerator ChangeDirectionWithDelay_left()
     {
         yield return new WaitForSeconds(reaction_rate);
@@ -379,8 +313,7 @@ public class Unit : MonoBehaviour
         startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = false;
-        direction_flag = true; //左
-        direction = -1;
+        direction = -1;//左
 
         // ジャンプ開始
         isJumping = true;
@@ -400,8 +333,7 @@ public class Unit : MonoBehaviour
         startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = true;
-        direction_flag = false; //右
-        direction = 1;
+        direction = 1;//右
 
         // ジャンプ開始
         isJumping = true;
@@ -433,40 +365,32 @@ public class Unit : MonoBehaviour
         {
             isJumping = false; // ジャンプ終了
             //transform.position = new Vector2(transform.position.x, 0.0f); // 元の位置に戻す
-            knockback_flag = false; // のけぞりフラグを解除
         }
 
     }
 
-    //private void Knockback()
-    //{
-    //    //isPerformingAction = true; // 通常の動作に戻す
+    private void knockback()
+    {
+        jumpTime += Time.deltaTime;
 
-    //    Debug.Log("knocked!");
+        // 三角関数を使ってY軸方向の移動を計算
+        float progress = jumpTime / jumpDuration; // ジャンプの進捗
+        float yOffset = Mathf.Sin(Mathf.PI * progress) * jumpHeight; // sinカーブでY軸の移動量を決定
 
-    //    jumpTime += Time.deltaTime;
+        transform.Translate(Vector2.right * direction * speed * -1 * Time.deltaTime);
 
-    //    // 三角関数を使ってY軸方向の移動を計算
-    //    float progress = jumpTime / jumpDuration; // ジャンプの進捗
-    //    float yOffset = Mathf.Sin(Mathf.PI * progress) * jumpHeight; // sinカーブでY軸の移動量を決定
+        // X軸ののけぞり移動とY軸のジャンプを同時に適用
+        transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
 
-    //    transform.Translate(Vector2.right * direction * speed * -1 * Time.deltaTime);
-
-    //    // X軸ののけぞり移動とY軸のジャンプを同時に適用
-    //    transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
-
-    //    // ジャンプが終了したかどうかを確認
-    //    if (progress >= 1f)
-    //    {
-    //        Debug.Log("knocked off!");
-    //        // ジャンプ終了時、Y軸位置を元に戻す
-    //        transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
-    //        jumpTime = 0f; // のけぞり動作が終わったらジャンプ時間をリセット
-    //        knockback_flag = false; // のけぞりフラグを解除
-
-    //    }
-
-
-
-    //}
+        // ジャンプが終了したかどうかを確認
+        if (progress >= 1f)
+        {
+            Debug.Log("knocked off!");
+            // ジャンプ終了時、Y軸位置を元に戻す
+            transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
+            knockback_flag = false; // のけぞりフラグを解除
+            isPerformingAction = true;
+            jumpTime = 0f;
+        }
+    }
 }

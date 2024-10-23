@@ -22,6 +22,9 @@ public class Spawn : MonoBehaviour
 
     public Button menu_Button;
     public Button cancel_Button;
+    public Button speed_Button;
+
+    private int speed_switch = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +35,12 @@ public class Spawn : MonoBehaviour
 
         menu_Button.onClick.AddListener(OnButtonClick_menu);
         cancel_Button.onClick.AddListener(OnButtonClick_cancel);
+        speed_Button.onClick.AddListener(OnButtonClick_speed);
+    }
+
+    void OnButtonClick_speed()
+    {
+        speed_switch++;
     }
 
     void OnButtonClick_menu()
@@ -68,6 +77,27 @@ public class Spawn : MonoBehaviour
             
         }
 
+        if (speed_switch == 1)
+        {
+            Time.timeScale = 1.0f;
+            Debug.Log(Time.timeScale);
+        }
+        else if (speed_switch == 2)
+        {
+            Time.timeScale = 1.5f;
+            Debug.Log(Time.timeScale);
+        }
+        else if (speed_switch == 3)
+        {
+            Time.timeScale = 2.0f;
+            Debug.Log(Time.timeScale);
+        }
+        else if (speed_switch >= 4)
+        {
+            speed_switch = 1;
+            Debug.Log(Time.timeScale);
+        }
+
         if (time_switch == true)
         {
             Panel.SetActive(true);
@@ -89,7 +119,7 @@ public class Spawn : MonoBehaviour
 
             status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-            movementScript.Initialize(2, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+            movementScript.Initialize(3, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
         }
 
         if (Input.GetKeyDown(KeyCode.Z))

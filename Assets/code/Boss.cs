@@ -48,11 +48,6 @@ public class Boss : MonoBehaviour
 
         if (!attack_flag)
         {
-            if (attackPattern != null && attackPattern.b_attacksequence.Count > 0)
-            {
-                //Debug.Log("Attack pattern initialized with " + attackPattern.b_attacksequence.Count + " actions.");
-                
-            }
             StartCoroutine(ExecuteAttacksequence());
         }
 
@@ -170,6 +165,8 @@ public class Boss : MonoBehaviour
     void AttackNearestAllyInRange()
     {
         GameObject target = FindNearestAllyInAttackRange();
+
+        //Debug.Log(target);
         if (target != null)
         {
             // ターゲットに攻撃する処理

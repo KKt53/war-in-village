@@ -143,3 +143,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eccc80bab5c4d2f4391bd0d0e9c6508d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attack_point: 0
+  features_point: []

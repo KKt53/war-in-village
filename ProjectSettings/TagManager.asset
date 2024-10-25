@@ -4,11 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Boss
   - Attack
   - B_Attack
   - B_S_Attack
   - Villager
+  - Enemy
+  - Boss
   layers:
   - Default
   - TransparentFX

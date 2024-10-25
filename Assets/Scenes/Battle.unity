@@ -974,6 +974,7 @@ MonoBehaviour:
   characterPrefab_first: {fileID: 6870088046224800040, guid: 8157d34c31f481440b66787134b830fa, type: 3}
   characterPrefab_second: {fileID: 1134676488677342882, guid: 18e3a35cba2c32b448a80cafd65ef029, type: 3}
   characterPrefab_third: {fileID: 1856066138539442105, guid: d7c42772b30692b43b75e672856143d8, type: 3}
+  enemyPrefab: {fileID: 6758964340233496448, guid: c1e395b1edd8cf84e95ab2cd6e167c26, type: 3}
   Panel: {fileID: 755971378}
   max_time: 160
   timeBar: {fileID: 867786777}
@@ -981,6 +982,7 @@ MonoBehaviour:
   cancel_Button: {fileID: 1489500391}
   speed_Button: {fileID: 56920226}
   unitTable: {fileID: 11400000, guid: 955978886ae9d7747bc9638bebb15bf3, type: 2}
+  enemyTable: {fileID: 11400000, guid: 5412a3078fc3b034a9f0e58bb17d88b7, type: 2}
 --- !u!4 &1076775195
 Transform:
   m_ObjectHideFlags: 0

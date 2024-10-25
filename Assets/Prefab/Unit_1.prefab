@@ -52,8 +52,6 @@ MonoBehaviour:
   Attack_Object: {fileID: 5885974817446648721, guid: 255aa201bf1dc1545b0fa353bf1fb293, type: 3}
   jumpHeight: 0.8
   jumpDuration: 0.5
-  pointA: {x: -10, y: 0}
-  pointB: {x: 10, y: 0}
 --- !u!95 &5182058220167184524
 Animator:
   serializedVersion: 5

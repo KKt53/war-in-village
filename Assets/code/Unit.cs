@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using static System.Collections.Specialized.BitVector32;
 using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 
 public class Unit : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class Unit : MonoBehaviour
     public bool knockback_flag = false;//のけぞりフラグ
     private bool attack_flag;//攻撃フラグ
     private bool isPerformingAction = true;//移動フラグ
+    private bool isPerformingAction_e = true;//移動フラグ(雑魚)
     private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
     private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
     private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
@@ -53,6 +55,8 @@ public class Unit : MonoBehaviour
     GameObject left_edge;
     GameObject right_edge;
 
+    GameObject[] Enemy;
+
     public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
     {
         hp = c_hp;
@@ -75,6 +79,7 @@ public class Unit : MonoBehaviour
         direction = 1;
         knockback_flag = false;
         isPerformingAction = true;
+        isPerformingAction_e = true;
         boss = GameObject.FindWithTag("Boss");
         attack_flag = false;
         this.sr = GetComponent<SpriteRenderer>();
@@ -100,6 +105,7 @@ public class Unit : MonoBehaviour
         //ノックバック動作
         if (knockback_flag == true)
         {
+            Destroy(AO);
             isPerformingAction = false;
 
             knockback();
@@ -188,31 +194,23 @@ public class Unit : MonoBehaviour
             }
         }
 
-        if (boss)
+        if (transform.position.x + attack_scope < boss.transform.position.x)
         {
-            if (transform.position.x + attack_scope < boss.transform.position.x)
-            {
-                
-                isPerformingAction = true;
-            }
-            else
-            {
-                if (direction == -1)
-                {
-                    isPerformingAction = true;
-                }
-                else
-                {
-                    isPerformingAction = false;
-                }
-            }
+            isPerformingAction_e = true;
         }
         else
         {
-            Destroy(AO);
-            attack_flag = false;
-            isPerformingAction = true;
+            isPerformingAction = false;
         }
+
+        //if (FindNearestAllyInAttackRange() != null)
+        //{
+        //    isPerformingAction = false;
+        //}
+        //else
+        //{
+        //    isPerformingAction = true;
+        //}
 
         if (isJumping == true)
         {
@@ -360,8 +358,6 @@ public class Unit : MonoBehaviour
         // Y軸にジャンプの高さを加える
         transform.position = new Vector2(transform.position.x, startPosition.y + yOffset);
 
-        
-
         // ジャンプが終了したかどうかを確認
         if (progress >= 1f)
         {
@@ -394,5 +390,29 @@ public class Unit : MonoBehaviour
             isPerformingAction = true;
             jumpTime = 0f;
         }
+    }
+
+    //１番近い敵を見つける
+    GameObject FindNearestAllyInAttackRange()
+    {
+        GameObject nearestAlly = null;
+        float shortestDistance = Mathf.Infinity;
+
+        Enemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject ally in Enemy)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= attack_scope && distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestAlly = ally;
+            }
+        }
+
+        return nearestAlly;
     }
 }

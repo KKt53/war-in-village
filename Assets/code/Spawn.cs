@@ -12,6 +12,8 @@ public class Spawn : MonoBehaviour
     public GameObject characterPrefab_second;
     public GameObject characterPrefab_third;
 
+    public GameObject enemyPrefab;
+
     public GameObject Panel;
 
     private bool time_switch = false;
@@ -28,12 +30,15 @@ public class Spawn : MonoBehaviour
 
     const int line_max = 2;
     const float Interval = 3.0f;
+    const float Interval_e = 1.0f;
 
     public SpawnUnitTable unitTable;
+    public SpawnEnemyTable enemyTable;
     private int unitIndex = 0;
     private int random_value = 0;
 
-    private bool isSpawning = false;  // Track if the coroutine is running
+    private bool isSpawning_villager = false;  // Track if the coroutine is running
+    private bool isSpawning_enemy = false;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +53,8 @@ public class Spawn : MonoBehaviour
         cancel_Button.onClick.AddListener(OnButtonClick_cancel);
         speed_Button.onClick.AddListener(OnButtonClick_speed);
 
-        isSpawning = false;
+        isSpawning_villager = false;
+        isSpawning_enemy = false;
     }
 
     void OnButtonClick_speed()
@@ -70,9 +76,14 @@ public class Spawn : MonoBehaviour
     {
         Operation();
 
-        if (!isSpawning)
+        if (!isSpawning_villager)
         {
             StartCoroutine(Unit_spawn());
+        }
+
+        if (!isSpawning_enemy)
+        {
+            StartCoroutine(Enemy_spawn());
         }
     }
 
@@ -126,7 +137,7 @@ public class Spawn : MonoBehaviour
 
     IEnumerator Unit_spawn()
     {
-        isSpawning = true;
+        isSpawning_villager = true;
 
         int table_max = unitTable.spawnquence.Count;
 
@@ -154,7 +165,7 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(3, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+                movementScript.Initialize(5, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
 
                 yield return new WaitForSeconds(Interval);
 
@@ -169,7 +180,7 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(3, 1, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
+                movementScript.Initialize(3, 3, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
 
                 yield return new WaitForSeconds(Interval);
 
@@ -185,13 +196,47 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(1, 1, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
+                movementScript.Initialize(1, 5, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
 
                 yield return new WaitForSeconds(Interval);
 
                 break;
         }
 
-        isSpawning = false;
+        isSpawning_villager = false;
+    }
+
+    IEnumerator Enemy_spawn()
+    {
+        isSpawning_enemy = true;
+
+        int table_max = enemyTable.spawnquence_e.Count;
+
+        GameObject characterInstance;
+        Enemy movementScript;
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        unitIndex = UnityEngine.Random.Range(0, table_max);
+        string spawnunit = enemyTable.spawnquence_e[unitIndex];
+
+        switch (spawnunit)
+        {
+            case "Enemy":
+
+                characterInstance = Instantiate(enemyPrefab, new Vector3(10, line, 0), Quaternion.identity);
+
+                movementScript = characterInstance.GetComponent<Enemy>();
+
+                movementScript.Initialize(3f,3f,1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+
+                yield return new WaitForSeconds(Interval_e);
+
+                break;
+        }
+
+        isSpawning_enemy = false;
     }
 }

@@ -29,7 +29,7 @@ public class Spawn : MonoBehaviour
     private int speed_switch = 1;
 
     const int line_max = 2;
-    const float Interval = 3.0f;
+    const float Interval = 1.0f;
     const float Interval_e = 1.0f;
 
     public SpawnUnitTable unitTable;
@@ -39,6 +39,9 @@ public class Spawn : MonoBehaviour
 
     private bool isSpawning_villager = false;  // Track if the coroutine is running
     private bool isSpawning_enemy = false;
+
+    private string spawnunit;
+    private string spawnunit_after;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +58,8 @@ public class Spawn : MonoBehaviour
 
         isSpawning_villager = false;
         isSpawning_enemy = false;
+
+        spawnunit = unitTable.spawnquence[unitIndex];
     }
 
     void OnButtonClick_speed()
@@ -89,9 +94,6 @@ public class Spawn : MonoBehaviour
 
     private void Operation()
     {
-        double limit_time = Math.Floor(max_time - Time.time) / max_time;
-
-        timeBar.fillAmount = (float)limit_time;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -133,6 +135,7 @@ public class Spawn : MonoBehaviour
             Panel.SetActive(false);
             Time.timeScale = 1.0f;
         }
+
     }
 
     IEnumerator Unit_spawn()
@@ -141,8 +144,19 @@ public class Spawn : MonoBehaviour
 
         int table_max = unitTable.spawnquence.Count;
 
+        int rest_or_spawn = 1;
+
         GameObject characterInstance;
         Unit movementScript;
+
+        float hp;//ヒットポイント
+        float strengh;//攻撃力
+        float speed;//素早さ
+        float attack_frequency;//攻撃頻度
+        float contact_range;//接触範囲
+        float attack_scope;//攻撃範囲
+        float reaction_rate;//反応速度
+
         List<string> features_point;
         List<string> status;
 
@@ -151,8 +165,10 @@ public class Spawn : MonoBehaviour
         float line = random_value * 0.3f;
 
         unitIndex = UnityEngine.Random.Range(0, table_max);
-        string spawnunit = unitTable.spawnquence[unitIndex];
+        spawnunit_after = unitTable.spawnquence[unitIndex];
 
+        
+        //ここで生産
         switch (spawnunit)
         {
             case "Unit_1":
@@ -165,7 +181,15 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(5, 1, features_point, 3f, 0.5f, 5.0f, 1, 4, status); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+                hp = 5;
+                strengh = 1;
+                speed = 1;
+                attack_frequency = 1;
+                contact_range = 1;
+                attack_scope = 1;
+                reaction_rate = 1;
+
+                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
                 yield return new WaitForSeconds(Interval);
 
@@ -180,7 +204,15 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(3, 3, features_point, 2f, 0.8f, 1.0f, 1, 5, status);
+                hp = 1;
+                strengh = 5;
+                speed = 3;
+                attack_frequency = 3;
+                contact_range = 3;
+                attack_scope = 7;
+                reaction_rate = 3;
+
+                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
                 yield return new WaitForSeconds(Interval);
 
@@ -196,13 +228,41 @@ public class Spawn : MonoBehaviour
 
                 status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
 
-                movementScript.Initialize(1, 5, features_point, 4f, 0.1f, 10.0f, 1, 3, status);
+                hp = 3;
+                strengh = 3;
+                speed = 5;
+                attack_frequency = 5;
+                contact_range = 2;
+                attack_scope = 5;
+                reaction_rate = 2;
+
+                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
                 yield return new WaitForSeconds(Interval);
 
                 break;
         }
 
+        switch (spawnunit_after)
+        {
+            case "Unit_1":
+
+                yield return new WaitForSeconds(1.8f);
+
+                break;
+            case "Unit_2":
+
+                yield return new WaitForSeconds(1.8f);
+
+                break;
+
+            case "Unit_3":
+
+                yield return new WaitForSeconds(0.6f);
+
+                break;
+        }
+        spawnunit = spawnunit_after;
         isSpawning_villager = false;
     }
 

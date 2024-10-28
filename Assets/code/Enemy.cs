@@ -21,6 +21,9 @@ public class Enemy : MonoBehaviour
     public UnitAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
 
+    GameObject left_edge;
+    GameObject right_edge;
+
     GameObject[] Villager;
 
     public float jumpHeight = 0.8f;       // ジャンプの高さ
@@ -43,6 +46,8 @@ public class Enemy : MonoBehaviour
         isPerformingAction = true;
         direction = 1;
         attack_scope = 5f;
+        left_edge = GameObject.Find("左端");
+        right_edge = GameObject.Find("右端");
     }
 
     // Update is called once per frame
@@ -51,6 +56,14 @@ public class Enemy : MonoBehaviour
         Moving();
 
         CheckForAttacks();
+
+        Vector2 position = transform.position;
+
+        // x座標とy座標の範囲をClampで制限
+        position.x = Mathf.Clamp(position.x, Mathf.Min(left_edge.transform.position.x, right_edge.transform.position.x), Mathf.Max(left_edge.transform.position.x, right_edge.transform.position.x));
+
+        // 位置を更新
+        transform.position = position;
 
         //ノックバック動作
         if (knockback_flag == true)
@@ -158,7 +171,6 @@ public class Enemy : MonoBehaviour
         Unit unit = target.GetComponent<Unit>();
 
         unit.hp = unit.hp - 1;
-        Debug.Log(unit.hp);
         unit.knockback_flag = true;
     }
 

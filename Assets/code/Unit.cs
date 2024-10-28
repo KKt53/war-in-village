@@ -13,19 +13,21 @@ public class Unit : MonoBehaviour
 {
     public float hp;//ヒットポイント
     private float strengh;//攻撃力
-    private List<string> features_point;//ダメージ増減倍率
     private float speed;//素早さ
-    private float reaction_rate;//反応速度
     private float attack_frequency;//攻撃頻度
-    private float size;//大きさ
+    private float contact_range;//接触範囲
     private float attack_scope;//攻撃範囲
+    private float reaction_rate;//反応速度
+
+    private List<string> features_point;//ダメージ増減倍率
     private List<string> status;//かかりやすい状態
 
     private int direction = 1;//反転方向
     public bool knockback_flag = false;//のけぞりフラグ
-    private bool attack_flag;//攻撃フラグ
+
+    private bool attack_flag = false;//攻撃フラグ
+
     private bool isPerformingAction = true;//移動フラグ
-    private bool isPerformingAction_e = true;//移動フラグ(雑魚)
     private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
     private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
     private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
@@ -57,17 +59,15 @@ public class Unit : MonoBehaviour
 
     GameObject[] Enemy;
 
-    public void Initialize(float c_hp, float c_strengh, List<string> c_features_point, float c_speed, float c_reaction_rate, float c_attack_frequency, float c_size, float c_attack_scope, List<string> c_status)
+    public void Initialize(float c_hp, float c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
     {
         hp = c_hp;
         strengh = c_strengh;
-        features_point = c_features_point;
         speed = c_speed;
-        reaction_rate = c_reaction_rate;
         attack_frequency = c_attack_frequency;
-        size = c_size;
+        contact_range = UnityEngine.Random.Range(c_contact_range, c_attack_scope);
         attack_scope = c_attack_scope;
-        status = c_status;
+        reaction_rate = c_reaction_rate;
     }
 
     void Start()
@@ -79,12 +79,12 @@ public class Unit : MonoBehaviour
         direction = 1;
         knockback_flag = false;
         isPerformingAction = true;
-        isPerformingAction_e = true;
-        boss = GameObject.FindWithTag("Boss");
+        boss = GameObject.Find("Boss");
         attack_flag = false;
         this.sr = GetComponent<SpriteRenderer>();
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
+        startPosition = transform.position;// ジャンプ開始時の位置を保存
     }
 
     void Update()
@@ -178,14 +178,14 @@ public class Unit : MonoBehaviour
             }
          }
 
-        
-
         // 方向に基づいて移動
-        if (isPerformingAction) // この条件が移動制御のためのスイッチ
+        if (isPerformingAction && !attack_flag) // この条件が移動制御のためのスイッチ
         {
+            //Destroy(AO);
             transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
         }
 
+        //止まっていたら攻撃する
         if (!isPerformingAction && !attack_flag)
         {
             if (attackPattern != null && attackPattern.attacksequence.Count > 0)
@@ -194,23 +194,22 @@ public class Unit : MonoBehaviour
             }
         }
 
-        if (transform.position.x + attack_scope < boss.transform.position.x)
+        if (transform.position.x + contact_range < boss.transform.position.x)
         {
-            isPerformingAction_e = true;
+            if (FindNearestAllyInAttackRange() != null)
+            {
+                isPerformingAction = false;
+            }
+
+            if (FindNearestAllyInAttackRange() == null)
+            {
+                isPerformingAction = true;
+            }
         }
         else
         {
             isPerformingAction = false;
         }
-
-        //if (FindNearestAllyInAttackRange() != null)
-        //{
-        //    isPerformingAction = false;
-        //}
-        //else
-        //{
-        //    isPerformingAction = true;
-        //}
 
         if (isJumping == true)
         {
@@ -251,7 +250,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-
+    //攻撃シーケンス
     IEnumerator ExecuteAttacksequence()
     {
         // 現在の行動を取得
@@ -259,7 +258,7 @@ public class Unit : MonoBehaviour
 
         attack_flag = true; // 攻撃後にフラグをオンにする
         movement_disabled_flag = true;
-
+        isPerformingAction = false;
         switch (currentAction)
         {
             case "Rest":
@@ -270,7 +269,7 @@ public class Unit : MonoBehaviour
                 break;
 
             case "Attack":
-                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope, 0, 0), Quaternion.identity);
+                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope / 2, 0, 0), Quaternion.identity);
 
                 AO_I = AO.GetComponent<Attack_Object>();
 
@@ -300,6 +299,7 @@ public class Unit : MonoBehaviour
         }
 
         // 次の行動に進む
+        Destroy(AO);
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
         movement_disabled_flag = false;
@@ -310,7 +310,6 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
 
         jumpTime = 0f;
-        startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = false;
         direction = -1;//左
@@ -330,7 +329,6 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(reaction_rate);
 
         jumpTime = 0f;
-        startPosition = transform.position; // ジャンプ開始時の位置を保存
 
         sr.flipX = true;
         direction = 1;//右
@@ -406,7 +404,7 @@ public class Unit : MonoBehaviour
             float distance = Vector2.Distance(transform.position, ally.transform.position);
 
             // ユニットが攻撃範囲内にあるか確認
-            if (distance <= attack_scope && distance < shortestDistance)
+            if (distance <= contact_range && distance < shortestDistance)
             {
                 shortestDistance = distance;
                 nearestAlly = ally;
@@ -414,5 +412,15 @@ public class Unit : MonoBehaviour
         }
 
         return nearestAlly;
+    }
+
+    //通常単体攻撃
+    void AttackNearestAllyInRange(GameObject target)
+    {
+        // ターゲットに攻撃する処理
+        Unit unit = target.GetComponent<Unit>();
+
+        unit.hp = unit.hp - 1;
+        unit.knockback_flag = true;
     }
 }

@@ -60,6 +60,7 @@ public class Spawn : MonoBehaviour
         isSpawning_enemy = false;
 
         spawnunit = unitTable.spawnquence[unitIndex];
+
     }
 
     void OnButtonClick_speed()
@@ -144,13 +145,11 @@ public class Spawn : MonoBehaviour
 
         int table_max = unitTable.spawnquence.Count;
 
-        int rest_or_spawn = 1;
-
         GameObject characterInstance;
         Unit movementScript;
 
         float hp;//ヒットポイント
-        float strengh;//攻撃力
+        int strengh;//攻撃力
         float speed;//素早さ
         float attack_frequency;//攻撃頻度
         float contact_range;//接触範囲
@@ -290,7 +289,7 @@ public class Spawn : MonoBehaviour
 
                 movementScript = characterInstance.GetComponent<Enemy>();
 
-                movementScript.Initialize(3f,3f,1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+                movementScript.Initialize(3,3f,1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
 
                 yield return new WaitForSeconds(Interval_e);
 

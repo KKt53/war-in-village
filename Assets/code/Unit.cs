@@ -12,7 +12,7 @@ using static UnityEngine.GraphicsBuffer;
 public class Unit : MonoBehaviour
 {
     public float hp;//ヒットポイント
-    private float strengh;//攻撃力
+    private int strengh;//攻撃力
     private float speed;//素早さ
     private float attack_frequency;//攻撃頻度
     private float contact_range;//接触範囲
@@ -59,7 +59,7 @@ public class Unit : MonoBehaviour
 
     GameObject[] Enemy;
 
-    public void Initialize(float c_hp, float c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
+    public void Initialize(float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
     {
         hp = c_hp;
         strengh = c_strengh;
@@ -185,23 +185,16 @@ public class Unit : MonoBehaviour
             transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
         }
 
-        //止まっていたら攻撃する
-        if (!isPerformingAction && !attack_flag)
-        {
-            if (attackPattern != null && attackPattern.attacksequence.Count > 0)
-            {
-                StartCoroutine(ExecuteAttacksequence());
-            }
-        }
+        GameObject target = FindNearestAllyInAttackRange();
 
         if (transform.position.x + contact_range < boss.transform.position.x)
         {
-            if (FindNearestAllyInAttackRange() != null)
+            if (target != null)
             {
                 isPerformingAction = false;
             }
 
-            if (FindNearestAllyInAttackRange() == null)
+            if (target == null)
             {
                 isPerformingAction = true;
             }
@@ -209,6 +202,15 @@ public class Unit : MonoBehaviour
         else
         {
             isPerformingAction = false;
+        }
+
+        //止まっていたら攻撃する
+        if (!isPerformingAction && !attack_flag)
+        {
+            if (attackPattern != null && attackPattern.attacksequence.Count > 0)
+            {
+                StartCoroutine(ExecuteAttacksequence(target));
+            }
         }
 
         if (isJumping == true)
@@ -251,14 +253,17 @@ public class Unit : MonoBehaviour
     }
 
     //攻撃シーケンス
-    IEnumerator ExecuteAttacksequence()
+    IEnumerator ExecuteAttacksequence(GameObject target)
     {
         // 現在の行動を取得
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
+        int random_value = UnityEngine.Random.Range(0, 2);
+
         attack_flag = true; // 攻撃後にフラグをオンにする
         movement_disabled_flag = true;
         isPerformingAction = false;
+
         switch (currentAction)
         {
             case "Rest":
@@ -269,11 +274,24 @@ public class Unit : MonoBehaviour
                 break;
 
             case "Attack":
-                AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope / 2, 0, 0), Quaternion.identity);
 
-                AO_I = AO.GetComponent<Attack_Object>();
+                if (random_value == 0)
+                {
+                    if (!target)
+                    {
+                        target = boss;
+                    }
 
-                AO_I.Initialize(strengh, features_point);
+                    AttackNearestAllyInRange(target);
+                }
+                else if (random_value == 1)
+                {
+                    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope / 2, 0, 0), Quaternion.identity);
+
+                    AO_I = AO.GetComponent<Attack_Object>();
+
+                    AO_I.Initialize(strengh, features_point);
+                }
 
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
@@ -418,9 +436,18 @@ public class Unit : MonoBehaviour
     void AttackNearestAllyInRange(GameObject target)
     {
         // ターゲットに攻撃する処理
-        Unit unit = target.GetComponent<Unit>();
+        IAttackable attackable = target.GetComponent<IAttackable>();
 
-        unit.hp = unit.hp - 1;
-        unit.knockback_flag = true;
+        if (target == boss)
+        {
+            Debug.Log(target);
+        }
+
+        if (attackable != null)
+        { 
+            attackable.ApplyDamage(strengh);
+        
+        }
+
     }
 }

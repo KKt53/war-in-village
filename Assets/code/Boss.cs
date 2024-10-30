@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Boss : MonoBehaviour
+public class Boss : MonoBehaviour, IAttackable
 {
-    private float hp_max;
-    private float hp;//HP
+    private int hp_max;
+    public int hp { get; set; }//HP
     private float strengh;//攻撃力
     private float attack_frequency;//攻撃頻度
     private float attack_scope;//攻撃範囲
-    private List<string> features_point;//ダメージ増減倍率
+    //private List<string> features_point;//ダメージ増減倍率
     private int Level_max;
     private int Level;//レベル
     private float experience;//経験値
@@ -39,10 +39,19 @@ public class Boss : MonoBehaviour
         Level_max = 3;
         experience = 0;
         experience_reference = 3;
-        features_point = new List<string> { "大型BOSSに強い", "中型" };
+        //features_point = new List<string> { "大型BOSSに強い", "中型" };
     }
 
-    
+    //public void Initialize(int c_hp, int c_strengh, float c_attack_frequency, float c_attack_scope)
+    //{
+    //    hp = c_hp;
+        
+    //    strengh = c_strengh;
+    //    attack_frequency = c_attack_frequency;
+    //    attack_scope = c_attack_scope;
+    //}
+
+
     void Update()
     {
 
@@ -70,7 +79,7 @@ public class Boss : MonoBehaviour
                 {
                     Attack_Object attack_object = attackObject.GetComponent<Attack_Object>();
 
-                    float damage = attack_object.attack_point;
+                    int damage = attack_object.attack_point;
 
                     if (attack_object != null)
                     {
@@ -161,6 +170,11 @@ public class Boss : MonoBehaviour
         return nearestAlly;
     }
 
+    public void ApplyDamage(int damage)
+    {
+        hp -= damage;
+    }
+
     //ボスの通常攻撃
     void AttackNearestAllyInRange()
     {
@@ -173,7 +187,7 @@ public class Boss : MonoBehaviour
 
             Unit unit = target.GetComponent<Unit>();
 
-            unit.hp = unit.hp - 1;
+            unit.hp = unit.hp - strengh;
             unit.knockback_flag = true;
 
             experience++;

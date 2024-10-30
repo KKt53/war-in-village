@@ -5,17 +5,17 @@ using System.Drawing;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IAttackable
 {
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();//攻撃重複チェック
-    public float hp;//ヒットポイント
+    public int hp { get; set; }//ヒットポイント
     private float strengh;//攻撃力
     private bool isPerformingAction = true;//移動フラグ
     private int direction = 1;//反転方向
     public bool knockback_flag = false;//のけぞりフラグ
     private float speed;//素早さ
     private float attack_frequency;//攻撃頻度
-    private float attack_scope = 5f;//攻撃範囲
+    private int attack_scope = 5;//攻撃範囲
     private bool attack_flag;//攻撃フラグ
 
     public UnitAttackPattern attackPattern;//パターン格納変数
@@ -26,12 +26,15 @@ public class Enemy : MonoBehaviour
 
     GameObject[] Villager;
 
+    GameObject AO;//攻撃用オブジェクトインスタンス用変数
+    public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
+
     public float jumpHeight = 0.8f;       // ジャンプの高さ
     public float jumpDuration = 0.5f;     // ジャンプにかかる時間
     private float jumpTime = 0f;        // ジャンプの経過時間
     private Vector3 startPosition;      // ジャンプ開始時の位置
 
-    public void Initialize(float c_hp, float c_speed, float c_attack_frequency)
+    public void Initialize(int c_hp, float c_speed, float c_attack_frequency)
     {
         hp = c_hp;
         speed = c_speed;
@@ -45,7 +48,7 @@ public class Enemy : MonoBehaviour
         attack_flag = false;
         isPerformingAction = true;
         direction = 1;
-        attack_scope = 5f;
+        attack_scope = 5;
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
     }
@@ -68,10 +71,16 @@ public class Enemy : MonoBehaviour
         //ノックバック動作
         if (knockback_flag == true)
         {
+            Destroy(AO);
             isPerformingAction = false;
 
             knockback();
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(AO);
     }
 
     private void Moving()
@@ -83,8 +92,8 @@ public class Enemy : MonoBehaviour
         }
 
 
-        GameObject target = FindNearestAllyInAttackRange();
-        if (target != null)
+        
+        if (FindNearestAllyInAttackRange_s() != null)
         {
             isPerformingAction = false;
         }
@@ -97,12 +106,35 @@ public class Enemy : MonoBehaviour
         {
             if (attackPattern != null && attackPattern.attacksequence.Count > 0)
             {
-                StartCoroutine(ExecuteAttacksequence(target));
+                StartCoroutine(ExecuteAttacksequence());
             }
         }
     }
 
-    
+    //１番近い敵を見つける
+    GameObject FindNearestAllyInAttackRange_s()
+    {
+        GameObject nearestAlly = null;
+        float shortestDistance = Mathf.Infinity;
+
+        int random_value = UnityEngine.Random.Range(1, attack_scope);
+
+        Villager = GameObject.FindGameObjectsWithTag("Villager");
+
+        foreach (GameObject ally in Villager)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= 1 && distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestAlly = ally;
+            }
+        }
+        return nearestAlly;
+    }
 
     //１番近い敵を見つける
     GameObject FindNearestAllyInAttackRange()
@@ -124,20 +156,22 @@ public class Enemy : MonoBehaviour
                 nearestAlly = ally;
             }
         }
-
         return nearestAlly;
     }
 
-    IEnumerator ExecuteAttacksequence(GameObject target)
+    IEnumerator ExecuteAttacksequence()
     {
         // 現在の行動を取得
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
+
+        int random_value = UnityEngine.Random.Range(0, 2);
 
         attack_flag = true; // 攻撃後にフラグをオンにする
 
         switch (currentAction)
         {
             case "Rest":
+                Destroy(AO);
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(10.0f / attack_frequency);
 
@@ -145,7 +179,14 @@ public class Enemy : MonoBehaviour
 
             case "Attack":
 
-                AttackNearestAllyInRange(target);
+                if (random_value == 0)
+                {
+                    AttackNearestAllyInRange();
+                }
+                else if (random_value == 1)
+                {
+                    AO = Instantiate(Attack_Object, transform.position + new Vector3(-1, 0, 0), Quaternion.identity);
+                }
 
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
@@ -158,20 +199,30 @@ public class Enemy : MonoBehaviour
         }
 
         // 次の行動に進む
+        Destroy(AO);
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
     }
 
     //通常単体攻撃
-    void AttackNearestAllyInRange(GameObject target)
+    void AttackNearestAllyInRange()
     {
-        
+        GameObject target = FindNearestAllyInAttackRange();
         // ターゲットに攻撃する処理
 
-        Unit unit = target.GetComponent<Unit>();
+        if (target != null)
+        {
+            Unit unit = target.GetComponent<Unit>();
 
-        unit.hp = unit.hp - 1;
-        unit.knockback_flag = true;
+            unit.hp = unit.hp - strengh;
+            unit.knockback_flag = true;
+        }
+    }
+
+    public void ApplyDamage(int damage)
+    {
+        hp -= damage;
+        knockback_flag = true;
     }
 
     private void CheckForAttacks()

@@ -105,6 +105,8 @@ public class Boss : MonoBehaviour, IAttackable
     {
         attack_flag = true;
 
+        int random_value = UnityEngine.Random.Range(0, 2);
+
         // 現在の行動を取得
         string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
         switch (currentAction)
@@ -117,8 +119,16 @@ public class Boss : MonoBehaviour, IAttackable
                 break;
 
             case "Attack":
-                
-                AttackNearestAllyInRange();
+
+                if (random_value == 0)
+                {
+                    AttackNearestAllyInRange();
+                }
+                else if (random_value == 1)
+                {
+
+                }
+
 
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);

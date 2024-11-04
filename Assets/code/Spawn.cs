@@ -140,6 +140,37 @@ public class Spawn : MonoBehaviour
             Time.timeScale = 1.0f;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject characterInstance;
+            Unit movementScript;
+
+            float hp;//ヒットポイント
+            int strengh;//攻撃力
+            float speed;//素早さ
+            float attack_frequency;//攻撃頻度
+            float contact_range;//接触範囲
+            float attack_scope;//攻撃範囲
+            float reaction_rate;//反応速度
+
+            random_value = UnityEngine.Random.Range(0, line_max);
+
+            float line = random_value * 0.3f;
+
+            characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, line, 0), Quaternion.identity);
+
+            movementScript = characterInstance.GetComponent<Unit>();
+
+            hp = 1;
+            strengh = 5;
+            speed = 3;
+            attack_frequency = 3;
+            contact_range = 3;
+            attack_scope = 7;
+            reaction_rate = 1.3f;
+
+            movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        }
     }
 
     IEnumerator Unit_spawn()
@@ -169,11 +200,10 @@ public class Spawn : MonoBehaviour
         unitIndex = UnityEngine.Random.Range(0, table_max);
         spawnunit_after = unitTable.spawnquence[unitIndex];
 
-        
-
         //ここで生産
         switch (spawnunit)
         {
+            //少女
             case "Unit_1":
 
                 characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, line, 0), Quaternion.identity);
@@ -197,6 +227,8 @@ public class Spawn : MonoBehaviour
                 yield return new WaitForSeconds(Interval);
 
                 break;
+
+            //少女（小）
             case "Unit_2":
 
                 characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, line, 0), Quaternion.identity);
@@ -213,7 +245,7 @@ public class Spawn : MonoBehaviour
                 attack_frequency = 3;
                 contact_range = 3;
                 attack_scope = 7;
-                reaction_rate = 3;
+                reaction_rate = 1.3f;
 
                 movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
@@ -221,6 +253,7 @@ public class Spawn : MonoBehaviour
 
                 break;
 
+            //バニーガール
             case "Unit_3":
 
                 characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, line, 0), Quaternion.identity);
@@ -237,7 +270,7 @@ public class Spawn : MonoBehaviour
                 attack_frequency = 5;
                 contact_range = 2;
                 attack_scope = 5;
-                reaction_rate = 2;
+                reaction_rate = 1.2f;
 
                 movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 

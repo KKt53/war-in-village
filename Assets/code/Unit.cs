@@ -180,6 +180,7 @@ public class Unit : MonoBehaviour
 
         // 方向に基づいて移動
         if (isPerformingAction && !attack_flag) // この条件が移動制御のためのスイッチ
+        //if (isPerformingAction)
         {
             //Destroy(AO);
             transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
@@ -339,6 +340,7 @@ public class Unit : MonoBehaviour
         {
             Destroy(AO);
             moving_standby = false;
+            attack_flag = false;
             isPerformingAction = true; // 移動を再開
         }
     }
@@ -358,6 +360,7 @@ public class Unit : MonoBehaviour
         {
             Destroy(AO);
             moving_standby = false;
+            attack_flag = false;
             isPerformingAction = true; // 移動を再開
             
         }
@@ -399,7 +402,6 @@ public class Unit : MonoBehaviour
         // ジャンプが終了したかどうかを確認
         if (progress >= 1f)
         {
-            
             // ジャンプ終了時、Y軸位置を元に戻す
             transform.position = new Vector2(transform.position.x, startPosition.y); // Y軸位置をリセット
             knockback_flag = false; // のけぞりフラグを解除

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using TMPro;
 
 public class Spawn : MonoBehaviour
 {
@@ -46,7 +47,6 @@ public class Spawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        max_time = 10f;
         timeBar.fillAmount = 1f;
         time_switch = false;
 
@@ -80,6 +80,9 @@ public class Spawn : MonoBehaviour
 
     void Update()
     {
+        double limit_time = Math.Floor(max_time - Time.time) / max_time;
+
+        timeBar.fillAmount = (float)limit_time;
         Operation();
 
         if (!isSpawning_villager)
@@ -167,6 +170,7 @@ public class Spawn : MonoBehaviour
         spawnunit_after = unitTable.spawnquence[unitIndex];
 
         
+
         //ここで生産
         switch (spawnunit)
         {

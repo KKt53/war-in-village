@@ -438,11 +438,6 @@ public class Unit : MonoBehaviour
         // ターゲットに攻撃する処理
         IAttackable attackable = target.GetComponent<IAttackable>();
 
-        if (target == boss)
-        {
-            Debug.Log(target);
-        }
-
         if (attackable != null)
         { 
             attackable.ApplyDamage(strengh);

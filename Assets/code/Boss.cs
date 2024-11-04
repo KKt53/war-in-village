@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Boss : MonoBehaviour, IAttackable
 {
@@ -27,6 +29,29 @@ public class Boss : MonoBehaviour, IAttackable
 
     GameObject[] Villager;
 
+    private int attack_count = 0;//攻撃カウント用変数
+    private int previous_hp;
+
+    public GameObject Hitcount;
+
+    public int Hp
+    {
+        get { return this.hp; }
+        set
+        {
+            TextMeshProUGUI counter;
+            counter = Hitcount.GetComponent<TextMeshProUGUI>();
+
+            this.hp = value;
+
+            attack_count++;
+            Hitcount.SetActive(true);
+            counter.text = attack_count.ToString() + "hits!";
+            // 値が変更された際の処理
+            //Debug.Log(attack_count);
+        }
+    }
+
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
@@ -39,6 +64,9 @@ public class Boss : MonoBehaviour, IAttackable
         Level_max = 3;
         experience = 0;
         experience_reference = 3;
+
+        attack_count = 0;
+        previous_hp = hp;
         //features_point = new List<string> { "大型BOSSに強い", "中型" };
     }
 
@@ -54,10 +82,13 @@ public class Boss : MonoBehaviour, IAttackable
 
     void Update()
     {
+        GameObject target = FindNearestAllyInAttackRange();
 
-        if (!attack_flag)
+        if (target != null && !attack_flag)
         {
-            StartCoroutine(ExecuteAttacksequence());
+            Hitcount.SetActive(false);
+            attack_count = 0;
+            StartCoroutine(ExecuteAttacksequence(target));
         }
 
         CheckForAttacks();
@@ -83,7 +114,7 @@ public class Boss : MonoBehaviour, IAttackable
 
                     if (attack_object != null)
                     {
-                        this.hp = this.hp - attack_object.attack_point;
+                        Hp -= attack_object.attack_point;
                     }
 
                     //Debug.Log("Boss hp:" + this.hp);
@@ -101,7 +132,7 @@ public class Boss : MonoBehaviour, IAttackable
     }
 
 
-    IEnumerator ExecuteAttacksequence()
+    IEnumerator ExecuteAttacksequence(GameObject target)
     {
         attack_flag = true;
 
@@ -120,16 +151,16 @@ public class Boss : MonoBehaviour, IAttackable
 
             case "Attack":
 
-                if (random_value == 0)
-                {
-                    AttackNearestAllyInRange();
-                }
-                else if (random_value == 1)
-                {
+                AttackNearestAllyInRange(target);
 
-                }
+                //if (random_value == 0)
+                //{
+                    
+                //}
+                //else if (random_value == 1)
+                //{
 
-
+                //}
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 yield return new WaitForSeconds(1.0f);
 
@@ -182,34 +213,30 @@ public class Boss : MonoBehaviour, IAttackable
 
     public void ApplyDamage(int damage)
     {
-        hp -= damage;
+        Hp -= damage;
     }
 
     //ボスの通常攻撃
-    void AttackNearestAllyInRange()
+    void AttackNearestAllyInRange(GameObject target)
     {
-        GameObject target = FindNearestAllyInAttackRange();
+        // ターゲットに攻撃する処理
 
-        //Debug.Log(target);
-        if (target != null)
-        {
-            // ターゲットに攻撃する処理
+        Unit unit = target.GetComponent<Unit>();
 
-            Unit unit = target.GetComponent<Unit>();
+        unit.hp = unit.hp - strengh;
+        unit.knockback_flag = true;
 
-            unit.hp = unit.hp - strengh;
-            unit.knockback_flag = true;
-
-            experience++;
+        experience++;
             
-            if(experience >= experience_reference && Level < Level_max)
-            {
-                Level++;
-                experience_reference = experience_reference * 1.2f;
-                strengh = strengh * 1.2f;
-                experience = 0;
-                Debug.Log("Level: " + Level);
-            }
+        if(experience >= experience_reference && Level < Level_max)
+        {
+            Level++;
+            experience_reference = experience_reference * 1.2f;
+            strengh = strengh * 1.2f;
+            experience = 0;
+            Debug.Log("Level: " + Level);
         }
     }
+
+    
 }

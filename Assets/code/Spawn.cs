@@ -220,7 +220,7 @@ public class Spawn : MonoBehaviour
                 attack_frequency = 1;
                 contact_range = 1;
                 attack_scope = 1;
-                reaction_rate = 1;
+                reaction_rate = 0;
 
                 movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
@@ -245,7 +245,7 @@ public class Spawn : MonoBehaviour
                 attack_frequency = 3;
                 contact_range = 3;
                 attack_scope = 7;
-                reaction_rate = 1.3f;
+                reaction_rate = 0.3f;
 
                 movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 
@@ -270,7 +270,7 @@ public class Spawn : MonoBehaviour
                 attack_frequency = 5;
                 contact_range = 2;
                 attack_scope = 5;
-                reaction_rate = 1.2f;
+                reaction_rate = 0.2f;
 
                 movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
 

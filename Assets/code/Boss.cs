@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class Boss : MonoBehaviour, IAttackable
@@ -34,6 +35,8 @@ public class Boss : MonoBehaviour, IAttackable
 
     public GameObject Hitcount;
 
+    public Image boss_life_bar;   // タイムゲージのImage
+
     public int Hp
     {
         get { return this.hp; }
@@ -55,7 +58,7 @@ public class Boss : MonoBehaviour, IAttackable
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        hp = 1000;
+        hp = 100;
         hp_max = hp;
         strengh = 1;
         attack_frequency = 2;
@@ -64,6 +67,8 @@ public class Boss : MonoBehaviour, IAttackable
         Level_max = 3;
         experience = 0;
         experience_reference = 3;
+
+        boss_life_bar.fillAmount = 1f;
 
         attack_count = 0;
         previous_hp = hp;
@@ -82,6 +87,10 @@ public class Boss : MonoBehaviour, IAttackable
 
     void Update()
     {
+        double now_bar = Mathf.Clamp(this.hp, 0, hp_max);
+
+        boss_life_bar.fillAmount = (float)(now_bar / hp_max);
+
         GameObject target = FindNearestAllyInAttackRange();
 
         if (target != null && !attack_flag)
@@ -151,7 +160,8 @@ public class Boss : MonoBehaviour, IAttackable
 
             case "Attack":
 
-                AttackNearestAllyInRange(target);
+                //単体攻撃保留
+                //AttackNearestAllyInRange(target);
 
                 //if (random_value == 0)
                 //{

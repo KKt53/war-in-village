@@ -13,15 +13,15 @@ public class Spawn : MonoBehaviour
     public GameObject characterPrefab_second;
     public GameObject characterPrefab_third;
 
+    public GameObject characterPrefab_prot;
+
     public GameObject enemyPrefab;
+
+    GameObject boss;//ボス用変数
 
     public GameObject Panel;
 
     private bool time_switch = false;
-
-    public float max_time = 160f;
-
-    public Image timeBar;   // タイムゲージのImage
 
     public Button menu_Button;
     public Button cancel_Button;
@@ -44,10 +44,20 @@ public class Spawn : MonoBehaviour
     private string spawnunit;
     private string spawnunit_after;
 
+    private GameObject characterInstance;
+    private Unit movementScript;
+
+    private float hp;//ヒットポイント
+    private int strengh;//攻撃力
+    private float speed;//素早さ
+    private float attack_frequency;//攻撃頻度
+    private float contact_range;//接触範囲
+    private float attack_scope;//攻撃範囲
+    private float reaction_rate;//反応速度
+
     // Start is called before the first frame update
     void Start()
     {
-        timeBar.fillAmount = 1f;
         time_switch = false;
 
         unitIndex = 0;
@@ -80,9 +90,6 @@ public class Spawn : MonoBehaviour
 
     void Update()
     {
-        double limit_time = Math.Floor(max_time - Time.time) / max_time;
-
-        timeBar.fillAmount = (float)limit_time;
         Operation();
 
         if (!isSpawning_villager)
@@ -92,7 +99,7 @@ public class Spawn : MonoBehaviour
 
         if (!isSpawning_enemy)
         {
-            StartCoroutine(Enemy_spawn());
+            //StartCoroutine(Enemy_spawn());
         }
     }
 
@@ -142,34 +149,8 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameObject characterInstance;
-            Unit movementScript;
-
-            float hp;//ヒットポイント
-            int strengh;//攻撃力
-            float speed;//素早さ
-            float attack_frequency;//攻撃頻度
-            float contact_range;//接触範囲
-            float attack_scope;//攻撃範囲
-            float reaction_rate;//反応速度
-
-            random_value = UnityEngine.Random.Range(0, line_max);
-
-            float line = random_value * 0.3f;
-
-            characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, line, 0), Quaternion.identity);
-
-            movementScript = characterInstance.GetComponent<Unit>();
-
-            hp = 1;
-            strengh = 5;
-            speed = 3;
-            attack_frequency = 3;
-            contact_range = 3;
-            attack_scope = 7;
-            reaction_rate = 1.3f;
-
-            movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+            //spawn_2();
+            characterInstance = Instantiate(characterPrefab_prot, new Vector3(2, 7, 0), Quaternion.identity);
         }
     }
 
@@ -179,19 +160,10 @@ public class Spawn : MonoBehaviour
 
         int table_max = unitTable.spawnquence.Count;
 
-        GameObject characterInstance;
-        Unit movementScript;
+        
 
-        float hp;//ヒットポイント
-        int strengh;//攻撃力
-        float speed;//素早さ
-        float attack_frequency;//攻撃頻度
-        float contact_range;//接触範囲
-        float attack_scope;//攻撃範囲
-        float reaction_rate;//反応速度
-
-        List<string> features_point;
-        List<string> status;
+        //List<string> features_point;
+        //List<string> status;
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
@@ -206,23 +178,7 @@ public class Spawn : MonoBehaviour
             //少女
             case "Unit_1":
 
-                characterInstance = Instantiate(characterPrefab_first, new Vector3(-10, line, 0), Quaternion.identity);
-
-                movementScript = characterInstance.GetComponent<Unit>();
-
-                features_point = new List<string> { "大型BOSSに強い", "中型" };
-
-                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
-
-                hp = 5;
-                strengh = 1;
-                speed = 1;
-                attack_frequency = 1;
-                contact_range = 1;
-                attack_scope = 1;
-                reaction_rate = 0;
-
-                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+                spawn_1();
 
                 yield return new WaitForSeconds(Interval);
 
@@ -231,23 +187,7 @@ public class Spawn : MonoBehaviour
             //少女（小）
             case "Unit_2":
 
-                characterInstance = Instantiate(characterPrefab_second, new Vector3(-10, line, 0), Quaternion.identity);
-
-                movementScript = characterInstance.GetComponent<Unit>();
-
-                features_point = new List<string> { "大型BOSSに強い", "中型" };
-
-                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
-
-                hp = 1;
-                strengh = 5;
-                speed = 3;
-                attack_frequency = 3;
-                contact_range = 3;
-                attack_scope = 7;
-                reaction_rate = 0.3f;
-
-                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+                spawn_2();
 
                 yield return new WaitForSeconds(Interval);
 
@@ -256,23 +196,7 @@ public class Spawn : MonoBehaviour
             //バニーガール
             case "Unit_3":
 
-                characterInstance = Instantiate(characterPrefab_third, new Vector3(-10, line, 0), Quaternion.identity);
-
-                movementScript = characterInstance.GetComponent<Unit>();
-
-                features_point = new List<string> { "大型BOSSに強い", "中型" };
-
-                status = new List<string> { "攻撃力アップ", "移動速度アップダウン" };
-
-                hp = 3;
-                strengh = 3;
-                speed = 5;
-                attack_frequency = 5;
-                contact_range = 2;
-                attack_scope = 5;
-                reaction_rate = 0.2f;
-
-                movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+                spawn_3();
 
                 yield return new WaitForSeconds(Interval);
 
@@ -308,9 +232,6 @@ public class Spawn : MonoBehaviour
 
         int table_max = enemyTable.spawnquence_e.Count;
 
-        GameObject characterInstance;
-        Enemy movementScript;
-
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
@@ -322,11 +243,7 @@ public class Spawn : MonoBehaviour
         {
             case "Enemy":
 
-                characterInstance = Instantiate(enemyPrefab, new Vector3(10, line, 0), Quaternion.identity);
-
-                movementScript = characterInstance.GetComponent<Enemy>();
-
-                movementScript.Initialize(3,3f,1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+                enemy();
 
                 yield return new WaitForSeconds(Interval_e);
 
@@ -334,5 +251,83 @@ public class Spawn : MonoBehaviour
         }
 
         isSpawning_enemy = false;
+    }
+
+    private void spawn_1()
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_first, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 5;
+        strengh = 1;
+        speed = 1;
+        attack_frequency = 1;
+        contact_range = 1;
+        attack_scope = 1;
+        reaction_rate = 0;
+
+        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+    }
+
+    private void spawn_2()
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_second, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 1;
+        strengh = 5;
+        speed = 3;
+        attack_frequency = 3;
+        contact_range = 3;
+        attack_scope = 7;
+        reaction_rate = 0.3f;
+
+        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+    }
+
+    private void spawn_3()
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_third, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 3;
+        strengh = 3;
+        speed = 5;
+        attack_frequency = 5;
+        contact_range = 2;
+        attack_scope = 5;
+        reaction_rate = 0.2f;
+
+        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+    }
+
+    private void enemy()
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        Enemy movementScript;
+
+        characterInstance = Instantiate(enemyPrefab, new Vector3(7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Enemy>();
+
+        movementScript.Initialize(3, 3f, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
     }
 }

@@ -70,7 +70,6 @@ public class Spawn : MonoBehaviour
         isSpawning_enemy = false;
 
         spawnunit = unitTable.spawnquence[unitIndex];
-
     }
 
     void OnButtonClick_speed()
@@ -99,7 +98,7 @@ public class Spawn : MonoBehaviour
 
         if (!isSpawning_enemy)
         {
-            //StartCoroutine(Enemy_spawn());
+            StartCoroutine(Enemy_spawn());
         }
     }
 
@@ -150,7 +149,9 @@ public class Spawn : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //spawn_2();
-            characterInstance = Instantiate(characterPrefab_prot, new Vector3(2, 7, 0), Quaternion.identity);
+
+            //隕石コード消すな
+            //characterInstance = Instantiate(characterPrefab_prot, new Vector3(2, 7, 0), Quaternion.identity);
         }
     }
 

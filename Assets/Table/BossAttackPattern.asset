@@ -15,4 +15,3 @@ MonoBehaviour:
   b_attacksequence:
   - Rest
   - Attack
-  - S_Attack

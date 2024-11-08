@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
 using UnityEditor;
@@ -11,6 +12,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Unit : MonoBehaviour
 {
+    public string type;
+    public string name_of_death;
     public float hp;//ヒットポイント
     private int strengh;//攻撃力
     private float speed;//素早さ
@@ -59,8 +62,18 @@ public class Unit : MonoBehaviour
 
     GameObject[] Enemy;
 
-    public void Initialize(float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
+    private UILoggerWithLimit uiLogger;
+
+    [System.Serializable]
+    public class NameList
     {
+        public List<string> names;
+    }
+
+    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
+    {
+        type = c_type;
+        name_of_death = c_name;
         hp = c_hp;
         strengh = c_strengh;
         speed = c_speed;
@@ -85,6 +98,8 @@ public class Unit : MonoBehaviour
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
         startPosition = transform.position;// ジャンプ開始時の位置を保存
+
+        uiLogger = FindObjectOfType<UILoggerWithLimit>();
     }
 
     void Update()
@@ -249,6 +264,7 @@ public class Unit : MonoBehaviour
 
         if (this.hp <= 0)
         {
+            uiLogger.AddLog(type + name_of_death + "が死亡");
             Destroy(this.gameObject);
         }
     }

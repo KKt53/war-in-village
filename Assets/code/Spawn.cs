@@ -6,6 +6,12 @@ using UnityEngine.UI;
 using Unity.VisualScripting;
 using TMPro;
 
+[System.Serializable]
+public class NameList
+{
+    public List<string> names;
+}
+
 public class Spawn : MonoBehaviour
 {
     //名前は後で変更する
@@ -55,6 +61,10 @@ public class Spawn : MonoBehaviour
     private float attack_scope;//攻撃範囲
     private float reaction_rate;//反応速度
 
+    private List<string> characterNames_Unit1;
+    private List<string> characterNames_Unit2;
+    private List<string> characterNames_Unit3;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +80,10 @@ public class Spawn : MonoBehaviour
         isSpawning_enemy = false;
 
         spawnunit = unitTable.spawnquence[unitIndex];
+
+        characterNames_Unit1 = LoadNamesFromJson("Unit1_name");
+        characterNames_Unit2 = LoadNamesFromJson("Unit2_name");
+        characterNames_Unit3 = LoadNamesFromJson("Unit3_name");
     }
 
     void OnButtonClick_speed()
@@ -256,6 +270,8 @@ public class Spawn : MonoBehaviour
 
     private void spawn_1()
     {
+        string randomName = GetUniqueRandomName(characterNames_Unit1);
+
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
@@ -272,11 +288,13 @@ public class Spawn : MonoBehaviour
         attack_scope = 1;
         reaction_rate = 0;
 
-        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("Unit1", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
     }
 
     private void spawn_2()
     {
+        string randomName = GetUniqueRandomName(characterNames_Unit2);
+
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
@@ -293,11 +311,13 @@ public class Spawn : MonoBehaviour
         attack_scope = 7;
         reaction_rate = 0.3f;
 
-        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("Unit2", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
     }
 
     private void spawn_3()
     {
+        string randomName = GetUniqueRandomName(characterNames_Unit3);
+
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
@@ -314,7 +334,7 @@ public class Spawn : MonoBehaviour
         attack_scope = 5;
         reaction_rate = 0.2f;
 
-        movementScript.Initialize(hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("Unit3", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
     }
 
     private void enemy()
@@ -330,5 +350,35 @@ public class Spawn : MonoBehaviour
         movementScript = characterInstance.GetComponent<Enemy>();
 
         movementScript.Initialize(3, 3f, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+    }
+
+    private List<string> LoadNamesFromJson(string file)
+    {
+        TextAsset jsonTextFile = Resources.Load<TextAsset>(file);
+        if (jsonTextFile != null)
+        {
+            NameList nameList = JsonUtility.FromJson<NameList>(jsonTextFile.text);
+            return new List<string>(nameList.names);
+        }
+        else
+        {
+            Debug.LogWarning("JSON file not found!");
+            return new List<string>();
+        }
+    }
+
+    public string GetUniqueRandomName(List<string> characterNames)
+    {
+        if (characterNames.Count == 0)
+        {
+            Debug.LogWarning("No more unique names available.");
+            return null;
+        }
+
+        int index = UnityEngine.Random.Range(0, characterNames.Count);
+        string selectedName = characterNames[index];
+        characterNames.RemoveAt(index);
+
+        return selectedName;
     }
 }

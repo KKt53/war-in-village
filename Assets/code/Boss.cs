@@ -58,7 +58,7 @@ public class Boss : MonoBehaviour, IAttackable
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        hp = 100;
+        hp = 500;
         hp_max = hp;
         strengh = 1;
         attack_frequency = 2;
@@ -97,7 +97,7 @@ public class Boss : MonoBehaviour, IAttackable
         {
             Hitcount.SetActive(false);
             attack_count = 0;
-            StartCoroutine(ExecuteAttacksequence(target));
+            StartCoroutine(ExecuteAttacksequence());
         }
 
         CheckForAttacks();
@@ -141,7 +141,7 @@ public class Boss : MonoBehaviour, IAttackable
     }
 
 
-    IEnumerator ExecuteAttacksequence(GameObject target)
+    IEnumerator ExecuteAttacksequence()
     {
         attack_flag = true;
 
@@ -160,30 +160,38 @@ public class Boss : MonoBehaviour, IAttackable
 
             case "Attack":
 
+                switch (Level)
+                {
+                    case 1:
+
+                        
+                        AttackNearestAllyInRange();
+                        yield return new WaitForSeconds(1.0f);
+                        
+
+                        break;
+                }
+
+                //if (Level != 1)
+                //{
+                //    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
+                //    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                //    yield return new WaitForSeconds(1.0f);
+                //}
+
                 //単体攻撃保留
-                //AttackNearestAllyInRange(target);
+                //
 
                 //if (random_value == 0)
                 //{
-                    
+
                 //}
                 //else if (random_value == 1)
                 //{
 
                 //}
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                yield return new WaitForSeconds(1.0f);
-
-                break;
-
-            case "S_Attack":
-
-                if (Level != 1)
-                {
-                    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
-                    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                    yield return new WaitForSeconds(1.0f);
-                }
+                
 
                 break;
 
@@ -227,24 +235,47 @@ public class Boss : MonoBehaviour, IAttackable
     }
 
     //ボスの通常攻撃
-    void AttackNearestAllyInRange(GameObject target)
+    void AttackNearestAllyInRange()
     {
         // ターゲットに攻撃する処理
 
+        GameObject target = FindNearestAllyInAttackRange();
+
         Unit unit = target.GetComponent<Unit>();
 
-        unit.hp = unit.hp - strengh;
-        unit.knockback_flag = true;
+        for (int i = 0; i < 3; i++)
+        {
 
-        experience++;
+            if (unit.hp <= 0)
+            {
+                experience++;
+
+                Destroy(target);
+
+                target = FindNearestAllyInAttackRange();
+
+                unit = target.GetComponent<Unit>();
+            }
+
+            unit.hp = unit.hp - strengh;
+
+            Debug.Log(unit.hp);
+            Debug.Log(unit.name_of_death);
+        }
+
+        unit.knockback_flag = true;
             
         if(experience >= experience_reference && Level < Level_max)
         {
             Level++;
             experience_reference = experience_reference * 1.2f;
-            strengh = strengh * 1.2f;
+
+            if (Level == 2)
+            {
+                strengh = 2;
+            }
+
             experience = 0;
-            Debug.Log("Level: " + Level);
         }
     }
 

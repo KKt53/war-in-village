@@ -32,7 +32,7 @@ public class UILoggerWithLimit : MonoBehaviour
 
         // コンテンツのスクロール位置を最上部に保つ
         Canvas.ForceUpdateCanvases(); // キャンバスの更新
-        contentParent.GetComponent<RectTransform>().anchoredPosition = Vector2.zero; // コンテンツの位置をリセット
+        //contentParent.GetComponent<RectTransform>().anchoredPosition = Vector2.zero; // コンテンツの位置をリセット
     }
 
     // ログをクリアするメソッド

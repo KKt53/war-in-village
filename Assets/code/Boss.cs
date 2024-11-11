@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms.Impl;
+using static UnityEngine.GraphicsBuffer;
 
 public class Boss : MonoBehaviour, IAttackable
 {
@@ -23,10 +24,14 @@ public class Boss : MonoBehaviour, IAttackable
     public BossAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
 
+    public GameObject meteoritePrefab_1;
+    public GameObject meteoritePrefab_2;
+
     private bool attack_flag;
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
     GameObject AO;//攻撃用オブジェクトインスタンス用変数
     public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
+    private Meteorite meteorite;
 
     GameObject[] Villager;
 
@@ -147,6 +152,8 @@ public class Boss : MonoBehaviour, IAttackable
 
         int random_value = UnityEngine.Random.Range(0, 2);
 
+        Vector3 targetScale = new Vector3(2.0f, 2.0f, 2.0f);
+
         // 現在の行動を取得
         string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
         switch (currentAction)
@@ -160,24 +167,53 @@ public class Boss : MonoBehaviour, IAttackable
 
             case "Attack":
 
-                switch (Level)
+                AttackNearestAllyInRange();
+                yield return new WaitForSeconds(1.0f);
+                
+                if (Level >= 3)
                 {
-                    case 1:
-
-                        
-                        AttackNearestAllyInRange();
-                        yield return new WaitForSeconds(1.0f);
-                        
-
-                        break;
+                    AttackNearestAllyInRange();
+                    yield return new WaitForSeconds(1.0f);
+                } 
+                
+                if (Level >= 5) 
+                {
+                    AttackNearestAllyInRange();
+                    yield return new WaitForSeconds(1.0f);
                 }
 
-                //if (Level != 1)
-                //{
-                //    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope * -1, 0, 0), Quaternion.identity);
-                //    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                //    yield return new WaitForSeconds(1.0f);
-                //}
+                break;
+
+            case "S_Attack":
+
+                if (Level >= 7)
+                {
+                    AO.transform.localScale = targetScale;
+                }
+
+                if (Level >= 4)
+                {
+                    AO = Instantiate(Attack_Object, transform.position + new Vector3(7, 7, 0), Quaternion.identity);
+
+                    meteorite = AO.GetComponent<Meteorite>();
+
+                    meteorite.Initialize(meteoritePrefab_1.transform);
+
+
+                    if (Level >= 6)
+                    {
+                        AO = Instantiate(Attack_Object, transform.position + new Vector3(7, 7, 0), Quaternion.identity);
+
+                        meteorite = AO.GetComponent<Meteorite>();
+
+                        meteorite.Initialize(meteoritePrefab_2.transform);
+                    }
+
+                    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                    yield return new WaitForSeconds(1.0f);
+                }
+
+                
 
                 //単体攻撃保留
                 //
@@ -191,7 +227,7 @@ public class Boss : MonoBehaviour, IAttackable
 
                 //}
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                
+
 
                 break;
 
@@ -229,6 +265,38 @@ public class Boss : MonoBehaviour, IAttackable
         return nearestAlly;
     }
 
+    GameObject FindNearestAllyInAttackRange_second(GameObject first)
+    {
+        GameObject nearestAlly = first;
+        Unit unit = nearestAlly.GetComponent<Unit>();
+        Unit unit_f = first.GetComponent<Unit>();
+
+        float shortestDistance = Mathf.Infinity;
+
+        Villager = GameObject.FindGameObjectsWithTag("Villager");
+
+        foreach (GameObject ally in Villager)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= attack_scope && distance < shortestDistance)
+            {
+                unit = ally.GetComponent<Unit>();
+
+                if (unit.name_of_death != unit_f.name_of_death)
+                {
+                    shortestDistance = distance;
+                    nearestAlly = ally;
+                    unit = nearestAlly.GetComponent<Unit>();
+                }
+            }
+        }
+
+        return nearestAlly;
+    }
+
     public void ApplyDamage(int damage)
     {
         Hp -= damage;
@@ -238,8 +306,9 @@ public class Boss : MonoBehaviour, IAttackable
     void AttackNearestAllyInRange()
     {
         // ターゲットに攻撃する処理
-
         GameObject target = FindNearestAllyInAttackRange();
+
+        GameObject target_before = target;
 
         Unit unit = target.GetComponent<Unit>();
 
@@ -252,9 +321,11 @@ public class Boss : MonoBehaviour, IAttackable
 
                 Destroy(target);
 
-                target = FindNearestAllyInAttackRange();
+                target = FindNearestAllyInAttackRange_second(target_before);
 
                 unit = target.GetComponent<Unit>();
+
+                target_before = target;
             }
 
             unit.hp = unit.hp - strengh;
@@ -270,7 +341,7 @@ public class Boss : MonoBehaviour, IAttackable
             Level++;
             experience_reference = experience_reference * 1.2f;
 
-            if (Level == 2)
+            if (Level >= 2)
             {
                 strengh = 2;
             }

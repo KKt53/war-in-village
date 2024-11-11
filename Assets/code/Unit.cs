@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static System.Collections.Specialized.BitVector32;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.GraphicsBuffer;
@@ -62,7 +63,7 @@ public class Unit : MonoBehaviour
 
     GameObject[] Enemy;
 
-    private UILoggerWithLimit uiLogger;
+    private UILoggerWithLimit uiLogger;//死亡ログ
 
     [System.Serializable]
     public class NameList
@@ -128,6 +129,8 @@ public class Unit : MonoBehaviour
     }
     private void OnDestroy()
     {
+        Debug.unityLogger.logEnabled = true;
+        uiLogger.AddLog(type + name_of_death + "が死亡");
         Destroy(AO);
     }
 
@@ -264,7 +267,7 @@ public class Unit : MonoBehaviour
 
         if (this.hp <= 0)
         {
-            uiLogger.AddLog(type + name_of_death + "が死亡");
+            //uiLogger.AddLog(type + name_of_death + "が死亡");
             Destroy(this.gameObject);
         }
     }

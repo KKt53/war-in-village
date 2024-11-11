@@ -23,6 +23,9 @@ public class Spawn : MonoBehaviour
 
     public GameObject enemyPrefab;
 
+    public GameObject meteoritePrefab_1;
+    public GameObject meteoritePrefab_2;
+
     GameObject boss;//ボス用変数
 
     public GameObject Panel;
@@ -52,6 +55,7 @@ public class Spawn : MonoBehaviour
 
     private GameObject characterInstance;
     private Unit movementScript;
+    private Meteorite meteorite;
 
     private float hp;//ヒットポイント
     private int strengh;//攻撃力
@@ -165,7 +169,17 @@ public class Spawn : MonoBehaviour
             //spawn_2();
 
             //隕石コード消すな
-            //characterInstance = Instantiate(characterPrefab_prot, new Vector3(2, 7, 0), Quaternion.identity);
+            characterInstance = Instantiate(characterPrefab_prot, new Vector3(7, 7, 0), Quaternion.identity);
+
+            meteorite = characterInstance.GetComponent<Meteorite>();
+
+            meteorite.Initialize(meteoritePrefab_1.transform);
+
+            characterInstance = Instantiate(characterPrefab_prot, new Vector3(7, 7, 0), Quaternion.identity);
+
+            meteorite = characterInstance.GetComponent<Meteorite>();
+
+            meteorite.Initialize(meteoritePrefab_2.transform);
         }
     }
 

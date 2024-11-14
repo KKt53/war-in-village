@@ -811,7 +811,7 @@ GameObject:
   - component: {fileID: 166576063}
   - component: {fileID: 166576062}
   m_Layer: 0
-  m_Name: "\u9695\u77F3\uFF11"
+  m_Name: "\u9695\u77F31"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2773,7 +2773,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1076775195}
   - component: {fileID: 1076775194}
-  - component: {fileID: 1076775196}
   m_Layer: 0
   m_Name: Spawn
   m_TagString: Untagged
@@ -2796,10 +2795,17 @@ MonoBehaviour:
   characterPrefab_first: {fileID: 6870088046224800040, guid: 8157d34c31f481440b66787134b830fa, type: 3}
   characterPrefab_second: {fileID: 1134676488677342882, guid: 18e3a35cba2c32b448a80cafd65ef029, type: 3}
   characterPrefab_third: {fileID: 1856066138539442105, guid: d7c42772b30692b43b75e672856143d8, type: 3}
-  characterPrefab_prot: {fileID: 3002491048335381676, guid: e18b366f73dc8f746ad43ddca692dee6, type: 3}
+  characterPrefab_rabbit: {fileID: 7955650834445444276, guid: ce9ab34dc40f5604789c4b3abdc00d01, type: 3}
+  characterPrefab_cat: {fileID: 7893482599372126688, guid: a821cf4a21ed8f04ca84b132c09697bc, type: 3}
+  characterPrefab_chicken: {fileID: 3449990404134001925, guid: d2e83d57bb9c2534cae5bff8106ce723, type: 3}
+  characterPrefab_gangi: {fileID: 1234443258448578597, guid: e01d109094890bf4aac3be2cbde8fd95, type: 3}
+  characterPrefab_goat: {fileID: 6426483683910606639, guid: de57300fed028624985ae480225377d1, type: 3}
+  characterPrefab_napi: {fileID: 6778097238284616858, guid: 24e88e01003135c4aa4426141ca53386, type: 3}
+  characterPrefab_pig: {fileID: 5703762687316438894, guid: 49f4163ba93657042a9fd19337123134, type: 3}
+  characterPrefab_squirrel: {fileID: 2640924050134867916, guid: eeb3dc6850ffe094fb1c240e35b6baba, type: 3}
   enemyPrefab: {fileID: 6758964340233496448, guid: c1e395b1edd8cf84e95ab2cd6e167c26, type: 3}
-  meteoritePrefab_1: {fileID: 166576061}
-  meteoritePrefab_2: {fileID: 1380855023}
+  meteorite_place_1: {fileID: 166576061}
+  meteorite_place_2: {fileID: 1380855023}
   Panel: {fileID: 755971378}
   menu_Button: {fileID: 1857524787}
   cancel_Button: {fileID: 1489500391}
@@ -2821,18 +2827,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1076775196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076775193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32b9a08399a0854f8b3c9ad7e195c25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1097638971
 GameObject:
   m_ObjectHideFlags: 0
@@ -3660,9 +3654,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPattern: {fileID: 11400000, guid: 4d53b8dc77a311c44ac4e51ab44abb3e, type: 2}
-  meteoritePrefab_1: {fileID: 166576061}
-  meteoritePrefab_2: {fileID: 1380855023}
-  Attack_Object: {fileID: 3002491048335381676, guid: e18b366f73dc8f746ad43ddca692dee6, type: 3}
+  meteorite_place_1: {fileID: 166576061}
+  meteorite_place_2: {fileID: 1380855023}
+  Meteor: {fileID: 3002491048335381676, guid: e18b366f73dc8f746ad43ddca692dee6, type: 3}
+  Bullet: {fileID: 6107634730684581302, guid: bb62e53fa6534e540941229209e3051f, type: 3}
+  Beam: {fileID: 8367158299481033596, guid: 058a8a04632e67c4a9d054b3858f3f98, type: 3}
   Hitcount: {fileID: 54254078}
   boss_life_bar: {fileID: 867786777}
 --- !u!61 &1510452354

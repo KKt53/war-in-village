@@ -19,12 +19,19 @@ public class Spawn : MonoBehaviour
     public GameObject characterPrefab_second;
     public GameObject characterPrefab_third;
 
-    public GameObject characterPrefab_prot;
+    public GameObject characterPrefab_rabbit;
+    public GameObject characterPrefab_cat;
+    public GameObject characterPrefab_chicken;
+    public GameObject characterPrefab_gangi;
+    public GameObject characterPrefab_goat;
+    public GameObject characterPrefab_napi;
+    public GameObject characterPrefab_pig;
+    public GameObject characterPrefab_squirrel;
 
     public GameObject enemyPrefab;
 
-    public GameObject meteoritePrefab_1;
-    public GameObject meteoritePrefab_2;
+    public GameObject meteorite_place_1;
+    public GameObject meteorite_place_2;
 
     GameObject boss;//ボス用変数
 
@@ -69,6 +76,8 @@ public class Spawn : MonoBehaviour
     private List<string> characterNames_Unit2;
     private List<string> characterNames_Unit3;
 
+    private List<string> features_point;//ダメージ増減倍率
+
     // Start is called before the first frame update
     void Start()
     {
@@ -88,6 +97,7 @@ public class Spawn : MonoBehaviour
         characterNames_Unit1 = LoadNamesFromJson("Unit1_name");
         characterNames_Unit2 = LoadNamesFromJson("Unit2_name");
         characterNames_Unit3 = LoadNamesFromJson("Unit3_name");
+
     }
 
     void OnButtonClick_speed()
@@ -109,15 +119,15 @@ public class Spawn : MonoBehaviour
     {
         Operation();
 
-        if (!isSpawning_villager)
-        {
-            StartCoroutine(Unit_spawn());
-        }
+        //if (!isSpawning_villager)
+        //{
+        //    StartCoroutine(Unit_spawn());
+        //}
 
-        if (!isSpawning_enemy)
-        {
-            StartCoroutine(Enemy_spawn());
-        }
+        //if (!isSpawning_enemy)
+        //{
+        //    StartCoroutine(Enemy_spawn());
+        //}
     }
 
     private void Operation()
@@ -167,19 +177,7 @@ public class Spawn : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //spawn_2();
-
-            //隕石コード消すな
-            characterInstance = Instantiate(characterPrefab_prot, new Vector3(7, 7, 0), Quaternion.identity);
-
-            meteorite = characterInstance.GetComponent<Meteorite>();
-
-            meteorite.Initialize(meteoritePrefab_1.transform);
-
-            characterInstance = Instantiate(characterPrefab_prot, new Vector3(7, 7, 0), Quaternion.identity);
-
-            meteorite = characterInstance.GetComponent<Meteorite>();
-
-            meteorite.Initialize(meteoritePrefab_2.transform);
+            rabbit();
         }
     }
 
@@ -280,6 +278,75 @@ public class Spawn : MonoBehaviour
         }
 
         isSpawning_enemy = false;
+    }
+
+    private void rabbit()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Unit1);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_rabbit, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 5;
+        strengh = 3;
+        speed = 5;
+        attack_frequency = 45;
+        contact_range = 2;
+        attack_scope = 4;
+        reaction_rate = 0;
+
+        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+    }
+
+    private void cat()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Unit1);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_cat, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 4;
+        strengh = 3;
+        speed = 0.4f;
+        attack_frequency = 30;
+        contact_range = 1;
+        attack_scope = 4;
+        reaction_rate = 0;
+
+        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+    }
+
+    private void chicken()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Unit1);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_chicken, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 1;
+        strengh = 1;
+        speed = 1;
+        attack_frequency = 15;
+        contact_range = 1;
+        attack_scope = 2;
+        reaction_rate = 0;
+
+        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
     }
 
     private void spawn_1()

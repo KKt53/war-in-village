@@ -43,6 +43,10 @@ public class Spawn : MonoBehaviour
     public Button cancel_Button;
     public Button speed_Button;
 
+    public GameObject s_button;
+    public Sprite speed_off;
+    public Sprite speed_on;
+
     private int speed_switch = 1;
 
     const int line_max = 2;
@@ -70,11 +74,20 @@ public class Spawn : MonoBehaviour
     private float attack_frequency;//攻撃頻度
     private float contact_range;//接触範囲
     private float attack_scope;//攻撃範囲
-    private float reaction_rate;//反応速度
+    private int reaction_rate_min;//反応速度
+    private int reaction_rate_max;//反応速度
 
     private List<string> characterNames_Unit1;
     private List<string> characterNames_Unit2;
     private List<string> characterNames_Unit3;
+
+    private List<string> characterNames_Cat;
+    private List<string> characterNames_Chicken;
+    private List<string> characterNames_Gangi;
+    private List<string> characterNames_Goat;
+    private List<string> characterNames_Napi;
+    private List<string> characterNames_Pig;
+    private List<string> characterNames_Squirrel;
 
     private List<string> features_point;//ダメージ増減倍率
 
@@ -98,6 +111,13 @@ public class Spawn : MonoBehaviour
         characterNames_Unit2 = LoadNamesFromJson("Unit2_name");
         characterNames_Unit3 = LoadNamesFromJson("Unit3_name");
 
+        characterNames_Cat = LoadNamesFromJson("Cat_name");
+        characterNames_Chicken = LoadNamesFromJson("Chicken_name");
+        characterNames_Gangi = LoadNamesFromJson("Gangi_name");
+        characterNames_Goat = LoadNamesFromJson("Goat_name");
+        characterNames_Napi = LoadNamesFromJson("Napi_name");
+        characterNames_Pig = LoadNamesFromJson("Pig_name");
+        characterNames_Squirrel = LoadNamesFromJson("Squirrel_name");
     }
 
     void OnButtonClick_speed()
@@ -119,19 +139,21 @@ public class Spawn : MonoBehaviour
     {
         Operation();
 
-        //if (!isSpawning_villager)
-        //{
-        //    StartCoroutine(Unit_spawn());
-        //}
+        if (!isSpawning_villager)
+        {
+            StartCoroutine(Unit_spawn());
+        }
 
-        //if (!isSpawning_enemy)
-        //{
-        //    StartCoroutine(Enemy_spawn());
-        //}
+        if (!isSpawning_enemy)
+        {
+            StartCoroutine(Enemy_spawn());
+        }
     }
 
     private void Operation()
     {
+
+        Image i_s_button = s_button.GetComponent<Image>();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -149,16 +171,18 @@ public class Spawn : MonoBehaviour
         if (speed_switch == 1)
         {
             Time.timeScale = 1.0f;
+            i_s_button.sprite = speed_off;
         }
+        //else if (speed_switch == 2)
+        //{
+        //    Time.timeScale = 1.5f;
+        //}
         else if (speed_switch == 2)
         {
-            Time.timeScale = 1.5f;
-        }
-        else if (speed_switch == 3)
-        {
             Time.timeScale = 2.0f;
+            i_s_button.sprite = speed_on;
         }
-        else if (speed_switch >= 4)
+        else if (speed_switch >= 3)
         {
             speed_switch = 1;
         }
@@ -176,8 +200,13 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //spawn_2();
             rabbit();
+            //cat();
+            //chicken();
+            //napi();
+            //gangi();
+            //squirrel();
+            //goat();
         }
     }
 
@@ -203,27 +232,67 @@ public class Spawn : MonoBehaviour
         switch (spawnunit)
         {
             //少女
-            case "Unit_1":
+            case "うさぎ":
 
-                spawn_1();
+                rabbit();
 
                 yield return new WaitForSeconds(Interval);
 
                 break;
 
             //少女（小）
-            case "Unit_2":
+            case "ねこ":
 
-                spawn_2();
+                cat();
 
                 yield return new WaitForSeconds(Interval);
 
                 break;
 
             //バニーガール
-            case "Unit_3":
+            case "にわとり":
 
-                spawn_3();
+                chicken();
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "なぴ":
+
+                napi();
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "ガンギ":
+
+                gangi();
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "リス":
+
+                squirrel();
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "やぎ":
+
+                goat();
+
+                yield return new WaitForSeconds(Interval);
+
+                break;
+
+            case "ぶた":
+
+                pig();
 
                 yield return new WaitForSeconds(Interval);
 
@@ -232,20 +301,50 @@ public class Spawn : MonoBehaviour
 
         switch (spawnunit_after)
         {
-            case "Unit_1":
+            case "うさぎ":
 
-                yield return new WaitForSeconds(1.8f);
-
-                break;
-            case "Unit_2":
-
-                yield return new WaitForSeconds(1.8f);
+                yield return new WaitForSeconds(1.0f);
 
                 break;
+            case "ねこ":
 
-            case "Unit_3":
+                yield return new WaitForSeconds(1.2f);
+
+                break;
+
+            case "にわとり":
 
                 yield return new WaitForSeconds(0.6f);
+
+                break;
+
+            case "なぴ":
+
+                yield return new WaitForSeconds(1.0f);
+
+                break;
+
+            case "ガンギ":
+
+                yield return new WaitForSeconds(2.0f);
+
+                break;
+
+            case "リス":
+
+                yield return new WaitForSeconds(1.3f);
+
+                break;
+
+            case "やぎ":
+
+                yield return new WaitForSeconds(1.0f);
+
+                break;
+
+            case "ぶた":
+
+                yield return new WaitForSeconds(3.6f);
 
                 break;
         }
@@ -294,18 +393,19 @@ public class Spawn : MonoBehaviour
 
         hp = 5;
         strengh = 3;
-        speed = 5;
-        attack_frequency = 45;
+        speed = 3;
+        attack_frequency = 45 / 60;
         contact_range = 2;
         attack_scope = 4;
-        reaction_rate = 0;
+        reaction_rate_max = 250 / 60;
+        reaction_rate_min = 150 / 60;
 
-        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
     }
 
     private void cat()
     {
-        string randomName = GetUniqueRandomName(characterNames_Unit1);
+        string randomName = GetUniqueRandomName(characterNames_Cat);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
@@ -317,18 +417,19 @@ public class Spawn : MonoBehaviour
 
         hp = 4;
         strengh = 3;
-        speed = 0.4f;
-        attack_frequency = 30;
+        speed = 2;
+        attack_frequency = 120 / 60;
         contact_range = 1;
         attack_scope = 4;
-        reaction_rate = 0;
+        reaction_rate_max = 300 / 60;
+        reaction_rate_min = 200 / 60;
 
-        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
     }
 
     private void chicken()
     {
-        string randomName = GetUniqueRandomName(characterNames_Unit1);
+        string randomName = GetUniqueRandomName(characterNames_Chicken);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
@@ -340,83 +441,207 @@ public class Spawn : MonoBehaviour
 
         hp = 1;
         strengh = 1;
-        speed = 1;
-        attack_frequency = 15;
+        speed = 6;
+        attack_frequency = 15 / 60;
         contact_range = 1;
         attack_scope = 2;
-        reaction_rate = 0;
+        reaction_rate_max = 200 / 60;
+        reaction_rate_min = 100 / 60;
 
-        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
     }
 
-    private void spawn_1()
+    private void napi()
     {
-        string randomName = GetUniqueRandomName(characterNames_Unit1);
+        string randomName = GetUniqueRandomName(characterNames_Napi);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
 
-        characterInstance = Instantiate(characterPrefab_first, new Vector3(-7, line, 0), Quaternion.identity);
+        characterInstance = Instantiate(characterPrefab_napi, new Vector3(-7, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Unit>();
 
-        hp = 5;
-        strengh = 1;
-        speed = 1;
-        attack_frequency = 1;
-        contact_range = 1;
-        attack_scope = 1;
-        reaction_rate = 0;
-
-        movementScript.Initialize("Unit1", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
-    }
-
-    private void spawn_2()
-    {
-        string randomName = GetUniqueRandomName(characterNames_Unit2);
-
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_second, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 1;
+        hp = 7;
         strengh = 5;
-        speed = 3;
-        attack_frequency = 3;
+        speed = 4;
+        attack_frequency = 50 / 60;
         contact_range = 3;
-        attack_scope = 7;
-        reaction_rate = 0.3f;
+        attack_scope = 6;
+        reaction_rate_max = 200 / 60;
+        reaction_rate_min = 150 / 60;
 
-        movementScript.Initialize("Unit2", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("なぴ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
     }
 
-    private void spawn_3()
+    private void gangi()
     {
-        string randomName = GetUniqueRandomName(characterNames_Unit3);
+        string randomName = GetUniqueRandomName(characterNames_Gangi);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
 
-        characterInstance = Instantiate(characterPrefab_third, new Vector3(-7, line, 0), Quaternion.identity);
+        characterInstance = Instantiate(characterPrefab_gangi, new Vector3(-7, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Unit>();
 
-        hp = 3;
+        hp = 2;
         strengh = 3;
-        speed = 5;
-        attack_frequency = 5;
-        contact_range = 2;
-        attack_scope = 5;
-        reaction_rate = 0.2f;
+        speed = 2;
+        attack_frequency = 45 / 60;
+        contact_range = 7;
+        attack_scope = 10;
+        reaction_rate_max = 500 / 60;
+        reaction_rate_min = 300 / 60;
 
-        movementScript.Initialize("Unit3", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate);
+        movementScript.Initialize("ガンギ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
     }
+
+    private void squirrel()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Squirrel);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_squirrel, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 4;
+        strengh = 4;
+        speed = 5;
+        attack_frequency = 30 / 60;
+        contact_range = 2;
+        attack_scope = 3;
+        reaction_rate_max = 550 / 60;
+        reaction_rate_min = 400 / 60;
+
+        movementScript.Initialize("リス", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    }
+
+    private void goat()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Goat);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_goat, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 8;
+        strengh = 2;
+        speed = 2;
+        attack_frequency = 75 / 60;
+        contact_range = 2;
+        attack_scope = 4;
+        reaction_rate_max = 300 / 60;
+        reaction_rate_min = 200 / 60;
+
+        movementScript.Initialize("やぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    }
+
+    private void pig()
+    {
+        string randomName = GetUniqueRandomName(characterNames_Pig);
+
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        characterInstance = Instantiate(characterPrefab_pig, new Vector3(-7, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Unit>();
+
+        hp = 10;
+        strengh = 20;
+        speed = 0.5f;
+        attack_frequency = 60 / 60;
+        contact_range = 2;
+        attack_scope = 3;
+        reaction_rate_max = 700 / 60;
+        reaction_rate_min = 600 / 60;
+
+        movementScript.Initialize("ぶた", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    }
+
+    //private void spawn_1()
+    //{
+    //    string randomName = GetUniqueRandomName(characterNames_Unit1);
+
+    //    random_value = UnityEngine.Random.Range(0, line_max);
+
+    //    float line = random_value * 0.3f;
+
+    //    characterInstance = Instantiate(characterPrefab_first, new Vector3(-7, line, 0), Quaternion.identity);
+
+    //    movementScript = characterInstance.GetComponent<Unit>();
+
+    //    hp = 5;
+    //    strengh = 1;
+    //    speed = 1;
+    //    attack_frequency = 1;
+    //    contact_range = 1;
+    //    attack_scope = 1;
+    //    reaction_rate_max = 250 / 60;
+    //    reaction_rate_min = 150 / 60;
+
+    //    movementScript.Initialize("Unit1", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    //}
+
+    //private void spawn_2()
+    //{
+    //    string randomName = GetUniqueRandomName(characterNames_Unit2);
+
+    //    random_value = UnityEngine.Random.Range(0, line_max);
+
+    //    float line = random_value * 0.3f;
+
+    //    characterInstance = Instantiate(characterPrefab_second, new Vector3(-7, line, 0), Quaternion.identity);
+
+    //    movementScript = characterInstance.GetComponent<Unit>();
+
+    //    hp = 1;
+    //    strengh = 5;
+    //    speed = 3;
+    //    attack_frequency = 3;
+    //    contact_range = 3;
+    //    attack_scope = 7;
+    //    reaction_rate_max = 250 / 60;
+    //    reaction_rate_min = 150 / 60;
+
+    //    movementScript.Initialize("Unit2", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    //}
+
+    //private void spawn_3()
+    //{
+    //    string randomName = GetUniqueRandomName(characterNames_Unit3);
+
+    //    random_value = UnityEngine.Random.Range(0, line_max);
+
+    //    float line = random_value * 0.3f;
+
+    //    characterInstance = Instantiate(characterPrefab_third, new Vector3(-7, line, 0), Quaternion.identity);
+
+    //    movementScript = characterInstance.GetComponent<Unit>();
+
+    //    hp = 3;
+    //    strengh = 3;
+    //    speed = 5;
+    //    attack_frequency = 5;
+    //    contact_range = 2;
+    //    attack_scope = 5;
+    //    reaction_rate_max = 250 / 60;
+    //    reaction_rate_min = 150 / 60;
+
+    //    movementScript.Initialize("Unit3", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+    //}
 
     private void enemy()
     {

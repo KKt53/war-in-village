@@ -17,7 +17,7 @@ public class Boss : MonoBehaviour, IAttackable
     private float attack_scope;//攻撃範囲
     //private List<string> features_point;//ダメージ増減倍率
     private int Level_max;
-    private int Level;//レベル
+    public int Level;//レベル
     private float experience;//経験値
     private float experience_reference;//経験値
 
@@ -52,6 +52,14 @@ public class Boss : MonoBehaviour, IAttackable
 
     public Image boss_life_bar;   // タイムゲージのImage
 
+    private Animator animator;
+
+    public GameObject Level_Up;
+
+    GameObject attack_effect_i;//インスタンス用
+
+    public GameObject attack_effect;//攻撃エフェクト
+
     public int Hp
     {
         get { return this.hp; }
@@ -73,13 +81,13 @@ public class Boss : MonoBehaviour, IAttackable
     void Start()
     {
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        hp = 900;
+        hp = 65536;
         hp_max = hp;
-        strengh = 1;
+        strengh = 5;
         attack_frequency = 2;
         attack_scope = 5;
-        Level = 10;
-        Level_max = 3;
+        Level = 4;
+        Level_max = 10;
         experience = 0;
         experience_reference = 3;
 
@@ -89,16 +97,9 @@ public class Boss : MonoBehaviour, IAttackable
         previous_hp = hp;
 
         //features_point = new List<string> { "大型BOSSに強い", "中型" };
-    }
 
-    //public void Initialize(int c_hp, int c_strengh, float c_attack_frequency, float c_attack_scope)
-    //{
-    //    hp = c_hp;
-        
-    //    strengh = c_strengh;
-    //    attack_frequency = c_attack_frequency;
-    //    attack_scope = c_attack_scope;
-    //}
+        animator = GetComponent<Animator>();
+    }
 
 
     void Update()
@@ -133,7 +134,7 @@ public class Boss : MonoBehaviour, IAttackable
                 // まだこの攻撃オブジェクトにヒットしていない場合のみ処理を実行
                 if (!hitAttacks.Contains(attackObject))
                 {
-                    Attack_Object attack_object = attackObject.GetComponent<Attack_Object>();
+                    Attack_Object attack_object = attack_effect.GetComponent<Attack_Object>();
 
                     int damage = attack_object.attack_point;
 
@@ -179,6 +180,9 @@ public class Boss : MonoBehaviour, IAttackable
 
                 if (Level >= 8)
                 {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                    
                     AO = Instantiate(Bullet, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
 
                     AO.transform.localScale = targetScale;
@@ -186,18 +190,35 @@ public class Boss : MonoBehaviour, IAttackable
                     bullet = AO.GetComponent<Bullet>();
 
                     bullet.Initialize(strengh, features_point);
+
+                    animator.SetTrigger("Idle");
                 }
 
-                AttackNearestAllyInRange();
+                animator.SetTrigger("Attack");
+                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
                 
+                AttackNearestAllyInRange();
+
+                animator.SetTrigger("Idle");
+
                 if (Level >= 3)
                 {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                    
                     AttackNearestAllyInRange();
+
+                    animator.SetTrigger("Idle");
                 } 
                 
                 if (Level >= 5) 
                 {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                    
                     AttackNearestAllyInRange();
+
+                    animator.SetTrigger("Idle");
                 }
 
                 if (Level >= 9)
@@ -217,17 +238,25 @@ public class Boss : MonoBehaviour, IAttackable
 
                 if (Level >= 10)
                 {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
                     AO_i = Instantiate(Beam, transform.position + new Vector3(-7, 0, 0), Quaternion.identity);
 
                     beam = AO_i.GetComponent<Attack_Object>();
 
                     beam.Initialize(strengh, features_point);
+
+                    animator.SetTrigger("Idle");
                 }
 
                 
 
                 if (Level >= 4)
                 {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
                     AO = Instantiate(Meteor, transform.position + new Vector3(0, 7, 0), Quaternion.identity);
 
                     if (Level >= 7)
@@ -239,16 +268,24 @@ public class Boss : MonoBehaviour, IAttackable
 
                     meteorite.Initialize(strengh, features_point, meteorite_place_2.transform);
 
-
+                    animator.SetTrigger("Idle");
                     if (Level >= 6)
                     {
+                        animator.SetTrigger("Attack");
+                        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
                         AO = Instantiate(Meteor, transform.position + new Vector3(7, 7, 0), Quaternion.identity);
 
-                        AO.transform.localScale = targetScale;
+                        if (Level >= 7)
+                        {
+                            AO.transform.localScale = targetScale;
+                        }
 
                         meteorite = AO.GetComponent<Meteorite>();
 
                         meteorite.Initialize(strengh, features_point, meteorite_place_1.transform);
+
+                        animator.SetTrigger("Idle");
                     }
 
                     // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
@@ -335,33 +372,56 @@ public class Boss : MonoBehaviour, IAttackable
         // ターゲットに攻撃する処理
         GameObject target = FindNearestAllyInAttackRange();
 
-        GameObject target_before = target;
-
-        Unit unit = target.GetComponent<Unit>();
-
-        for (int i = 0; i < 3; i++)
+        if (target)
         {
+            GameObject target_before = target;
 
-            if (unit.hp <= 0)
+            Unit unit = target.GetComponent<Unit>();
+
+            if (unit)
             {
-                experience++;
+                for (int i = 0; i < 3; i++)
+                {
 
-                target = FindNearestAllyInAttackRange_second(target_before);
+                    if (unit.hp <= 0)
+                    {
+                        Debug.Log(unit.name_of_death);
 
-                unit = target.GetComponent<Unit>();
+                        experience++;
 
-                target_before = target;
+                        target = FindNearestAllyInAttackRange_second(target_before);
+
+                        unit = target.GetComponent<Unit>();
+
+                        if (unit)
+                        {
+                            target_before = target;
+                        }
+                    }
+
+                    unit.hp = unit.hp - strengh;
+
+                    float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    attack_effect_i = Instantiate(attack_effect, target.transform.position + new Vector3(r_w, r_h, 0), Quaternion.identity);
+
+                    StartCoroutine(DeleteAfterAnimation(attack_effect_i));
+                }
+
+                unit.knockback_flag = true;
             }
-
-            unit.hp = unit.hp - strengh;
         }
 
-        unit.knockback_flag = true;
-            
+        
+
         if(experience >= experience_reference && Level < Level_max)
         {
             Level++;
             experience_reference = experience_reference * 1.2f;
+
+            Level_Up.SetActive(true);
 
             if (Level >= 2)
             {
@@ -374,5 +434,17 @@ public class Boss : MonoBehaviour, IAttackable
         }
     }
 
-    
+    private IEnumerator DeleteAfterAnimation(GameObject instance)
+    {
+        Animator animator = instance.GetComponent<Animator>();
+
+        // アニメーションの長さを取得
+        float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
+
+        // アニメーションが終了するまで待つ
+        yield return new WaitForSeconds(animationLength);
+
+        // オブジェクトを削除
+        Destroy(instance);
+    }
 }

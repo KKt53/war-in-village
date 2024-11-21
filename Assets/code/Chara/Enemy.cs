@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour, IAttackable
     // Start is called before the first frame update
     void Start()
     {
+        strengh = 1;
         knockback_flag = false;
         attack_flag = false;
         isPerformingAction = true;

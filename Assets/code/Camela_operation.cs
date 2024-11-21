@@ -31,7 +31,7 @@ public class Camela_operation : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.K)) //上キーが押されていれば
         {
-            if (cam.orthographicSize <= 7)
+            if (cam.orthographicSize <= 14)
             {
                 cam.orthographicSize = cam.orthographicSize + 0.001f; //ズームアウト。
             }

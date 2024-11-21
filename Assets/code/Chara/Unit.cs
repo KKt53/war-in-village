@@ -21,7 +21,8 @@ public class Unit : MonoBehaviour
     private float attack_frequency;//攻撃頻度
     private float contact_range;//接触範囲
     private float attack_scope;//攻撃範囲
-    private float reaction_rate;//反応速度
+    private int reaction_rate_min;//反応速度
+    private int reaction_rate_max;//反応速度
 
     private List<string> features_point;//ダメージ増減倍率
     private List<string> status;//かかりやすい状態
@@ -35,9 +36,9 @@ public class Unit : MonoBehaviour
     private float doublePressTime = 2.0f;      // 連打とみなす時間間隔（秒）
     private float lastPressTime_l = 0f; // 前回キーが押された時間(左)
     private float lastPressTime_r = 0f; // 前回キーが押された時間(右)
-    private bool movement_disabled_flag = false;
-    private bool movement_r_flag = true;
-    private bool movement_l_flag = false;
+    private bool movement_disabled_flag = false;//動けないフラグ
+    private bool movement_r_flag = true;//右反転フラグ
+    private bool movement_l_flag = false;//左反転フラグ
 
     public UnitAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
@@ -46,9 +47,8 @@ public class Unit : MonoBehaviour
     private SpriteRenderer spriteRenderer;//画像格納用変数
     GameObject boss;//ボス用変数
     GameObject AO;//攻撃用オブジェクトインスタンス用変数
-    public GameObject Attack_Object;//攻撃用オブジェクト格納用変数
+    public GameObject attack_Object;//攻撃用オブジェクト格納用変数
     SpriteRenderer sr;//画像格納用インスタンス
-    Attack_Object AO_I;//攻撃オブジェクト格納用インスタンス
 
     public float jumpHeight = 0.8f;       // ジャンプの高さ
     public float jumpDuration = 0.5f;     // ジャンプにかかる時間
@@ -58,14 +58,26 @@ public class Unit : MonoBehaviour
 
     private bool moving_standby = false; //移動待機フラグ
 
-    GameObject left_edge;
-    GameObject right_edge;
+    GameObject left_edge;//左端
+    GameObject right_edge;//右端
 
-    GameObject[] Enemy;
+    GameObject[] Enemy;//敵認識
 
     private UILoggerWithLimit uiLogger;//死亡ログ
 
-    private Animator animator;
+    private Animator animator;//アニメーション
+
+    AudioSource effect_sound;//効果音
+    public AudioClip soundEffect;//効果音
+
+    public GameObject attack_effect;//攻撃エフェクト
+
+    public GameObject attack_effect_b;
+
+    GameObject attack_effect_i;
+
+    GameObject attack_effect_b_i;
+
 
     [System.Serializable]
     public class NameList
@@ -73,7 +85,7 @@ public class Unit : MonoBehaviour
         public List<string> names;
     }
 
-    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate)
+    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, int c_reaction_rate_max, int c_reaction_rate_min)
     {
         type = c_type;
         name_of_death = c_name;
@@ -83,7 +95,8 @@ public class Unit : MonoBehaviour
         attack_frequency = c_attack_frequency;
         contact_range = UnityEngine.Random.Range(c_contact_range, c_attack_scope);
         attack_scope = c_attack_scope;
-        reaction_rate = c_reaction_rate;
+        reaction_rate_max = c_reaction_rate_max;
+        reaction_rate_min = c_reaction_rate_min;
     }
 
     void Start()
@@ -105,6 +118,8 @@ public class Unit : MonoBehaviour
         uiLogger = FindObjectOfType<UILoggerWithLimit>();
 
         animator = GetComponent<Animator>();
+
+        effect_sound = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -136,6 +151,10 @@ public class Unit : MonoBehaviour
         Debug.unityLogger.logEnabled = true;
         
         Destroy(AO);
+
+        Destroy(attack_effect_i);
+        Destroy(attack_effect_b_i);
+        
     }
 
     private void Moving()
@@ -151,11 +170,12 @@ public class Unit : MonoBehaviour
 
                 float total = currentTime - lastPressTime_l;
 
+                int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
 
                 // 前回の押下からの経過時間が設定した連打時間内であれば
                 if (total >= doublePressTime || direction == 1)
                 {
-                    StartCoroutine(ChangeDirectionWithDelay_left());
+                    StartCoroutine(ChangeDirectionWithDelay_left(random_value_reaction));
                 }
 
                 lastPressTime_l = currentTime;
@@ -168,11 +188,12 @@ public class Unit : MonoBehaviour
 
                 float total = currentTime - lastPressTime_r;
 
+                int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
 
                 // 前回の押下からの経過時間が設定した連打時間内であれば
                 if (total >= doublePressTime || direction == -1)
                 {
-                    StartCoroutine(ChangeDirectionWithDelay_right());
+                    StartCoroutine(ChangeDirectionWithDelay_right(random_value_reaction));
                 }
 
 
@@ -247,8 +268,10 @@ public class Unit : MonoBehaviour
     {
         if (this.hp <= 0)
         {
-            uiLogger.AddLog(type + name_of_death + "が死亡");
+            uiLogger.AddLog(type + "の" + name_of_death + "が死亡");
             Destroy(this.gameObject);
+            Destroy(attack_effect_i);
+            Destroy(attack_effect_b_i);
         }
 
         // 敵の周囲に攻撃オブジェクトが存在するかチェック
@@ -256,25 +279,36 @@ public class Unit : MonoBehaviour
         foreach (Collider2D attackCollider in hitColliders)
         {
             // 攻撃オブジェクトかどうか確認
-            if (attackCollider.CompareTag("B_S_Attack"))
+            if (attackCollider.CompareTag("B_S_Attack")　|| attackCollider.CompareTag("B_Attack"))
             {
                 GameObject attackObject = attackCollider.gameObject;
 
                 // まだこの攻撃オブジェクトにヒットしていない場合のみ処理を実行
                 if (!hitAttacks.Contains(attackObject))
                 {
-                    Attack_Object attack_object = attackObject.GetComponent<Attack_Object>();
+                    Attack_Object attack_object_e = attackObject.GetComponent<Attack_Object>();
 
-                    int damage = attack_object.attack_point;
+                    int damage = attack_object_e.attack_point;
 
                     this.hp = this.hp - damage;
-                    
+
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
 
                     //★
                     knockback_flag = true;
                     
+                }
+
+                if (attackCollider.CompareTag("B_S_Attack"))
+                {
+                    float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    attack_effect_b_i = Instantiate(attack_effect_b, transform.position + new Vector3(r_w, r_h, 0), Quaternion.identity);
+
+                    StartCoroutine(DeleteAfterAnimation(attack_effect_b_i));
                 }
             }
         }
@@ -289,6 +323,7 @@ public class Unit : MonoBehaviour
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
         int random_value = UnityEngine.Random.Range(0, 2);
+        int random_value_reaction;
 
         attack_flag = true; // 攻撃後にフラグをオンにする
         movement_disabled_flag = true;
@@ -307,6 +342,10 @@ public class Unit : MonoBehaviour
 
                 animator.SetTrigger("Attack");
 
+                effect_sound.PlayOneShot(soundEffect);
+                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+                
                 if (random_value == 0)
                 {
                     if (!target)
@@ -315,32 +354,52 @@ public class Unit : MonoBehaviour
                     }
 
                     AttackNearestAllyInRange(target);
+
+                    float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    attack_effect_i = Instantiate(attack_effect, transform.position + new Vector3(contact_range + r_w, r_h, 0), Quaternion.identity);
+
+                    StartCoroutine(DeleteAfterAnimation(attack_effect_i));
                 }
                 else if (random_value == 1)
                 {
-                    AO = Instantiate(Attack_Object, transform.position + new Vector3(attack_scope / 2, 0, 0), Quaternion.identity);
+                    Attack_Object AO_I;//攻撃オブジェクト変換格納用インスタンス
+
+                    float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+                    AO = Instantiate(attack_Object, transform.position + new Vector3(attack_scope / 2, 0, 0), Quaternion.identity);
 
                     AO_I = AO.GetComponent<Attack_Object>();
 
                     AO_I.Initialize(strengh, features_point);
+
+                    attack_effect_i = Instantiate(attack_effect, transform.position + new Vector3(contact_range + r_w, r_h, 0), Quaternion.identity);
+
+                    StartCoroutine(DeleteAfterAnimation(attack_effect_i));
                 }
+
+                animator.SetTrigger("Idle");
 
                 // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
                 //yield return new WaitForSeconds(1.0f);
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-                animator.SetTrigger("Idle");
 
                 movement_disabled_flag = false;
+
+                random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
 
                 if (moving_standby == true)
                 {
                     if (movement_r_flag == true && movement_l_flag == false)
                     {
-                        StartCoroutine(ChangeDirectionWithDelay_right());
+                        StartCoroutine(ChangeDirectionWithDelay_right(random_value_reaction));
                     }
                     else if (movement_l_flag == true && movement_r_flag == false)
                     {
-                        StartCoroutine(ChangeDirectionWithDelay_left());
+                        StartCoroutine(ChangeDirectionWithDelay_left(random_value_reaction));
                     }
                 }
 
@@ -358,13 +417,13 @@ public class Unit : MonoBehaviour
         movement_disabled_flag = false;
     }
 
-    IEnumerator ChangeDirectionWithDelay_left()
+    IEnumerator ChangeDirectionWithDelay_left(int reaction_rate)
     {
         yield return new WaitForSeconds(reaction_rate);
 
         jumpTime = 0f;
 
-        sr.flipX = false;
+        sr.flipX = true;
         direction = -1;//左
 
         // ジャンプ開始
@@ -378,13 +437,13 @@ public class Unit : MonoBehaviour
             isPerformingAction = true; // 移動を再開
         }
     }
-    IEnumerator ChangeDirectionWithDelay_right()
+    IEnumerator ChangeDirectionWithDelay_right(int reaction_rate)
     {
         yield return new WaitForSeconds(reaction_rate);
 
         jumpTime = 0f;
 
-        sr.flipX = true;
+        sr.flipX = false;
         direction = 1;//右
 
         // ジャンプ開始
@@ -480,5 +539,30 @@ public class Unit : MonoBehaviour
         
         }
 
+    }
+
+    private IEnumerator DeleteAfterAnimation(GameObject instance)
+    {
+        Animator animator_e = instance.GetComponent<Animator>();
+
+        // アニメーションの長さを取得
+        float animationLength = animator_e.GetCurrentAnimatorStateInfo(0).length;
+
+        while (true)
+        {
+            if (this == null)
+            {
+                Destroy(instance);
+            }
+            // アニメーションが終了するまで待つ
+            yield return new WaitForSeconds(animationLength);
+            // オブジェクトを削除
+            Destroy(instance);
+        }
+
+
+        
+
+        
     }
 }

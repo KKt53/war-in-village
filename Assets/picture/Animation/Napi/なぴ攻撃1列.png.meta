@@ -100,19 +100,19 @@ TextureImporter:
       name: "\u306A\u3074\u653B\u64831\u5217_0"
       rect:
         serializedVersion: 2
-        x: 242
-        y: 61
-        width: 298
-        height: 284
+        x: 212
+        y: 30
+        width: 367
+        height: 352
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd84eccd4bf37f348846299acf2d6469
-      internalID: -1138988975
+      spriteID: f17ecba8cd6330f48ba214b949a4549f
+      internalID: 1585806187
       vertices: []
       indices: 
       edges: []
@@ -121,19 +121,19 @@ TextureImporter:
       name: "\u306A\u3074\u653B\u64831\u5217_1"
       rect:
         serializedVersion: 2
-        x: 1080
-        y: 60
-        width: 306
-        height: 369
+        x: 901
+        y: 67
+        width: 401
+        height: 483
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8da67d377bd4fb343a36f3545f176159
-      internalID: 499339349
+      spriteID: 385fbc0ba6cba224697bf9290767e9ad
+      internalID: -991216381
       vertices: []
       indices: 
       edges: []
@@ -142,19 +142,19 @@ TextureImporter:
       name: "\u306A\u3074\u653B\u64831\u5217_2"
       rect:
         serializedVersion: 2
-        x: 1858
-        y: 120
-        width: 439
-        height: 248
+        x: 1820
+        y: 131
+        width: 640
+        height: 366
       alignment: 9
-      pivot: {x: 0.28946292, y: 0.5}
+      pivot: {x: 0.29781836, y: 0.5084176}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14ba9debd2e5a7146893c747570fc167
-      internalID: 898289115
+      spriteID: bd1c13b773fb8944b9d1e6844b79a2e3
+      internalID: 1306855619
       vertices: []
       indices: 
       edges: []
@@ -170,11 +170,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      "\u306A\u3074\u653B\u64831\u5217_0": -1138988975
-      "\u306A\u3074\u653B\u64831\u5217_1": 499339349
-      "\u306A\u3074\u653B\u64831\u5217_2": 898289115
-      "\u306A\u3074\u653B\u64831\u5217_3": 473523362
-      "\u306A\u3074\u653B\u64831\u5217_4": 955625943
+      "\u306A\u3074\u653B\u64831\u5217_0": 1585806187
+      "\u306A\u3074\u653B\u64831\u5217_1": -991216381
+      "\u306A\u3074\u653B\u64831\u5217_2": 1306855619
+      "\u306A\u3074\u653B\u64831\u5217_3": -31362062
+      "\u306A\u3074\u653B\u64831\u5217_4": 1654745079
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -77,10 +77,8 @@ public class Spawn : MonoBehaviour
     private int reaction_rate_min;//反応速度
     private int reaction_rate_max;//反応速度
 
-    private List<string> characterNames_Unit1;
-    private List<string> characterNames_Unit2;
-    private List<string> characterNames_Unit3;
 
+    private List<string> characterNames_Rabbit;
     private List<string> characterNames_Cat;
     private List<string> characterNames_Chicken;
     private List<string> characterNames_Gangi;
@@ -88,6 +86,15 @@ public class Spawn : MonoBehaviour
     private List<string> characterNames_Napi;
     private List<string> characterNames_Pig;
     private List<string> characterNames_Squirrel;
+
+    private List<string> characterComments_Rabbit;
+    private List<string> characterComments_Cat;
+    private List<string> characterComments_Chicken;
+    private List<string> characterComments_Gangi;
+    private List<string> characterComments_Goat;
+    private List<string> characterComments_Napi;
+    private List<string> characterComments_Pig;
+    private List<string> characterComments_Squirrel;
 
     private List<string> features_point;//ダメージ増減倍率
 
@@ -107,10 +114,9 @@ public class Spawn : MonoBehaviour
 
         spawnunit = unitTable.spawnquence[unitIndex];
 
-        characterNames_Unit1 = LoadNamesFromJson("Unit1_name");
-        characterNames_Unit2 = LoadNamesFromJson("Unit2_name");
-        characterNames_Unit3 = LoadNamesFromJson("Unit3_name");
+        
 
+        characterNames_Rabbit = LoadNamesFromJson("Rabbit_name");
         characterNames_Cat = LoadNamesFromJson("Cat_name");
         characterNames_Chicken = LoadNamesFromJson("Chicken_name");
         characterNames_Gangi = LoadNamesFromJson("Gangi_name");
@@ -118,6 +124,15 @@ public class Spawn : MonoBehaviour
         characterNames_Napi = LoadNamesFromJson("Napi_name");
         characterNames_Pig = LoadNamesFromJson("Pig_name");
         characterNames_Squirrel = LoadNamesFromJson("Squirrel_name");
+
+        characterComments_Rabbit = LoadNamesFromJson("Rabbit_comment");
+        characterComments_Cat = LoadNamesFromJson("Cat_comment");
+        characterComments_Chicken = LoadNamesFromJson("Chicken_comment");
+        characterComments_Gangi = LoadNamesFromJson("Gangi_comment");
+        characterComments_Goat = LoadNamesFromJson("Goat_comment");
+        characterComments_Napi = LoadNamesFromJson("Napi_comment");
+        characterComments_Pig = LoadNamesFromJson("Pig_comment");
+        characterComments_Squirrel = LoadNamesFromJson("Squirrel_comment");
     }
 
     void OnButtonClick_speed()
@@ -200,7 +215,7 @@ public class Spawn : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rabbit();
+            //rabbit();
             //cat();
             //chicken();
             //napi();
@@ -381,7 +396,7 @@ public class Spawn : MonoBehaviour
 
     private void rabbit()
     {
-        string randomName = GetUniqueRandomName(characterNames_Unit1);
+        string randomName = GetUniqueRandomName(characterNames_Rabbit);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
@@ -400,7 +415,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 250 / 60;
         reaction_rate_min = 150 / 60;
 
-        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Rabbit);
     }
 
     private void cat()
@@ -424,7 +439,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 300 / 60;
         reaction_rate_min = 200 / 60;
 
-        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Cat);
     }
 
     private void chicken()
@@ -448,7 +463,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 200 / 60;
         reaction_rate_min = 100 / 60;
 
-        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Chicken);
     }
 
     private void napi()
@@ -472,7 +487,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 200 / 60;
         reaction_rate_min = 150 / 60;
 
-        movementScript.Initialize("なぴ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("なぴ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Napi);
     }
 
     private void gangi()
@@ -496,7 +511,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 500 / 60;
         reaction_rate_min = 300 / 60;
 
-        movementScript.Initialize("ガンギ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("ガンギ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Gangi);
     }
 
     private void squirrel()
@@ -520,7 +535,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 550 / 60;
         reaction_rate_min = 400 / 60;
 
-        movementScript.Initialize("リス", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("リス", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Squirrel);
     }
 
     private void goat()
@@ -544,7 +559,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 300 / 60;
         reaction_rate_min = 200 / 60;
 
-        movementScript.Initialize("やぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("やぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Goat);
     }
 
     private void pig()
@@ -568,7 +583,7 @@ public class Spawn : MonoBehaviour
         reaction_rate_max = 700 / 60;
         reaction_rate_min = 600 / 60;
 
-        movementScript.Initialize("ぶた", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min);
+        movementScript.Initialize("ぶた", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Pig);
     }
 
     //private void spawn_1()

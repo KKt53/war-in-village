@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using TMPro;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
 using UnityEditor;
@@ -23,6 +25,7 @@ public class Unit : MonoBehaviour
     private float attack_scope;//攻撃範囲
     private int reaction_rate_min;//反応速度
     private int reaction_rate_max;//反応速度
+    public List<string> comments;
 
     private List<string> features_point;//ダメージ増減倍率
     private List<string> status;//かかりやすい状態
@@ -78,6 +81,12 @@ public class Unit : MonoBehaviour
 
     GameObject attack_effect_b_i;
 
+    const int line_max = 3;
+
+    private int random_value = 0;
+
+    GameObject canvas;
+    public GameObject comment;
 
     [System.Serializable]
     public class NameList
@@ -85,7 +94,7 @@ public class Unit : MonoBehaviour
         public List<string> names;
     }
 
-    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, int c_reaction_rate_max, int c_reaction_rate_min)
+    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, int c_reaction_rate_max, int c_reaction_rate_min, List<string> c_comments)
     {
         type = c_type;
         name_of_death = c_name;
@@ -97,6 +106,11 @@ public class Unit : MonoBehaviour
         attack_scope = c_attack_scope;
         reaction_rate_max = c_reaction_rate_max;
         reaction_rate_min = c_reaction_rate_min;
+        comments = c_comments;
+
+        random_value = UnityEngine.Random.Range(1, 2);
+
+        Comment_spawn(comments[random_value]);
     }
 
     void Start()
@@ -109,6 +123,7 @@ public class Unit : MonoBehaviour
         knockback_flag = false;
         isPerformingAction = true;
         boss = GameObject.Find("Boss");
+        canvas = GameObject.Find("画面上のボタン");
         attack_flag = false;
         this.sr = GetComponent<SpriteRenderer>();
         left_edge = GameObject.Find("左端");
@@ -269,6 +284,9 @@ public class Unit : MonoBehaviour
         if (this.hp <= 0)
         {
             uiLogger.AddLog(type + "の" + name_of_death + "が死亡");
+
+            Comment_spawn(comments[8]);
+
             Destroy(this.gameObject);
             Destroy(attack_effect_i);
             Destroy(attack_effect_b_i);
@@ -290,7 +308,19 @@ public class Unit : MonoBehaviour
 
                     int damage = attack_object_e.attack_point;
 
-                    this.hp = this.hp - damage;
+                    hp = hp - damage;
+
+                    if (hp <= 50 && hp > 30)
+                    {
+                        random_value = UnityEngine.Random.Range(3, 4);
+
+                        Comment_spawn(comments[random_value]);
+                    }else if (hp <= 30)
+                    {
+                        random_value = UnityEngine.Random.Range(5, 6);
+
+                        Comment_spawn(comments[random_value]);
+                    }
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
@@ -559,10 +589,25 @@ public class Unit : MonoBehaviour
             // オブジェクトを削除
             Destroy(instance);
         }
+    }
 
+    public void Comment_spawn(string comment_text)
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
 
-        
+        float line = random_value * 30;
+        GameObject comment_i;
 
-        
+        canvas = GameObject.Find("画面上のボタン");
+
+        comment_i = Instantiate(comment, canvas.transform);
+
+        TMP_Text c_Text = comment_i.GetComponentInChildren<TMP_Text>();
+
+        c_Text.text = comment_text;
+
+        RectTransform rectTransform = comment_i.GetComponent<RectTransform>();
+
+        rectTransform.anchoredPosition = new Vector2(Screen.width / 2, 50 + line);
     }
 }

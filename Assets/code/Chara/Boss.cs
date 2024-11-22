@@ -401,6 +401,19 @@ public class Boss : MonoBehaviour, IAttackable
 
                     unit.hp = unit.hp - strengh;
 
+                    if (unit.hp <= 50 && unit.hp > 30)
+                    {
+                        int random_value = UnityEngine.Random.Range(2, 3);
+
+                        unit.Comment_spawn(unit.comments[random_value]);
+                    }
+                    else if (unit.hp <= 30)
+                    {
+                        int random_value = UnityEngine.Random.Range(4, 5);
+
+                        unit.Comment_spawn(unit.comments[random_value]);
+                    }
+
                     float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
 
                     float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);

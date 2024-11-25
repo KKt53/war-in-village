@@ -49,6 +49,7 @@ public class Boss : MonoBehaviour, IAttackable
     private int previous_hp;
 
     public GameObject Hitcount;
+    public NumberDisplay numberDisplay;
 
     public Image boss_life_bar;   // タイムゲージのImage
 
@@ -72,7 +73,10 @@ public class Boss : MonoBehaviour, IAttackable
 
             attack_count++;
             Hitcount.SetActive(true);
-            counter.text = attack_count.ToString() + "hits!";
+            counter.text = attack_count.ToString();
+
+            numberDisplay.DisplayNumber(attack_count);
+
             // 値が変更された際の処理
             //Debug.Log(attack_count);
         }
@@ -86,7 +90,7 @@ public class Boss : MonoBehaviour, IAttackable
         strengh = 5;
         attack_frequency = 2;
         attack_scope = 5;
-        Level = 4;
+        Level = 1;
         Level_max = 10;
         experience = 0;
         experience_reference = 3;

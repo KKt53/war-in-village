@@ -18,6 +18,7 @@ public class Unit : MonoBehaviour
     public string type;
     public string name_of_death;
     public float hp;//ヒットポイント
+    private float hp_max;
     private int strengh;//攻撃力
     private float speed;//素早さ
     private float attack_frequency;//攻撃頻度
@@ -310,12 +311,12 @@ public class Unit : MonoBehaviour
 
                     hp = hp - damage;
 
-                    if (hp <= 50 && hp > 30)
+                    if (hp <= (hp_max * 0.5) && hp > (hp_max * 0.3))
                     {
                         random_value = UnityEngine.Random.Range(3, 4);
 
                         Comment_spawn(comments[random_value]);
-                    }else if (hp <= 30)
+                    }else if (hp <= (hp_max * 0.3))
                     {
                         random_value = UnityEngine.Random.Range(5, 6);
 

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NumberDisplay : MonoBehaviour
 {
-    public NumberFont numberFont; // 上記のNumberFontスクリプトをアタッチ
-    public GameObject digitPrefab; // 1桁ごとに表示するためのプレハブ（SpriteRenderer付き）
+    public NumberFont numberFont; // 0?9のスプライトを保持するスクリプト
+    public GameObject digitPrefab; // Imageコンポーネントを持つプレハブ
+    public float spacing = 50f; // 各数字の間隔
 
     public void DisplayNumber(int number)
     {
@@ -25,11 +27,16 @@ public class NumberDisplay : MonoBehaviour
             {
                 // プレハブを生成してスプライトを設定
                 GameObject digitObj = Instantiate(digitPrefab, transform);
-                digitObj.GetComponent<SpriteRenderer>().sprite = sprite;
+                Image image = digitObj.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.sprite = sprite;
+                }
 
-                // 配置
-                digitObj.transform.localPosition = new Vector3(xOffset, 0, 0);
-                xOffset += 1.0f; // 桁の間隔を調整
+                // RectTransformを使って配置
+                RectTransform rectTransform = digitObj.GetComponent<RectTransform>();
+                rectTransform.anchoredPosition = new Vector2(xOffset, 0);
+                xOffset += spacing; // 間隔を追加
             }
         }
     }

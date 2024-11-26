@@ -3,7 +3,15 @@
   "WorkspaceRootPath": "D:\\Unity\\war in village\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|D:\\Unity\\war in village\\assets\\code\\chara\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\numberfont.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\numberfont.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\numberdisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\numberdisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\chara\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\chara\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -46,11 +54,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 360,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NumberFont.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\NumberFont.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\NumberFont.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\NumberFont.cs",
+              "RelativeToolTip": "Assets\\code\\NumberFont.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-26T10:51:53.505Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "NumberDisplay.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\NumberDisplay.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\NumberDisplay.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\NumberDisplay.cs",
+              "RelativeToolTip": "Assets\\code\\NumberDisplay.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAuwBoAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-26T10:38:40.376Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "IAttackable.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Chara\\IAttackable.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Chara\\IAttackable.cs",
@@ -58,12 +92,11 @@
               "RelativeToolTip": "Assets\\code\\Chara\\IAttackable.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-22T10:41:55.851Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-22T10:41:55.851Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Spawn.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Spawn.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Spawn.cs",
@@ -75,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Comment_Spawn.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\UI\\Comment_Spawn.cs",
               "RelativeDocumentMoniker": "Assets\\code\\UI\\Comment_Spawn.cs",
@@ -87,7 +120,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Enemy.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Chara\\Enemy.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Chara\\Enemy.cs",
@@ -99,20 +132,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Boss.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Chara\\Boss.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Chara\\Boss.cs",
               "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Chara\\Boss.cs",
               "RelativeToolTip": "Assets\\code\\Chara\\Boss.cs",
-              "ViewState": "AQIAADYAAAAAAAAAAAAawEUAAAA+AAAA",
+              "ViewState": "AQIAADoAAAAAAAAAAAAawEwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-12T12:57:35.668Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Attack_Object.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Attack\\Attack_Object.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Attack\\Attack_Object.cs",
@@ -124,7 +157,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Level_Up.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\UI\\Level_Up.cs",
               "RelativeDocumentMoniker": "Assets\\code\\UI\\Level_Up.cs",
@@ -136,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "Meteorite.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Attack\\Meteorite.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Attack\\Meteorite.cs",
@@ -148,7 +181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Unit.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Chara\\Unit.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Chara\\Unit.cs",

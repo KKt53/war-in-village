@@ -49,6 +49,7 @@ public class Boss : MonoBehaviour, IAttackable
     private int previous_hp;
 
     public GameObject Hitcount;
+    public GameObject ND;
     public NumberDisplay numberDisplay;
 
     public Image boss_life_bar;   // タイムゲージのImage
@@ -66,14 +67,12 @@ public class Boss : MonoBehaviour, IAttackable
         get { return this.hp; }
         set
         {
-            TextMeshProUGUI counter;
-            counter = Hitcount.GetComponent<TextMeshProUGUI>();
-
             this.hp = value;
 
             attack_count++;
+
             Hitcount.SetActive(true);
-            counter.text = attack_count.ToString();
+            ND.SetActive(true);
 
             numberDisplay.DisplayNumber(attack_count);
 
@@ -117,6 +116,7 @@ public class Boss : MonoBehaviour, IAttackable
         if (target != null && !attack_flag)
         {
             Hitcount.SetActive(false);
+            ND.SetActive(false);
             attack_count = 0;
             StartCoroutine(ExecuteAttacksequence());
         }

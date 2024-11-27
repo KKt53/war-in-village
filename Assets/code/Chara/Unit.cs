@@ -609,6 +609,6 @@ public class Unit : MonoBehaviour
 
         RectTransform rectTransform = comment_i.GetComponent<RectTransform>();
 
-        rectTransform.anchoredPosition = new Vector2(Screen.width / 2, 50 + line);
+        rectTransform.anchoredPosition = new Vector2(400, -200 + line);
     }
 }

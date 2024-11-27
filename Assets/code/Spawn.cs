@@ -204,10 +204,10 @@ public class Spawn : MonoBehaviour
 
         Unit_spawn();
 
-        if (!isSpawning_enemy)
-        {
-            StartCoroutine(Enemy_spawn());
-        }
+        //if (!isSpawning_enemy)
+        //{
+        //    StartCoroutine(Enemy_spawn());
+        //}
     }
 
     private void Operation()
@@ -403,7 +403,7 @@ public class Spawn : MonoBehaviour
 
         hp = 5;
         strengh = 3;
-        speed = 3;
+        speed = 3 / 2;
         attack_frequency = 45 / 60;
         contact_range = 2;
         attack_scope = 4;
@@ -433,7 +433,7 @@ public class Spawn : MonoBehaviour
 
         hp = 4;
         strengh = 3;
-        speed = 2;
+        speed = 2 / 2;
         attack_frequency = 120 / 60;
         contact_range = 1;
         attack_scope = 4;
@@ -463,7 +463,7 @@ public class Spawn : MonoBehaviour
 
         hp = 1;
         strengh = 1;
-        speed = 6;
+        speed = 6/2;
         attack_frequency = 15 / 60;
         contact_range = 1;
         attack_scope = 2;
@@ -493,7 +493,7 @@ public class Spawn : MonoBehaviour
 
         hp = 7;
         strengh = 5;
-        speed = 4;
+        speed = 4 / 2;
         attack_frequency = 50 / 60;
         contact_range = 3;
         attack_scope = 6;
@@ -502,7 +502,7 @@ public class Spawn : MonoBehaviour
 
         movementScript.Initialize("なぴ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Napi);
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(10.0f);
 
         isSpawning_napi = false;
     }
@@ -523,7 +523,7 @@ public class Spawn : MonoBehaviour
 
         hp = 2;
         strengh = 3;
-        speed = 2;
+        speed = 2 / 2;
         attack_frequency = 45 / 60;
         contact_range = 7;
         attack_scope = 10;
@@ -553,7 +553,7 @@ public class Spawn : MonoBehaviour
 
         hp = 4;
         strengh = 4;
-        speed = 5;
+        speed = 5 / 2;
         attack_frequency = 30 / 60;
         contact_range = 2;
         attack_scope = 3;
@@ -583,7 +583,7 @@ public class Spawn : MonoBehaviour
 
         hp = 8;
         strengh = 2;
-        speed = 2;
+        speed = 2 / 2;
         attack_frequency = 75 / 60;
         contact_range = 2;
         attack_scope = 4;
@@ -613,7 +613,7 @@ public class Spawn : MonoBehaviour
 
         hp = 10;
         strengh = 20;
-        speed = 0.5f;
+        speed = 0.5f / 2;
         attack_frequency = 60 / 60;
         contact_range = 2;
         attack_scope = 3;

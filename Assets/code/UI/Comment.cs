@@ -28,6 +28,7 @@ public class Comment : MonoBehaviour
     private bool IsOutOfScreen()
     {
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(rectTransform.position);
+        //return rectTransform.anchoredPosition.x < -200;
         return screenPoint.x < Screen.width / 2 * -1;
     }
 }

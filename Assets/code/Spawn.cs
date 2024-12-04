@@ -35,20 +35,6 @@ public class Spawn : MonoBehaviour
 
     GameObject boss;//ボス用変数
 
-    public GameObject Panel;
-
-    private bool time_switch = false;
-
-    public Button menu_Button;
-    public Button cancel_Button;
-    public Button speed_Button;
-
-    public GameObject s_button;
-    public Sprite speed_off;
-    public Sprite speed_on;
-
-    private int speed_switch = 1;
-
     const int line_max = 2;
     const float Interval = 1.0f;
     const float Interval_e = 1.0f;
@@ -126,14 +112,7 @@ public class Spawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        time_switch = false;
-
         unitIndex = 0;
-
-        menu_Button.onClick.AddListener(OnButtonClick_menu);
-        cancel_Button.onClick.AddListener(OnButtonClick_cancel);
-        speed_Button.onClick.AddListener(OnButtonClick_speed);
-
         isSpawning_rabbit = false;
         isSpawning_cat = false;
         isSpawning_chicken = false;
@@ -164,7 +143,7 @@ public class Spawn : MonoBehaviour
         pig_max = 10;
         pig_count = 0;
 
-    characterNames_Rabbit = LoadNamesFromJson("Rabbit_name");
+        characterNames_Rabbit = LoadNamesFromJson("Rabbit_name");
         characterNames_Cat = LoadNamesFromJson("Cat_name");
         characterNames_Chicken = LoadNamesFromJson("Chicken_name");
         characterNames_Gangi = LoadNamesFromJson("Gangi_name");
@@ -181,21 +160,7 @@ public class Spawn : MonoBehaviour
         characterComments_Napi = LoadNamesFromJson("Napi_comment");
         characterComments_Pig = LoadNamesFromJson("Pig_comment");
         characterComments_Squirrel = LoadNamesFromJson("Squirrel_comment");
-    }
 
-    void OnButtonClick_speed()
-    {
-        speed_switch++;
-    }
-
-    void OnButtonClick_menu()
-    {
-        time_switch = true;
-    }
-
-    void OnButtonClick_cancel()
-    {
-        time_switch = false;
     }
 
     void Update()
@@ -212,52 +177,6 @@ public class Spawn : MonoBehaviour
 
     private void Operation()
     {
-
-        Image i_s_button = s_button.GetComponent<Image>();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (time_switch == false)
-            {
-                time_switch = true;
-            }
-            else
-            {
-                time_switch = false;
-            }
-
-        }
-
-        if (speed_switch == 1)
-        {
-            Time.timeScale = 1.0f;
-            i_s_button.sprite = speed_off;
-        }
-        //else if (speed_switch == 2)
-        //{
-        //    Time.timeScale = 1.5f;
-        //}
-        else if (speed_switch == 2)
-        {
-            Time.timeScale = 2.0f;
-            i_s_button.sprite = speed_on;
-        }
-        else if (speed_switch >= 3)
-        {
-            speed_switch = 1;
-        }
-
-        if (time_switch == true)
-        {
-            Panel.SetActive(true);
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Panel.SetActive(false);
-            Time.timeScale = 1.0f;
-        }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //rabbit();

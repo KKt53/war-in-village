@@ -88,6 +88,12 @@ public class Unit : MonoBehaviour
 
     GameObject canvas;
     public GameObject comment;
+    GameObject maskObject;
+
+    GameObject sp_storm;
+    GameObject sp_guard;
+    GameObject sp_gravity;
+    GameObject sp_step;
 
     [System.Serializable]
     public class NameList
@@ -247,22 +253,27 @@ public class Unit : MonoBehaviour
 
         GameObject target = FindNearestAllyInAttackRange();
 
-        if (transform.position.x + contact_range < boss.transform.position.x)
+        if (boss)
         {
-            if (target != null)
+            if (transform.position.x + contact_range < boss.transform.position.x)
+            {
+                if (target != null)
+                {
+                    isPerformingAction = false;
+                }
+
+                if (target == null)
+                {
+                    isPerformingAction = true;
+                }
+            }
+            else
             {
                 isPerformingAction = false;
             }
+        }
 
-            if (target == null)
-            {
-                isPerformingAction = true;
-            }
-        }
-        else
-        {
-            isPerformingAction = false;
-        }
+        
 
         //止まっていたら攻撃する
         if (!isPerformingAction && !attack_flag)
@@ -601,7 +612,11 @@ public class Unit : MonoBehaviour
 
         canvas = GameObject.Find("画面上のボタン");
 
-        comment_i = Instantiate(comment, canvas.transform);
+        maskObject = GameObject.Find("マスク");
+
+        comment_i = Instantiate(comment);
+
+        comment_i.transform.SetParent(maskObject.transform, false);
 
         TMP_Text c_Text = comment_i.GetComponentInChildren<TMP_Text>();
 
@@ -609,6 +624,6 @@ public class Unit : MonoBehaviour
 
         RectTransform rectTransform = comment_i.GetComponent<RectTransform>();
 
-        rectTransform.anchoredPosition = new Vector2(400, -200 + line);
+        rectTransform.anchoredPosition = new Vector2(Screen.width / 2, line);
     }
 }

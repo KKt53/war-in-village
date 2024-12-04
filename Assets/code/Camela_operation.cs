@@ -19,14 +19,14 @@ public class Camela_operation : MonoBehaviour
         {
             if (tf.position.x >= -5)
             {
-                tf.position = tf.position + new Vector3(-0.05f, 0.0f, 0.0f); //カメラを左へ移動。
+                tf.position = tf.position + new Vector3(-0.04f, 0.0f, 0.0f); //カメラを左へ移動。
             }
         }
         else if (Input.GetKey(KeyCode.O)) //Oキーが押されていれば
         {
             if (tf.position.x <= 5)
             {
-                tf.position = tf.position + new Vector3(0.05f, 0.0f, 0.0f); //カメラを右へ移動。
+                tf.position = tf.position + new Vector3(0.04f, 0.0f, 0.0f); //カメラを右へ移動。
             }
         }
         if (Input.GetKey(KeyCode.K)) //上キーが押されていれば

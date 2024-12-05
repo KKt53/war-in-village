@@ -20,7 +20,6 @@ public class Comment : MonoBehaviour
 
         if (IsOutOfScreen())
         {
-            Debug.Log(rectTransform.anchoredPosition);
             Destroy(gameObject); // テキストオブジェクトを削除
         }
     }

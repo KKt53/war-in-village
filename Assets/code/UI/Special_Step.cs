@@ -11,6 +11,7 @@ public class Special_Step : MonoBehaviour
     public Button targetButton; // 対象のボタン
     public float cooldownTime = 15.0f; // クールダウン時間（秒）
 
+    private float timeofeffect = 3.0f;
     private float timer;
     private bool isOnCooldown;
 
@@ -42,7 +43,13 @@ public class Special_Step : MonoBehaviour
             Debug.Log("step");
             skill_flag = true;
             StartCooldown();
+            StartCoroutine(effect_time());
         }
+    }
+    IEnumerator effect_time()
+    {
+        yield return new WaitForSeconds(timeofeffect);
+        skill_flag = false;
     }
 
     void StartCooldown()

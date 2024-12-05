@@ -62,6 +62,8 @@ public class Boss : MonoBehaviour, IAttackable
 
     public GameObject attack_effect;//攻撃エフェクト
 
+    GameObject sp_guard;
+    Special_Guard special_guard;
     public int Hp
     {
         get { return this.hp; }
@@ -102,6 +104,8 @@ public class Boss : MonoBehaviour, IAttackable
         //features_point = new List<string> { "大型BOSSに強い", "中型" };
 
         animator = GetComponent<Animator>();
+        sp_guard = GameObject.Find("スキル2");
+        special_guard = sp_guard.GetComponent<Special_Guard>();
     }
 
 
@@ -403,7 +407,10 @@ public class Boss : MonoBehaviour, IAttackable
                         }
                     }
 
-                    unit.hp = unit.hp - strengh;
+                    if (special_guard.skill_flag == false)
+                    {
+                        unit.hp = unit.hp - strengh;
+                    }
 
                     if (unit.hp <= 50 && unit.hp > 30)
                     {

@@ -95,6 +95,11 @@ public class Unit : MonoBehaviour
     GameObject sp_gravity;
     GameObject sp_step;
 
+    Special_Storm special_storm;
+    Special_Guard special_guard;
+    Special_Gravity special_gravity;
+    Special_Step special_step;
+
     [System.Serializable]
     public class NameList
     {
@@ -135,6 +140,17 @@ public class Unit : MonoBehaviour
         this.sr = GetComponent<SpriteRenderer>();
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
+
+        sp_storm = GameObject.Find("スキル1");
+        sp_guard = GameObject.Find("スキル2");
+        sp_gravity = GameObject.Find("スキル3");
+        sp_step = GameObject.Find("スキル4");
+
+        special_storm = sp_storm.GetComponent<Special_Storm>();
+        special_guard = sp_guard.GetComponent<Special_Guard>();
+        special_gravity = sp_gravity.GetComponent<Special_Gravity>();
+        special_step = sp_step.GetComponent<Special_Step>();
+
         startPosition = transform.position;// ジャンプ開始時の位置を保存
 
         uiLogger = FindObjectOfType<UILoggerWithLimit>();
@@ -293,15 +309,20 @@ public class Unit : MonoBehaviour
 
     private void CheckForAttacks()
     {
-        if (this.hp <= 0)
+
+
+        if (special_storm.skill_flag == false)
         {
-            uiLogger.AddLog(type + "の" + name_of_death + "が死亡");
+            if (this.hp <= 0)
+            {
+                uiLogger.AddLog(type + "の" + name_of_death + "が死亡");
 
-            Comment_spawn(comments[8]);
+                Comment_spawn(comments[8]);
 
-            Destroy(this.gameObject);
-            Destroy(attack_effect_i);
-            Destroy(attack_effect_b_i);
+                Destroy(this.gameObject);
+                Destroy(attack_effect_i);
+                Destroy(attack_effect_b_i);
+            }
         }
 
         // 敵の周囲に攻撃オブジェクトが存在するかチェック
@@ -320,7 +341,10 @@ public class Unit : MonoBehaviour
 
                     int damage = attack_object_e.attack_point;
 
-                    hp = hp - damage;
+                    if (special_guard.skill_flag == false)
+                    {
+                        hp = hp - damage;
+                    }
 
                     if (hp <= (hp_max * 0.5) && hp > (hp_max * 0.3))
                     {
@@ -361,6 +385,8 @@ public class Unit : MonoBehaviour
     //攻撃シーケンス
     IEnumerator ExecuteAttacksequence(GameObject target)
     {
+        
+
         // 現在の行動を取得
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
@@ -370,6 +396,12 @@ public class Unit : MonoBehaviour
         attack_flag = true; // 攻撃後にフラグをオンにする
         movement_disabled_flag = true;
         isPerformingAction = false;
+
+        if (special_storm.skill_flag == true)
+        {
+            currentAction = "Attack";
+            Debug.Log(name_of_death + ":" + currentAction);
+        }
 
         switch (currentAction)
         {

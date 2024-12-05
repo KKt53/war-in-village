@@ -10,6 +10,7 @@ public class Special_Storm : MonoBehaviour
     public Button targetButton; // 対象のボタン
     public float cooldownTime = 30.0f; // クールダウン時間（秒）
 
+    private float timeofeffect = 5.0f; 
     private float timer;
     private bool isOnCooldown;
 
@@ -41,7 +42,15 @@ public class Special_Storm : MonoBehaviour
             Debug.Log("storm");
             skill_flag = true;
             StartCooldown();
+            StartCoroutine(effect_time());
         }
+    }
+
+    IEnumerator effect_time()
+    {
+        yield return new WaitForSeconds(timeofeffect);
+        Debug.Log("storm end");
+        skill_flag = false;
     }
 
     void StartCooldown()

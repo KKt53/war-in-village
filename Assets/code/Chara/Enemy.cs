@@ -34,6 +34,9 @@ public class Enemy : MonoBehaviour, IAttackable
     private float jumpTime = 0f;        // ジャンプの経過時間
     private Vector3 startPosition;      // ジャンプ開始時の位置
 
+    GameObject sp_guard;
+    Special_Guard special_guard;
+
     public void Initialize(int c_hp, float c_speed, float c_attack_frequency)
     {
         hp = c_hp;
@@ -52,6 +55,8 @@ public class Enemy : MonoBehaviour, IAttackable
         attack_scope = 5;
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
+        sp_guard = GameObject.Find("スキル2");
+        special_guard = sp_guard.GetComponent<Special_Guard>();
     }
 
     // Update is called once per frame
@@ -215,7 +220,10 @@ public class Enemy : MonoBehaviour, IAttackable
         {
             Unit unit = target.GetComponent<Unit>();
 
-            unit.hp = unit.hp - strengh;
+            if (special_guard.skill_flag == false)
+            {
+                unit.hp = unit.hp - strengh;
+            }
 
             if (unit.hp <= 50 && unit.hp > 30)
             {

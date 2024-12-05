@@ -12,6 +12,7 @@ public class Special_Guard : MonoBehaviour
     public Button targetButton; // 対象のボタン
     public float cooldownTime = 20.0f; // クールダウン時間（秒）
 
+    private float timeofeffect = 3.0f;
     private float timer;
     private bool isOnCooldown;
 
@@ -43,7 +44,14 @@ public class Special_Guard : MonoBehaviour
             Debug.Log("guard");
             skill_flag = true;
             StartCooldown();
+            StartCoroutine(effect_time());
         }
+    }
+    IEnumerator effect_time()
+    {
+        yield return new WaitForSeconds(timeofeffect);
+        Debug.Log("guard end");
+        skill_flag = false;
     }
 
     void StartCooldown()

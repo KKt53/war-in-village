@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 using static System.Collections.Specialized.BitVector32;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
@@ -92,13 +93,17 @@ public class Unit : MonoBehaviour
 
     GameObject sp_storm;
     GameObject sp_guard;
-    GameObject sp_gravity;
     GameObject sp_step;
 
     Special_Storm special_storm;
     Special_Guard special_guard;
-    Special_Gravity special_gravity;
     Special_Step special_step;
+
+    GameObject r_button;
+    GameObject l_button;
+
+    Button right_Button; // 右のボタン
+    Button left_Button; // 左のボタン
 
     [System.Serializable]
     public class NameList
@@ -143,12 +148,10 @@ public class Unit : MonoBehaviour
 
         sp_storm = GameObject.Find("スキル1");
         sp_guard = GameObject.Find("スキル2");
-        sp_gravity = GameObject.Find("スキル3");
         sp_step = GameObject.Find("スキル4");
 
         special_storm = sp_storm.GetComponent<Special_Storm>();
         special_guard = sp_guard.GetComponent<Special_Guard>();
-        special_gravity = sp_gravity.GetComponent<Special_Gravity>();
         special_step = sp_step.GetComponent<Special_Step>();
 
         startPosition = transform.position;// ジャンプ開始時の位置を保存
@@ -158,6 +161,14 @@ public class Unit : MonoBehaviour
         animator = GetComponent<Animator>();
 
         effect_sound = GetComponent<AudioSource>();
+
+        r_button = GameObject.Find("右ボタン");
+        right_Button = r_button.GetComponent<Button>();
+        l_button = GameObject.Find("左ボタン");
+        left_Button = l_button.GetComponent<Button>();
+
+        right_Button.onClick.AddListener(OnButtonClick_right);
+        left_Button.onClick.AddListener(OnButtonClick_left);
     }
 
     void Update()
@@ -197,74 +208,29 @@ public class Unit : MonoBehaviour
 
     private void Moving()
     {
-        //攻撃してる最中じゃなかったら
-        if (!movement_disabled_flag)
+        
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                // 現在の時間を取得
-                float currentTime = Time.time;
-
-                float total = currentTime - lastPressTime_l;
-
-                int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
-
-                // 前回の押下からの経過時間が設定した連打時間内であれば
-                if (total >= doublePressTime || direction == 1)
-                {
-                    StartCoroutine(ChangeDirectionWithDelay_left(random_value_reaction));
-                }
-
-                lastPressTime_l = currentTime;
-            }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                // 現在の時間を取得
-                float currentTime = Time.time;
-
-                float total = currentTime - lastPressTime_r;
-
-                int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
-
-                // 前回の押下からの経過時間が設定した連打時間内であれば
-                if (total >= doublePressTime || direction == -1)
-                {
-                    StartCoroutine(ChangeDirectionWithDelay_right(random_value_reaction));
-                }
-
-
-                lastPressTime_r = currentTime;
-            }
+            OnButtonClick_left();
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                movement_r_flag = false;
-                movement_l_flag = true;
-
-                //待機フラグON
-                moving_standby = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                movement_r_flag = true;
-                movement_l_flag = false;
-
-                //待機フラグON
-                moving_standby = true;
-            }
-         }
+            OnButtonClick_right();
+        }
+        
 
         // 方向に基づいて移動
         if (isPerformingAction && !attack_flag) // この条件が移動制御のためのスイッチ
-        //if (isPerformingAction)
         {
-            //Destroy(AO);
-            transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
+            if (special_step.skill_flag == true)
+            {
+                transform.Translate(Vector2.right * direction * speed * 2 * Time.deltaTime);
+            }
+            else
+            {
+                transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
+            }
         }
 
         GameObject target = FindNearestAllyInAttackRange();
@@ -493,7 +459,14 @@ public class Unit : MonoBehaviour
 
     IEnumerator ChangeDirectionWithDelay_left(int reaction_rate)
     {
-        yield return new WaitForSeconds(reaction_rate);
+        if (special_step.skill_flag == true)
+        {
+            yield return new WaitForSeconds(reaction_rate * 2);
+        }
+        else
+        {
+            yield return new WaitForSeconds(reaction_rate);
+        }
 
         jumpTime = 0f;
 
@@ -513,7 +486,14 @@ public class Unit : MonoBehaviour
     }
     IEnumerator ChangeDirectionWithDelay_right(int reaction_rate)
     {
-        yield return new WaitForSeconds(reaction_rate);
+        if (special_step.skill_flag == true)
+        {
+            yield return new WaitForSeconds(reaction_rate * 2);
+        }
+        else
+        {
+            yield return new WaitForSeconds(reaction_rate);
+        }
 
         jumpTime = 0f;
 
@@ -657,5 +637,63 @@ public class Unit : MonoBehaviour
         RectTransform rectTransform = comment_i.GetComponent<RectTransform>();
 
         rectTransform.anchoredPosition = new Vector2(Screen.width / 2, line);
+    }
+
+    void OnButtonClick_right()
+    {
+        if (!movement_disabled_flag)
+        {
+            // 現在の時間を取得
+            float currentTime = Time.time;
+
+            float total = currentTime - lastPressTime_r;
+
+            int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
+
+            // 前回の押下からの経過時間が設定した連打時間内であれば
+            if (total >= doublePressTime || direction == -1)
+            {
+                StartCoroutine(ChangeDirectionWithDelay_right(random_value_reaction));
+            }
+
+            lastPressTime_r = currentTime;
+        }
+        else
+        {
+            movement_r_flag = true;
+            movement_l_flag = false;
+
+            //待機フラグON
+            moving_standby = true;
+        }
+    }
+
+    void OnButtonClick_left()
+    {
+        if (!movement_disabled_flag)
+        {
+            // 現在の時間を取得
+            float currentTime = Time.time;
+
+            float total = currentTime - lastPressTime_l;
+
+            int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
+
+            // 前回の押下からの経過時間が設定した連打時間内であれば
+            if (total >= doublePressTime || direction == 1)
+            {
+                StartCoroutine(ChangeDirectionWithDelay_left(random_value_reaction));
+            }
+
+            lastPressTime_l = currentTime;
+        }
+        else
+        {
+            movement_r_flag = false;
+            movement_l_flag = true;
+
+            //待機フラグON
+            moving_standby = true;
+        }
     }
 }

@@ -1,0 +1,98 @@
+[
+    {
+        "_comment": "これはrabbitのデータ",
+        "hp": 5,
+        "strengh": 3,
+        "speed": 3,
+        "attack_frequency": 45,
+        "contact_range": 2,
+        "attack_scope": 4,
+        "reaction_rate_max": 250,
+        "reaction_rate_min": 150,
+        "wait": 10
+    },
+    {
+        "_comment": "これはcatのデータ",
+        "hp": 4,
+        "strengh": 3,
+        "speed": 2,
+        "attack_frequency": 120,
+        "contact_range": 1,
+        "attack_scope": 4,
+        "reaction_rate_max": 300,
+        "reaction_rate_min": 200,
+        "wait": 12
+    },
+    {
+        "_comment": "これはchickenのデータ",
+        "hp": 1,
+        "strengh": 1,
+        "speed": 6,
+        "attack_frequency": 15,
+        "contact_range": 1,
+        "attack_scope": 2,
+        "reaction_rate_max": 200,
+        "reaction_rate_min": 100,
+        "wait": 6
+    },
+    {
+        "_comment": "これはnapiのデータ",
+        "hp": 7,
+        "strengh": 5,
+        "speed": 4,
+        "attack_frequency": 50,
+        "contact_range": 3,
+        "attack_scope": 2,
+        "reaction_rate_max": 200,
+        "reaction_rate_min": 150,
+        "wait": 10
+    },
+    {
+        "_comment": "これはgangiのデータ",
+        "hp": 2,
+        "strengh": 3,
+        "speed": 2,
+        "attack_frequency": 45,
+        "contact_range": 7,
+        "attack_scope": 10,
+        "reaction_rate_max": 500,
+        "reaction_rate_min": 300,
+        "wait": 20
+    },
+    {
+        "_comment": "これはsquirrelのデータ",
+        "hp": 4,
+        "strengh": 4,
+        "speed": 5,
+        "attack_frequency": 30,
+        "contact_range": 2,
+        "attack_scope": 3,
+        "reaction_rate_max": 550,
+        "reaction_rate_min": 400,
+        "wait": 13
+    },
+    {
+        "_comment": "これはgoatのデータ",
+        "hp": 8,
+        "strengh": 2,
+        "speed": 2,
+        "attack_frequency": 75,
+        "contact_range": 2,
+        "attack_scope": 4,
+        "reaction_rate_max": 300,
+        "reaction_rate_min": 200,
+        "wait": 10
+    },
+    {
+        "_comment": "これはpigのデータ",
+        "hp": 10,
+        "strengh": 20,
+        "speed": 0.5,
+        "attack_frequency": 60,
+        "contact_range": 2,
+        "attack_scope": 3,
+        "reaction_rate_max": 700,
+        "reaction_rate_min": 600,
+        "wait": 36
+    }
+]

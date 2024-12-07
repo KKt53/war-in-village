@@ -88,7 +88,6 @@ public class Spawn : MonoBehaviour
     private int reaction_rate_min;//反応速度
     private int reaction_rate_max;//反応速度
 
-
     private List<string> characterNames_Rabbit;
     private List<string> characterNames_Cat;
     private List<string> characterNames_Chicken;
@@ -108,6 +107,9 @@ public class Spawn : MonoBehaviour
     private List<string> characterComments_Squirrel;
 
     private List<string> features_point;//ダメージ増減倍率
+
+    [SerializeField]
+    private List<CharacterData> characterList;
 
     // Start is called before the first frame update
     void Start()
@@ -143,6 +145,8 @@ public class Spawn : MonoBehaviour
         pig_max = 10;
         pig_count = 0;
 
+        characterList = LoadJsonData();
+
         characterNames_Rabbit = LoadNamesFromJson("Rabbit_name");
         characterNames_Cat = LoadNamesFromJson("Cat_name");
         characterNames_Chicken = LoadNamesFromJson("Chicken_name");
@@ -160,7 +164,6 @@ public class Spawn : MonoBehaviour
         characterComments_Napi = LoadNamesFromJson("Napi_comment");
         characterComments_Pig = LoadNamesFromJson("Pig_comment");
         characterComments_Squirrel = LoadNamesFromJson("Squirrel_comment");
-
     }
 
     void Update()
@@ -215,6 +218,7 @@ public class Spawn : MonoBehaviour
             }
 
         }
+
 
         if (!isSpawning_chicken)
         {
@@ -306,32 +310,37 @@ public class Spawn : MonoBehaviour
         isSpawning_enemy = false;
     }
 
-    IEnumerator rabbit()
+    private void us(List<string> characterNames, GameObject characterPrefab, CharacterData cd, string name, List<string> characterComments)
     {
-        isSpawning_rabbit = true;
-
-        string randomName = GetUniqueRandomName(characterNames_Rabbit);
+        string randomName = GetUniqueRandomName(characterNames);
 
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
 
-        characterInstance = Instantiate(characterPrefab_rabbit, new Vector3(-7, line, 0), Quaternion.identity);
+        characterInstance = Instantiate(characterPrefab, new Vector3(-7, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Unit>();
 
-        hp = 5;
-        strengh = 3;
-        speed = 3 / 2;
-        attack_frequency = 45 / 60;
-        contact_range = 2;
-        attack_scope = 4;
-        reaction_rate_max = 250 / 60;
-        reaction_rate_min = 150 / 60;
+        hp = cd.hp;
+        strengh = cd.strengh;
+        speed = cd.speed / 2;
+        attack_frequency = cd.attack_frequency / 60;
+        contact_range = cd.contact_range;
+        attack_scope = cd.attack_scope;
+        reaction_rate_max = cd.reaction_rate_max / 60;
+        reaction_rate_min = cd.reaction_rate_min / 60;
 
-        movementScript.Initialize("うさぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Rabbit);
+        movementScript.Initialize(name, randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments);
+    }
 
-        yield return new WaitForSeconds(10.0f);
+    IEnumerator rabbit()
+    {
+        isSpawning_rabbit = true;
+
+        us(characterNames_Rabbit, characterPrefab_rabbit, characterList[0], "うさぎ", characterComments_Rabbit);
+
+        yield return new WaitForSeconds(characterList[0].wait);
 
         isSpawning_rabbit = false;
     }
@@ -340,28 +349,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_cat = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Cat);
+        us(characterNames_Cat, characterPrefab_cat, characterList[1], "ねこ", characterComments_Cat);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_cat, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 4;
-        strengh = 3;
-        speed = 2 / 2;
-        attack_frequency = 120 / 60;
-        contact_range = 1;
-        attack_scope = 4;
-        reaction_rate_max = 300 / 60;
-        reaction_rate_min = 200 / 60;
-
-        movementScript.Initialize("ねこ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Cat);
-
-        yield return new WaitForSeconds(12.0f);
+        yield return new WaitForSeconds(characterList[1].wait);
 
         isSpawning_cat = false;
     }
@@ -370,28 +360,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_chicken = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Chicken);
+        us(characterNames_Chicken, characterPrefab_chicken, characterList[2], "にわとり", characterComments_Chicken);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_chicken, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 1;
-        strengh = 1;
-        speed = 6/2;
-        attack_frequency = 15 / 60;
-        contact_range = 1;
-        attack_scope = 2;
-        reaction_rate_max = 200 / 60;
-        reaction_rate_min = 100 / 60;
-
-        movementScript.Initialize("にわとり", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Chicken);
-
-        yield return new WaitForSeconds(6.0f);
+        yield return new WaitForSeconds(characterList[2].wait);
 
         isSpawning_chicken = false;
     }
@@ -400,28 +371,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_napi = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Napi);
+        us(characterNames_Napi, characterPrefab_napi, characterList[3], "なぴ", characterComments_Napi);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_napi, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 7;
-        strengh = 5;
-        speed = 4 / 2;
-        attack_frequency = 50 / 60;
-        contact_range = 3;
-        attack_scope = 6;
-        reaction_rate_max = 200 / 60;
-        reaction_rate_min = 150 / 60;
-
-        movementScript.Initialize("なぴ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Napi);
-
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(characterList[3].wait);
 
         isSpawning_napi = false;
     }
@@ -430,28 +382,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_gangi = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Gangi);
+        us(characterNames_Gangi, characterPrefab_gangi, characterList[4], "ガンギ", characterComments_Gangi);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_gangi, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 2;
-        strengh = 3;
-        speed = 2 / 2;
-        attack_frequency = 45 / 60;
-        contact_range = 7;
-        attack_scope = 10;
-        reaction_rate_max = 500 / 60;
-        reaction_rate_min = 300 / 60;
-
-        movementScript.Initialize("ガンギ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Gangi);
-
-        yield return new WaitForSeconds(20.0f);
+        yield return new WaitForSeconds(characterList[4].wait);
 
         isSpawning_gangi = false;
     }
@@ -460,28 +393,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_squirrel = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Squirrel);
+        us(characterNames_Squirrel, characterPrefab_squirrel, characterList[5], "リス", characterComments_Squirrel);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_squirrel, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 4;
-        strengh = 4;
-        speed = 5 / 2;
-        attack_frequency = 30 / 60;
-        contact_range = 2;
-        attack_scope = 3;
-        reaction_rate_max = 550 / 60;
-        reaction_rate_min = 400 / 60;
-
-        movementScript.Initialize("リス", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Squirrel);
-
-        yield return new WaitForSeconds(13.0f);
+        yield return new WaitForSeconds(characterList[5].wait);
 
         isSpawning_squirrel = false;
     }
@@ -490,28 +404,9 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_goat = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Goat);
+        us(characterNames_Goat, characterPrefab_goat, characterList[6], "やぎ", characterComments_Goat);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_goat, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 8;
-        strengh = 2;
-        speed = 2 / 2;
-        attack_frequency = 75 / 60;
-        contact_range = 2;
-        attack_scope = 4;
-        reaction_rate_max = 300 / 60;
-        reaction_rate_min = 200 / 60;
-
-        movementScript.Initialize("やぎ", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Goat);
-
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(characterList[6].wait);
 
         isSpawning_goat = false;
     }
@@ -520,33 +415,14 @@ public class Spawn : MonoBehaviour
     {
         isSpawning_pig = true;
 
-        string randomName = GetUniqueRandomName(characterNames_Pig);
+        us(characterNames_Pig, characterPrefab_pig, characterList[7], "ぶた", characterComments_Pig);
 
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        characterInstance = Instantiate(characterPrefab_pig, new Vector3(-7, line, 0), Quaternion.identity);
-
-        movementScript = characterInstance.GetComponent<Unit>();
-
-        hp = 10;
-        strengh = 20;
-        speed = 0.5f / 2;
-        attack_frequency = 60 / 60;
-        contact_range = 2;
-        attack_scope = 3;
-        reaction_rate_max = 700 / 60;
-        reaction_rate_min = 600 / 60;
-
-        movementScript.Initialize("ぶた", randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments_Pig);
-
-        yield return new WaitForSeconds(36.0f);
+        yield return new WaitForSeconds(characterList[7].wait);
 
         isSpawning_pig = false;
     }
 
-    
+
 
     private void enemy()
     {
@@ -563,6 +439,20 @@ public class Spawn : MonoBehaviour
         movementScript.Initialize(3, 3f, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
     }
 
+    public string GetUniqueRandomName(List<string> characterNames)
+    {
+        if (characterNames.Count == 0)
+        {
+            Debug.LogWarning("No more unique names available.");
+            return null;
+        }
+
+        int index = UnityEngine.Random.Range(0, characterNames.Count);
+        string selectedName = characterNames[index];
+        characterNames.RemoveAt(index);
+
+        return selectedName;
+    }
     private List<string> LoadNamesFromJson(string file)
     {
         TextAsset jsonTextFile = Resources.Load<TextAsset>(file);
@@ -578,18 +468,28 @@ public class Spawn : MonoBehaviour
         }
     }
 
-    public string GetUniqueRandomName(List<string> characterNames)
+    private List<CharacterData> LoadJsonData()
     {
-        if (characterNames.Count == 0)
+        // ResourcesフォルダからJSONを読み込む
+        TextAsset jsonFile = Resources.Load<TextAsset>("CharacterData");
+        if (jsonFile != null)
         {
-            Debug.LogWarning("No more unique names available.");
-            return null;
+            // JSONデータをリストに変換
+            List<CharacterData> cd = JsonUtility.FromJson<CharacterDataList>("{\"characters\":" + jsonFile.text + "}").characters;
+
+            return new List<CharacterData>(cd);
+
+            // デバッグで確認
+            //foreach (var character in characterList)
+            //{
+            //    Debug.Log($"hp: {character.hp}, strengh: {character.strengh}, speed: {character.speed}");
+            //}
         }
-
-        int index = UnityEngine.Random.Range(0, characterNames.Count);
-        string selectedName = characterNames[index];
-        characterNames.RemoveAt(index);
-
-        return selectedName;
+        else
+        {
+            Debug.LogError("JSONファイルが見つかりません！");
+            return new List<CharacterData>();
+        }
     }
+
 }

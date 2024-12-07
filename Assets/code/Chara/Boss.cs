@@ -186,57 +186,32 @@ public class Boss : MonoBehaviour, IAttackable
 
             case "Attack":
 
-                if (Level >= 8)
+                if (Level == 1)
                 {
                     animator.SetTrigger("Attack");
                     yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-                    
-                    AO = Instantiate(Bullet, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
 
-                    AO.transform.localScale = targetScale;
-
-                    bullet = AO.GetComponent<Bullet>();
-
-                    bullet.Initialize(strengh, features_point);
+                    AttackNearestAllyInRange();
 
                     animator.SetTrigger("Idle");
                 }
 
-                animator.SetTrigger("Attack");
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-                
-                AttackNearestAllyInRange();
-
-                animator.SetTrigger("Idle");
-
-                if (Level >= 3)
+                if (Level >= 2)
                 {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-                    
-                    AttackNearestAllyInRange();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        animator.SetTrigger("Attack");
+                        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-                    animator.SetTrigger("Idle");
+                        AttackNearestAllyInRange();
+
+                        animator.SetTrigger("Idle");
+                    }
                 } 
                 
-                if (Level >= 5) 
-                {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-                    
-                    AttackNearestAllyInRange();
 
-                    animator.SetTrigger("Idle");
-                }
-
-                if (Level >= 9)
-                {
-                    yield return new WaitForSeconds(1.0f);
-                }
-                else
-                {
-                    yield return new WaitForSeconds(3.0f);
-                }
+                
+                yield return new WaitForSeconds(1.0f);
 
                 
 
@@ -412,18 +387,6 @@ public class Boss : MonoBehaviour, IAttackable
                         unit.hp = unit.hp - strengh;
                     }
 
-                    if (unit.hp <= 50 && unit.hp > 30)
-                    {
-                        int random_value = UnityEngine.Random.Range(2, 3);
-
-                        unit.Comment_spawn(unit.comments[random_value]);
-                    }
-                    else if (unit.hp <= 30)
-                    {
-                        int random_value = UnityEngine.Random.Range(4, 5);
-
-                        unit.Comment_spawn(unit.comments[random_value]);
-                    }
 
                     float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
 

@@ -85,8 +85,8 @@ public class Spawn : MonoBehaviour
     private float attack_frequency;//攻撃頻度
     private float contact_range;//接触範囲
     private float attack_scope;//攻撃範囲
-    private int reaction_rate_min;//反応速度
-    private int reaction_rate_max;//反応速度
+    private float reaction_rate_min;//反応速度
+    private float reaction_rate_max;//反応速度
 
     private List<string> characterNames_Rabbit;
     private List<string> characterNames_Cat;
@@ -324,12 +324,12 @@ public class Spawn : MonoBehaviour
 
         hp = cd.hp;
         strengh = cd.strengh;
-        speed = cd.speed / 2;
-        attack_frequency = cd.attack_frequency / 60;
+        speed = cd.speed;
+        attack_frequency = cd.attack_frequency;
         contact_range = cd.contact_range;
         attack_scope = cd.attack_scope;
-        reaction_rate_max = cd.reaction_rate_max / 60;
-        reaction_rate_min = cd.reaction_rate_min / 60;
+        reaction_rate_max = cd.reaction_rate_max;
+        reaction_rate_min = cd.reaction_rate_min;
 
         movementScript.Initialize(name, randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments);
     }
@@ -344,49 +344,48 @@ public class Spawn : MonoBehaviour
 
         isSpawning_rabbit = false;
     }
-
-    IEnumerator cat()
+    IEnumerator gangi()
     {
-        isSpawning_cat = true;
+        isSpawning_gangi = true;
 
-        us(characterNames_Cat, characterPrefab_cat, characterList[1], "ねこ", characterComments_Cat);
+        us(characterNames_Gangi, characterPrefab_gangi, characterList[1], "ガンギ", characterComments_Gangi);
 
         yield return new WaitForSeconds(characterList[1].wait);
 
-        isSpawning_cat = false;
-    }
-
-    IEnumerator chicken()
-    {
-        isSpawning_chicken = true;
-
-        us(characterNames_Chicken, characterPrefab_chicken, characterList[2], "にわとり", characterComments_Chicken);
-
-        yield return new WaitForSeconds(characterList[2].wait);
-
-        isSpawning_chicken = false;
+        isSpawning_gangi = false;
     }
 
     IEnumerator napi()
     {
         isSpawning_napi = true;
 
-        us(characterNames_Napi, characterPrefab_napi, characterList[3], "なぴ", characterComments_Napi);
+        us(characterNames_Napi, characterPrefab_napi, characterList[2], "なぴ", characterComments_Napi);
 
-        yield return new WaitForSeconds(characterList[3].wait);
+        yield return new WaitForSeconds(characterList[2].wait);
 
         isSpawning_napi = false;
     }
 
-    IEnumerator gangi()
+    IEnumerator chicken()
     {
-        isSpawning_gangi = true;
+        isSpawning_chicken = true;
 
-        us(characterNames_Gangi, characterPrefab_gangi, characterList[4], "ガンギ", characterComments_Gangi);
+        us(characterNames_Chicken, characterPrefab_chicken, characterList[3], "にわとり", characterComments_Chicken);
+
+        yield return new WaitForSeconds(characterList[3].wait);
+
+        isSpawning_chicken = false;
+    }
+
+    IEnumerator cat()
+    {
+        isSpawning_cat = true;
+
+        us(characterNames_Cat, characterPrefab_cat, characterList[4], "ねこ", characterComments_Cat);
 
         yield return new WaitForSeconds(characterList[4].wait);
 
-        isSpawning_gangi = false;
+        isSpawning_cat = false;
     }
 
     IEnumerator squirrel()

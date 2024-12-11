@@ -23,6 +23,9 @@ public class Boss : MonoBehaviour, IAttackable
 
     public BossAttackPattern attackPattern;//パターン格納変数
     private int currentAttackIndex = 0;//パターン管理変数
+    private int currentMeteorIndex = 0;//パターン管理変数
+    private int currentBeamIndex = 0;//パターン管理変数
+    private int currentBulletIndex = 0;//パターン管理変数
 
     private List<string> features_point;//ダメージ増減倍率
 
@@ -30,12 +33,15 @@ public class Boss : MonoBehaviour, IAttackable
     public GameObject meteorite_place_2;
 
     private bool attack_flag;
+    private bool bullet_flag;
+    private bool beam_flag;
+    private bool meteor_flag;
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();
     GameObject AO;//攻撃用オブジェクトインスタンス用変数
     public GameObject Meteor;//攻撃用オブジェクト格納用変数
     private Meteorite meteorite;
 
-    GameObject AO_i;//攻撃用オブジェクトインスタンス用変数
+    GameObject AO_b;//攻撃用オブジェクトインスタンス用変数
 
     public GameObject Bullet;
     private Bullet bullet;
@@ -91,7 +97,7 @@ public class Boss : MonoBehaviour, IAttackable
         strengh = 5;
         attack_frequency = 2;
         attack_scope = 5;
-        Level = 1;
+        Level = 10;
         Level_max = 10;
         experience = 0;
         experience_reference = 3;
@@ -125,7 +131,45 @@ public class Boss : MonoBehaviour, IAttackable
             StartCoroutine(ExecuteAttacksequence());
         }
 
+        if (Level >= 4)
+        {
+            if (target != null && !meteor_flag)
+            {
+                Hitcount.SetActive(false);
+                ND.SetActive(false);
+                attack_count = 0;
+                StartCoroutine(ExecuteMeteorAttacksequence());
+            }
+        }
+
+        if (Level >= 8)
+        {
+            if (target != null && !bullet_flag)
+            {
+                Hitcount.SetActive(false);
+                ND.SetActive(false);
+                attack_count = 0;
+                StartCoroutine(ExecuteBulletAttacksequence());
+            }
+        }
+
+        if (Level >= 10)
+        {
+            if (target != null && !beam_flag)
+            {
+                Hitcount.SetActive(false);
+                ND.SetActive(false);
+                attack_count = 0;
+                StartCoroutine(ExecuteBeamAttacksequence());
+            }
+        }
+
         CheckForAttacks();
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(AO_b);
     }
 
     private void CheckForAttacks()
@@ -165,77 +209,136 @@ public class Boss : MonoBehaviour, IAttackable
         }
     }
 
-
-    IEnumerator ExecuteAttacksequence()
+    IEnumerator ExecuteBulletAttacksequence()
     {
-        attack_flag = true;
-
-        int random_value = UnityEngine.Random.Range(0, 2);
+        bullet_flag = true;
 
         Vector3 targetScale = new Vector3(2.0f, 2.0f, 2.0f);
 
-        // 現在の行動を取得
-        string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
+        string currentAction = attackPattern.b_attacksequence[currentBulletIndex];
+
         switch (currentAction)
         {
             case "Rest":
-                // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                yield return new WaitForSeconds(10.0f / attack_frequency);
+
+                if (Level >= 9)
+                {
+                    yield return new WaitForSeconds(9.0f);
+                }
+                else
+                {
+                    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                    yield return new WaitForSeconds(15.0f);
+                }
 
                 break;
 
             case "Attack":
 
-                if (Level == 1)
-                {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                animator.SetTrigger("Attack");
+                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-                    AttackNearestAllyInRange();
+                AO = Instantiate(Bullet, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
 
-                    animator.SetTrigger("Idle");
-                }
+                AO.transform.localScale = targetScale;
 
-                if (Level >= 2)
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        animator.SetTrigger("Attack");
-                        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                bullet = AO.GetComponent<Bullet>();
 
-                        AttackNearestAllyInRange();
+                bullet.Initialize(strengh, features_point);
 
-                        animator.SetTrigger("Idle");
-                    }
-                } 
+                animator.SetTrigger("Idle");
+
+                break;
+        }
+
+        currentBulletIndex = (currentBulletIndex + 1) % attackPattern.b_attacksequence.Count;
+
+        bullet_flag = false;
+    }
+
+    IEnumerator ExecuteBeamAttacksequence()
+    {
+        beam_flag = true;
+
+        string currentAction = attackPattern.b_attacksequence[currentBeamIndex];
+
+        switch (currentAction)
+        {
+            case "Rest":
                 
-
-                
-                yield return new WaitForSeconds(1.0f);
-
-                
+                // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                yield return new WaitForSeconds(15.0f);
 
                 break;
 
-            case "S_Attack":
+            case "Attack":
 
-                if (Level >= 10)
+                animator.SetTrigger("Attack");
+                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+                AO_b = Instantiate(Beam, transform.position + new Vector3(-7, 0, 0), Quaternion.identity);
+
+                beam = AO_b.GetComponent<Attack_Object>();
+
+                beam.Initialize(strengh, features_point);
+
+                animator.SetTrigger("Idle");
+
+                yield return new WaitForSeconds(1.0f);
+
+                Destroy(AO_b);
+
+                break;
+        }
+        
+        currentBeamIndex = (currentBeamIndex + 1) % attackPattern.b_attacksequence.Count;
+
+        beam_flag = false;
+    }
+
+    IEnumerator ExecuteMeteorAttacksequence()
+    {
+        meteor_flag = true;
+
+        Vector3 targetScale = new Vector3(2.0f, 2.0f, 2.0f);
+
+        string currentAction = attackPattern.b_attacksequence[currentMeteorIndex];
+
+        switch (currentAction)
+        {
+            case "Rest":
+                // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+
+                if (Level >= 9)
                 {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-
-                    AO_i = Instantiate(Beam, transform.position + new Vector3(-7, 0, 0), Quaternion.identity);
-
-                    beam = AO_i.GetComponent<Attack_Object>();
-
-                    beam.Initialize(strengh, features_point);
-
-                    animator.SetTrigger("Idle");
+                    yield return new WaitForSeconds(3.0f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(5.0f);
                 }
 
-                
+                break;
 
-                if (Level >= 4)
+            case "Attack":
+                
+                animator.SetTrigger("Attack");
+                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+                AO = Instantiate(Meteor, transform.position + new Vector3(0, 7, 0), Quaternion.identity);
+
+                if (Level >= 7)
+                {
+                    AO.transform.localScale = targetScale;
+                }
+
+                meteorite = AO.GetComponent<Meteorite>();
+
+                meteorite.Initialize(strengh, features_point, meteorite_place_1.transform);
+
+                animator.SetTrigger("Idle");
+
+                if (Level >= 6)
                 {
                     animator.SetTrigger("Attack");
                     yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
@@ -252,37 +355,57 @@ public class Boss : MonoBehaviour, IAttackable
                     meteorite.Initialize(strengh, features_point, meteorite_place_2.transform);
 
                     animator.SetTrigger("Idle");
-                    if (Level >= 6)
-                    {
-                        animator.SetTrigger("Attack");
-                        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-
-                        AO = Instantiate(Meteor, transform.position + new Vector3(7, 7, 0), Quaternion.identity);
-
-                        if (Level >= 7)
-                        {
-                            AO.transform.localScale = targetScale;
-                        }
-
-                        meteorite = AO.GetComponent<Meteorite>();
-
-                        meteorite.Initialize(strengh, features_point, meteorite_place_1.transform);
-
-                        animator.SetTrigger("Idle");
-                    }
-
-                    // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                    yield return new WaitForSeconds(1.0f);
                 }
+
+                break;
+        }
+        currentMeteorIndex = (currentMeteorIndex + 1) % attackPattern.b_attacksequence.Count;
+
+        meteor_flag = false;
+    }
+
+    IEnumerator ExecuteAttacksequence()
+    {
+        attack_flag = true;
+
+        int normal = 1;
+
+        if (Level >= 2)
+        {
+            normal = 3;
+        }
+
+        // 現在の行動を取得
+        string currentAction = attackPattern.b_attacksequence[currentAttackIndex];
+        switch (currentAction)
+        {
+            case "Rest":
+                // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
+                yield return new WaitForSeconds(10.0f / attack_frequency);
+
+                break;
+
+            case "Attack":
+
+                for (int j = 0; j < normal; j++)
+                {
+                    animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+                    AttackNearestAllyInRange();
+
+                    animator.SetTrigger("Idle");
+                }
+
+                yield return new WaitForSeconds(1.0f);
+
+                
 
                 break;
 
             default:
-                //Debug.Log("Unknown action: ");
                 break;
         }
-
-        Destroy(AO_i);
         // 次の行動に進む
         currentAttackIndex = (currentAttackIndex + 1) % attackPattern.b_attacksequence.Count;
         attack_flag = false; // 攻撃後にフラグを解除して再度攻撃可能に
@@ -312,37 +435,26 @@ public class Boss : MonoBehaviour, IAttackable
         return nearestAlly;
     }
 
-    GameObject FindNearestAllyInAttackRange_second(GameObject first)
+    
+
+    List<GameObject> SortAlliesByDistance()
     {
-        GameObject nearestAlly = first;
-        Unit unit = nearestAlly.GetComponent<Unit>();
-        Unit unit_f = first.GetComponent<Unit>();
+        // Villagerを取得
+        GameObject[] allies = GameObject.FindGameObjectsWithTag("Villager");
 
-        float shortestDistance = Mathf.Infinity;
-
-        Villager = GameObject.FindGameObjectsWithTag("Villager");
-
-        foreach (GameObject ally in Villager)
+        // リストに変換して距離順にソート
+        List<GameObject> sortedAllies = new List<GameObject>(allies);
+        sortedAllies.Sort((a, b) =>
         {
-            // ボスと味方ユニット間の距離を計算
-            float distance = Vector2.Distance(transform.position, ally.transform.position);
+            float distanceA = Vector2.Distance(transform.position, a.transform.position);
+            float distanceB = Vector2.Distance(transform.position, b.transform.position);
+            return distanceA.CompareTo(distanceB); // 距離の昇順でソート
+        });
 
-            // ユニットが攻撃範囲内にあるか確認
-            if (distance <= attack_scope && distance < shortestDistance)
-            {
-                unit = ally.GetComponent<Unit>();
-
-                if (unit.name_of_death != unit_f.name_of_death)
-                {
-                    shortestDistance = distance;
-                    nearestAlly = ally;
-                    unit = nearestAlly.GetComponent<Unit>();
-                }
-            }
-        }
-
-        return nearestAlly;
+        return sortedAllies;
     }
+
+
 
     public void ApplyDamage(int damage)
     {
@@ -352,56 +464,53 @@ public class Boss : MonoBehaviour, IAttackable
     //ボスの通常攻撃
     void AttackNearestAllyInRange()
     {
-        // ターゲットに攻撃する処理
-        GameObject target = FindNearestAllyInAttackRange();
+        List<GameObject> target_i = SortAlliesByDistance();
 
-        if (target)
+        int count_a = 1;
+
+        if (Level >= 3)
         {
-            GameObject target_before = target;
-
-            Unit unit = target.GetComponent<Unit>();
-
-            if (unit)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-
-                    if (unit.hp <= 0)
-                    {
-                        Debug.Log(unit.name_of_death);
-
-                        experience++;
-
-                        target = FindNearestAllyInAttackRange_second(target_before);
-
-                        unit = target.GetComponent<Unit>();
-
-                        if (unit)
-                        {
-                            target_before = target;
-                        }
-                    }
-
-                    if (special_guard.skill_flag == false)
-                    {
-                        unit.hp = unit.hp - strengh;
-                    }
-
-
-                    float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
-
-                    float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
-
-                    attack_effect_i = Instantiate(attack_effect, target.transform.position + new Vector3(r_w, r_h, 0), Quaternion.identity);
-
-                    StartCoroutine(DeleteAfterAnimation(attack_effect_i));
-                }
-
-                unit.knockback_flag = true;
-            }
+            count_a = 2;
         }
 
-        
+        if (Level >= 5)
+        {
+            count_a = 3;
+        }
+
+        if(count_a > target_i.Count)
+        {
+            count_a = target_i.Count;
+        }
+
+        for (int i = 0; i < count_a; i++)
+        {
+            Unit unit = target_i[i].GetComponent<Unit>();
+            
+            if (unit.hp <= 0)
+            {
+                Debug.Log(unit.name_of_death);
+
+                experience++;
+
+                unit = target_i[i++].GetComponent<Unit>();
+            }
+
+            if (special_guard.skill_flag == false)
+            {
+                unit.hp = unit.hp - strengh;
+            }
+
+            float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+            float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
+            attack_effect_i = Instantiate(attack_effect, target_i[i].transform.position + new Vector3(r_w, r_h, 0), Quaternion.identity);
+
+            StartCoroutine(DeleteAfterAnimation(attack_effect_i));
+
+            unit.knockback_flag = true;
+        }
 
         if(experience >= experience_reference && Level < Level_max)
         {
@@ -409,11 +518,6 @@ public class Boss : MonoBehaviour, IAttackable
             experience_reference = experience_reference * 1.2f;
 
             Level_Up.SetActive(true);
-
-            if (Level >= 2)
-            {
-                strengh = 2;
-            }
 
             Debug.Log("Level:" + Level);
 

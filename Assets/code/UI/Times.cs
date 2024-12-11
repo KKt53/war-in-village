@@ -14,7 +14,7 @@ public class Times : MonoBehaviour
 
     private bool time_switch = false;
 
-    private float duration = 180f; // 右端に到達するまでの時間（秒）
+    private float duration = 10f; // 右端に到達するまでの時間（秒）
     private RectTransform rectTransform;
     private Vector2 startPosition;
     private Vector2 endPosition;
@@ -155,16 +155,27 @@ public class Times : MonoBehaviour
 
     void OnButtonClick_menu()
     {
-        time_switch = true;
+        if (Over.activeSelf == false)
+        {
+            time_switch = true;
+        }
+
+        
     }
 
     void OnButtonClick_cancel()
     {
-        time_switch = false;
+        if (Over.activeSelf == false)
+        {
+            time_switch = false;
+        }
     }
 
     void OnButtonClick_speed()
     {
-        speed_switch++;
+        if (Over.activeSelf == false)
+        {
+            speed_switch++;
+        }
     }
 }

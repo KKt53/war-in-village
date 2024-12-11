@@ -25,8 +25,8 @@ public class Unit : MonoBehaviour
     private float attack_frequency;//攻撃頻度
     private float contact_range;//接触範囲
     private float attack_scope;//攻撃範囲
-    private int reaction_rate_min;//反応速度
-    private int reaction_rate_max;//反応速度
+    private float reaction_rate_min;//反応速度
+    private float reaction_rate_max;//反応速度
     public List<string> comments;
 
     private List<string> features_point;//ダメージ増減倍率
@@ -111,7 +111,7 @@ public class Unit : MonoBehaviour
         public List<string> names;
     }
 
-    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, int c_reaction_rate_max, int c_reaction_rate_min, List<string> c_comments)
+    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate_max, float c_reaction_rate_min, List<string> c_comments)
     {
         type = c_type;
         name_of_death = c_name;
@@ -357,7 +357,7 @@ public class Unit : MonoBehaviour
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
         int random_value = UnityEngine.Random.Range(0, 2);
-        int random_value_reaction;
+        float random_value_reaction;
 
         attack_flag = true; // 攻撃後にフラグをオンにする
         movement_disabled_flag = true;
@@ -457,7 +457,7 @@ public class Unit : MonoBehaviour
         movement_disabled_flag = false;
     }
 
-    IEnumerator ChangeDirectionWithDelay_left(int reaction_rate)
+    IEnumerator ChangeDirectionWithDelay_left(float reaction_rate)
     {
         if (special_step.skill_flag == true)
         {
@@ -484,7 +484,7 @@ public class Unit : MonoBehaviour
             isPerformingAction = true; // 移動を再開
         }
     }
-    IEnumerator ChangeDirectionWithDelay_right(int reaction_rate)
+    IEnumerator ChangeDirectionWithDelay_right(float reaction_rate)
     {
         if (special_step.skill_flag == true)
         {
@@ -648,7 +648,7 @@ public class Unit : MonoBehaviour
 
             float total = currentTime - lastPressTime_r;
 
-            int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
+            float random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
 
             // 前回の押下からの経過時間が設定した連打時間内であれば
             if (total >= doublePressTime || direction == -1)
@@ -677,7 +677,7 @@ public class Unit : MonoBehaviour
 
             float total = currentTime - lastPressTime_l;
 
-            int random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
+            float random_value_reaction = UnityEngine.Random.Range(reaction_rate_min, reaction_rate_max);
 
             // 前回の押下からの経過時間が設定した連打時間内であれば
             if (total >= doublePressTime || direction == 1)

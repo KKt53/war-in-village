@@ -7,10 +7,10 @@ public class CharacterData
     public int strengh;
     public float speed;
     public int attack_frequency;
-    public int contact_range;
-    public int attack_scope;
-    public int reaction_rate_max;
-    public int reaction_rate_min;
+    public float contact_range;
+    public float attack_scope;
+    public float reaction_rate_max;
+    public float reaction_rate_min;
     public int wait;
 }
 

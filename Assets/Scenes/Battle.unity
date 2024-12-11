@@ -3344,6 +3344,7 @@ MonoBehaviour:
   meteorite_place_2: {fileID: 1380855023}
   unitTable: {fileID: 11400000, guid: 955978886ae9d7747bc9638bebb15bf3, type: 2}
   enemyTable: {fileID: 11400000, guid: 5412a3078fc3b034a9f0e58bb17d88b7, type: 2}
+  characterList: []
 --- !u!4 &1076775195
 Transform:
   m_ObjectHideFlags: 0
@@ -5108,7 +5109,6 @@ RectTransform:
   - {fileID: 1857524784}
   - {fileID: 56920225}
   - {fileID: 755971379}
-  - {fileID: 1369212003}
   - {fileID: 64695649}
   - {fileID: 78879211}
   - {fileID: 1632832828}
@@ -5122,6 +5122,7 @@ RectTransform:
   - {fileID: 225785700}
   - {fileID: 1439348179}
   - {fileID: 718564493}
+  - {fileID: 1369212003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

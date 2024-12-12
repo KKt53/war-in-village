@@ -33,6 +33,11 @@ public class Special_Storm : MonoBehaviour
                 ResetCooldown();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            OnButtonClick();
+        }
     }
 
     void OnButtonClick()

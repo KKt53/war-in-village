@@ -35,6 +35,11 @@ public class Special_Guard : MonoBehaviour
                 ResetCooldown();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            OnButtonClick();
+        }
     }
 
     void OnButtonClick()

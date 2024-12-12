@@ -34,6 +34,11 @@ public class Special_Step : MonoBehaviour
                 ResetCooldown();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            OnButtonClick();
+        }
     }
 
     void OnButtonClick()

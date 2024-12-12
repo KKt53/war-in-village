@@ -209,12 +209,12 @@ public class Unit : MonoBehaviour
     private void Moving()
     {
         
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             OnButtonClick_left();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             OnButtonClick_right();
         }

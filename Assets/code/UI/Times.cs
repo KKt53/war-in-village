@@ -14,7 +14,7 @@ public class Times : MonoBehaviour
 
     private bool time_switch = false;
 
-    private float duration = 10f; // 右端に到達するまでの時間（秒）
+    private float duration = 180f; // 右端に到達するまでの時間（秒）
     private RectTransform rectTransform;
     private Vector2 startPosition;
     private Vector2 endPosition;
@@ -84,22 +84,11 @@ public class Times : MonoBehaviour
             {
                 time_switch = false;
             }
-
         }
 
-        if (speed_switch == 1)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Time.timeScale = 1.0f;
-            i_s_button.sprite = speed_off;
-        }
-        else if (speed_switch == 2)
-        {
-            Time.timeScale = 2.0f;
-            i_s_button.sprite = speed_on;
-        }
-        else if (speed_switch >= 3)
-        {
-            speed_switch = 1;
+            OnButtonClick_speed();
         }
 
         if (time_switch == true)
@@ -109,11 +98,22 @@ public class Times : MonoBehaviour
         }
         else
         {
-
             Panel.SetActive(false);
-            Time.timeScale = 1.0f;
+            if (speed_switch == 1)
+            {
+                Time.timeScale = 1.0f;
+                i_s_button.sprite = speed_off;
+            }
+            else if (speed_switch == 2)
+            {
+                Time.timeScale = 2.0f;
+                i_s_button.sprite = speed_on;
+            }
+            else if (speed_switch >= 3)
+            {
+                speed_switch = 1;
+            }
         }
-
     }
 
     void gamgeover()

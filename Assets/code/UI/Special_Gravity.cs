@@ -40,6 +40,11 @@ public class Special_Gravity : MonoBehaviour
                 ResetCooldown();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            OnButtonClick();
+        }
     }
 
     void OnButtonClick()

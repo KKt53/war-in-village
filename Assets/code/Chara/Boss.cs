@@ -97,7 +97,7 @@ public class Boss : MonoBehaviour, IAttackable
         strengh = 5;
         attack_frequency = 2;
         attack_scope = 5;
-        Level = 10;
+        Level = 1;
         Level_max = 10;
         experience = 0;
         experience_reference = 3;

@@ -33,7 +33,8 @@ public class Spawn : MonoBehaviour
     public GameObject meteorite_place_1;
     public GameObject meteorite_place_2;
 
-    GameObject boss;//ボス用変数
+    GameObject Unit_position;
+    GameObject Enemy_position;
 
     const int line_max = 2;
     const float Interval = 1.0f;
@@ -164,6 +165,9 @@ public class Spawn : MonoBehaviour
         characterComments_Napi = LoadNamesFromJson("Napi_comment");
         characterComments_Pig = LoadNamesFromJson("Pig_comment");
         characterComments_Squirrel = LoadNamesFromJson("Squirrel_comment");
+
+        Unit_position = GameObject.Find("Unit_Position");
+        Enemy_position = GameObject.Find("Enemy_Position");
     }
 
     void Update()
@@ -318,7 +322,7 @@ public class Spawn : MonoBehaviour
 
         float line = random_value * 0.3f;
 
-        characterInstance = Instantiate(characterPrefab, new Vector3(-7, line, 0), Quaternion.identity);
+        characterInstance = Instantiate(characterPrefab, new Vector3(Unit_position.transform.position.x, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Unit>();
 
@@ -431,7 +435,7 @@ public class Spawn : MonoBehaviour
 
         Enemy movementScript;
 
-        characterInstance = Instantiate(enemyPrefab, new Vector3(7, line, 0), Quaternion.identity);
+        characterInstance = Instantiate(enemyPrefab, new Vector3(Enemy_position.transform.position.x, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Enemy>();
 

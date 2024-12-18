@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms.Impl;
 using static UnityEngine.GraphicsBuffer;
+using UnityEditor;
 
 public class Boss : MonoBehaviour, IAttackable
 {
@@ -14,7 +15,7 @@ public class Boss : MonoBehaviour, IAttackable
     public int hp { get; set; }//HP
     private int strengh;//攻撃力
     private float attack_frequency;//攻撃頻度
-    private float attack_scope;//攻撃範囲
+    public float attack_scope;//攻撃範囲
     //private List<string> features_point;//ダメージ増減倍率
     private int Level_max;
     public int Level;//レベル
@@ -68,8 +69,12 @@ public class Boss : MonoBehaviour, IAttackable
 
     public GameObject attack_effect;//攻撃エフェクト
 
+    public GameObject attack_notice;//攻撃予告
+    GameObject AN;//攻撃予告用オブジェクトインスタンス用変数
+
     GameObject sp_guard;
     Special_Guard special_guard;
+
     public int Hp
     {
         get { return this.hp; }
@@ -96,8 +101,6 @@ public class Boss : MonoBehaviour, IAttackable
         hp_max = hp;
         strengh = 5;
         attack_frequency = 2;
-        attack_scope = 5;
-        Level = 1;
         Level_max = 10;
         experience = 0;
         experience_reference = 3;
@@ -112,6 +115,7 @@ public class Boss : MonoBehaviour, IAttackable
         animator = GetComponent<Animator>();
         sp_guard = GameObject.Find("スキル2");
         special_guard = sp_guard.GetComponent<Special_Guard>();
+
     }
 
 
@@ -123,13 +127,13 @@ public class Boss : MonoBehaviour, IAttackable
 
         GameObject target = FindNearestAllyInAttackRange();
 
-        if (target != null && !attack_flag)
-        {
-            Hitcount.SetActive(false);
-            ND.SetActive(false);
-            attack_count = 0;
-            StartCoroutine(ExecuteAttacksequence());
-        }
+        //if (target != null && !attack_flag)
+        //{
+        //    Hitcount.SetActive(false);
+        //    ND.SetActive(false);
+        //    attack_count = 0;
+        //    StartCoroutine(ExecuteAttacksequence());
+        //}
 
         if (Level >= 4)
         {
@@ -194,8 +198,6 @@ public class Boss : MonoBehaviour, IAttackable
                     {
                         Hp -= attack_object.attack_point;
                     }
-
-                    //Debug.Log("Boss hp:" + this.hp);
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
                     hitAttacks.Add(attackObject);
@@ -276,7 +278,7 @@ public class Boss : MonoBehaviour, IAttackable
                 animator.SetTrigger("Attack");
                 yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-                AO_b = Instantiate(Beam, transform.position + new Vector3(-7, 0, 0), Quaternion.identity);
+                AO_b = Instantiate(Beam, transform.position + new Vector3(-9, -1, 0), Quaternion.identity);
 
                 beam = AO_b.GetComponent<Attack_Object>();
 
@@ -336,6 +338,8 @@ public class Boss : MonoBehaviour, IAttackable
 
                 meteorite.Initialize(strengh, features_point, meteorite_place_1.transform);
 
+                StartCoroutine(AN_S(meteorite_place_1));
+
                 animator.SetTrigger("Idle");
 
                 if (Level >= 6)
@@ -354,19 +358,38 @@ public class Boss : MonoBehaviour, IAttackable
 
                     meteorite.Initialize(strengh, features_point, meteorite_place_2.transform);
 
-                    animator.SetTrigger("Idle");
+                    StartCoroutine(AN_S(meteorite_place_2));
                 }
 
                 break;
         }
+
+        animator.SetTrigger("Idle");
         currentMeteorIndex = (currentMeteorIndex + 1) % attackPattern.b_attacksequence.Count;
 
         meteor_flag = false;
     }
 
+    IEnumerator AN_S(GameObject M)
+    {
+        GameObject AN_M;
+
+        Vector3 scale = new Vector3(10.0f, 3.0f, 1.0f);
+
+        AN_M = Instantiate(attack_notice, M.transform.position, Quaternion.identity);
+
+        AN_M.transform.localScale = scale;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(AN_M);
+    }
+
     IEnumerator ExecuteAttacksequence()
     {
         attack_flag = true;
+
+        Vector3 scale = new Vector3(4 * attack_scope, 3.0f, 1.0f);
 
         int normal = 1;
 
@@ -389,17 +412,42 @@ public class Boss : MonoBehaviour, IAttackable
 
                 for (int j = 0; j < normal; j++)
                 {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                    
+
+                    animator.SetTrigger("Pre");
+
+                    yield return new WaitForSeconds(0.5f);
+
+                    AN = Instantiate(attack_notice, transform.position + new Vector3(attack_scope * -1 / 2, 0, 0), Quaternion.identity);
+
+                    AN.transform.localScale = scale;
+
+                    yield return new WaitForSeconds(1.0f);
+
+                    Destroy(AN);
+
+                    animator.SetTrigger("Exe");
+                    //Debug.Log("アニメーションが終了しました！");
+
+
+                    animator.SetTrigger("After");
+
+                    //AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+                    //string clipName = clipInfo[0].clip.name;
+                    //if (clipName == "Boss_AF_Attack")
+                    //{
+                        
+                    //}
+
+                    
+                    yield return new WaitForSeconds(0.3f);
 
                     AttackNearestAllyInRange();
 
-                    animator.SetTrigger("Idle");
                 }
+                //yield return new WaitForSeconds(1.0f);
 
-                yield return new WaitForSeconds(1.0f);
 
-                
 
                 break;
 
@@ -435,15 +483,18 @@ public class Boss : MonoBehaviour, IAttackable
         return nearestAlly;
     }
 
-    
-
     List<GameObject> SortAlliesByDistance()
     {
+        float shortestDistance = Mathf.Infinity;
+
         // Villagerを取得
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Villager");
 
         // リストに変換して距離順にソート
         List<GameObject> sortedAllies = new List<GameObject>(allies);
+
+        List<GameObject> answer = new List<GameObject>();
+
         sortedAllies.Sort((a, b) =>
         {
             float distanceA = Vector2.Distance(transform.position, a.transform.position);
@@ -451,7 +502,20 @@ public class Boss : MonoBehaviour, IAttackable
             return distanceA.CompareTo(distanceB); // 距離の昇順でソート
         });
 
-        return sortedAllies;
+        foreach (GameObject ally in sortedAllies)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= attack_scope && distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                answer.Add(ally);
+            }
+        }
+
+        return answer;
     }
 
 
@@ -485,8 +549,15 @@ public class Boss : MonoBehaviour, IAttackable
 
         for (int i = 0; i < count_a; i++)
         {
+            
+
             Unit unit = target_i[i].GetComponent<Unit>();
             
+            if (special_guard.skill_flag == false)
+            {
+                unit.hp = unit.hp - strengh;
+            }
+
             if (unit.hp <= 0)
             {
                 Debug.Log(unit.name_of_death);
@@ -496,14 +567,15 @@ public class Boss : MonoBehaviour, IAttackable
                 unit = target_i[i++].GetComponent<Unit>();
             }
 
-            if (special_guard.skill_flag == false)
+            if (i >= target_i.Count)
             {
-                unit.hp = unit.hp - strengh;
+                break;
             }
 
-            float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
+            float r_w = UnityEngine.Random.Range(-1.0f, 1.0f); 
 
             float r_h = UnityEngine.Random.Range(-1.0f, 1.0f);
+
 
             attack_effect_i = Instantiate(attack_effect, target_i[i].transform.position + new Vector3(r_w, r_h, 0), Quaternion.identity);
 

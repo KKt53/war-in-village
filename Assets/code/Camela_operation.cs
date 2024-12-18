@@ -125,7 +125,7 @@ public class Camela_operation : MonoBehaviour
         Vector3 cameraPosition = cam.transform.position;
         cameraPosition.x -= swipeDeltaX * swipeSensitivity; // スワイプ方向に応じてカメラを移動
 
-        cameraPosition.x = Mathf.Clamp(cameraPosition.x ,- 5,5);
+        cameraPosition.x = Mathf.Clamp(cameraPosition.x, -5, 5);
 
         cam.transform.position = cameraPosition;
     }

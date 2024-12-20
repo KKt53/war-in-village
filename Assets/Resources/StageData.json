@@ -1,0 +1,46 @@
+[
+	{
+		"_comment":"Stage1",
+
+		"left_edge_x": -6.2,
+		"left_edge_y": 0,
+
+		"right_edge_x": 6.2,
+		"right_edge_y": 0,
+
+		"Unit_spawn_position_x": -6,
+		"Unit_spawn_position_y": 0,
+
+		"Enemy_spawn_position_x": 6,
+		"Enemy_spawn_position_y": 0,
+
+		"Camera_position_x": 0,
+		"Camera_position_y": -0.17,
+		"Camera_position_z": -10,
+
+		"stage_time": 300,
+		"enemy_flg": false
+	},
+	{
+		"_comment":"Stage2",
+
+		"left_edge_x": -10.2,
+		"left_edge_y": 0,
+
+		"right_edge_x": 10.2,
+		"right_edge_y": 0,
+
+		"Unit_spawn_position_x": -10,
+		"Unit_spawn_position_y": 0,
+
+		"Enemy_spawn_position_x": 10,
+		"Enemy_spawn_position_y": 0,
+
+		"Camera_position_x": -4,
+		"Camera_position_y": -0.17,
+		"Camera_position_z": -10,
+
+		"stage_time": 420,
+		"enemy_flg": true
+	}
+]

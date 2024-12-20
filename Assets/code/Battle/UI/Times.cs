@@ -36,6 +36,11 @@ public class Times : MonoBehaviour
 
     void Start()
     {
+        if (Select_Push_1.push_flg == true)
+        {
+            duration = Select_Push_1.stage_time;
+        }
+
         time_switch = false;
 
         rectTransform = GetComponent<RectTransform>();

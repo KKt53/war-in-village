@@ -23,6 +23,11 @@ public class Camela_operation : MonoBehaviour
 
     void Start()
     {
+        if (Select_Push_1.push_flg == true)
+        {
+            this.transform.position = Select_Push_1.Camera_position;
+        }
+
         tf = this.gameObject.GetComponent<Transform>(); //Main Camera‚ÌTransform‚ğæ“¾‚·‚éB
         cam = this.gameObject.GetComponent<Camera>(); //Main Camera‚ÌCamera‚ğæ“¾‚·‚éB
 

@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour
 {
     public string type;
     public string name_of_death;
-    public float hp;//ヒットポイント
+    public int hp;//ヒットポイント
     private float hp_max;
     private int strengh;//攻撃力
     private float speed;//素早さ
@@ -111,7 +111,7 @@ public class Unit : MonoBehaviour
         public List<string> names;
     }
 
-    public void Initialize(string c_type, string c_name, float c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate_max, float c_reaction_rate_min, List<string> c_comments)
+    public void Initialize(string c_type, string c_name, int c_hp, int c_strengh, float c_speed, float c_attack_frequency,float c_contact_range, float c_attack_scope, float c_reaction_rate_max, float c_reaction_rate_min, List<string> c_comments)
     {
         type = c_type;
         name_of_death = c_name;
@@ -255,14 +255,13 @@ public class Unit : MonoBehaviour
             }
         }
 
-        
-
         //止まっていたら攻撃する
         if (!isPerformingAction && !attack_flag)
         {
             if (attackPattern != null && attackPattern.attacksequence.Count > 0)
             {
-                StartCoroutine(ExecuteAttacksequence(target));
+                
+                StartCoroutine(ExecuteAttacksequence());
             }
         }
 
@@ -349,14 +348,17 @@ public class Unit : MonoBehaviour
     }
 
     //攻撃シーケンス
-    IEnumerator ExecuteAttacksequence(GameObject target)
+    IEnumerator ExecuteAttacksequence()
     {
         
 
         // 現在の行動を取得
         string currentAction = attackPattern.attacksequence[currentAttackIndex];
 
-        int random_value = UnityEngine.Random.Range(0, 2);
+        //int random_value = UnityEngine.Random.Range(0, 2);
+
+        int random_value = 0;
+
         float random_value_reaction;
 
         attack_flag = true; // 攻撃後にフラグをオンにする
@@ -385,15 +387,10 @@ public class Unit : MonoBehaviour
                 effect_sound.PlayOneShot(soundEffect);
                 yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-                
                 if (random_value == 0)
                 {
-                    if (!target)
-                    {
-                        target = boss;
-                    }
-
-                    AttackNearestAllyInRange(target);
+                    
+                    AttackNearestAllyInRange();
 
                     float r_w = UnityEngine.Random.Range(-1.0f, 1.0f);
 
@@ -416,6 +413,7 @@ public class Unit : MonoBehaviour
                     AO_I = AO.GetComponent<Attack_Object>();
 
                     AO_I.Initialize(strengh, features_point);
+
 
                     attack_effect_i = Instantiate(attack_effect, transform.position + new Vector3(contact_range + r_w, r_h, 0), Quaternion.identity);
 
@@ -565,34 +563,62 @@ public class Unit : MonoBehaviour
 
         Enemy = GameObject.FindGameObjectsWithTag("Enemy");
 
-        foreach (GameObject ally in Enemy)
-        {
-            // ボスと味方ユニット間の距離を計算
-            float distance = Vector2.Distance(transform.position, ally.transform.position);
 
-            // ユニットが攻撃範囲内にあるか確認
-            if (distance <= contact_range && distance < shortestDistance)
-            {
-                shortestDistance = distance;
-                nearestAlly = ally;
-            }
+        // リストに変換して距離順にソート
+        List<GameObject> sortedAllies = new List<GameObject>(Enemy);
+
+        List<GameObject> answer = new List<GameObject>();
+
+        sortedAllies.Sort((a, b) =>
+        {
+            float distanceA = Vector2.Distance(transform.position, a.transform.position);
+            float distanceB = Vector2.Distance(transform.position, b.transform.position);
+            return distanceA.CompareTo(distanceB); // 距離の昇順でソート
+        });
+
+        // ボスと味方ユニット間の距離を計算
+        float distance = Vector2.Distance(transform.position, sortedAllies[0].transform.position);
+
+        // ユニットが攻撃範囲内にあるか確認
+        if (distance <= contact_range && distance < shortestDistance)
+        {
+            shortestDistance = distance;
+            nearestAlly = sortedAllies[0];
         }
+
+        ////前回までの攻撃判定
+        //foreach (GameObject ally in Enemy)
+        //{
+        //    // ボスと味方ユニット間の距離を計算
+        //    float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+        //    // ユニットが攻撃範囲内にあるか確認
+        //    if (distance <= contact_range && distance < shortestDistance)
+        //    {
+        //        shortestDistance = distance;
+        //        nearestAlly = ally;
+        //    }
+        //}
 
         return nearestAlly;
     }
 
     //通常単体攻撃
-    void AttackNearestAllyInRange(GameObject target)
+    void AttackNearestAllyInRange()
     {
-        // ターゲットに攻撃する処理
-        IAttackable attackable = target.GetComponent<IAttackable>();
+        GameObject target = FindNearestAllyInAttackRange();
 
-        if (attackable != null)
-        { 
-            attackable.ApplyDamage(strengh);
-        
+        if (target)
+        {
+            // ターゲットに攻撃する処理
+            IAttackable attackable = target.GetComponent<IAttackable>();
+
+            if (attackable != null)
+            {
+                attackable.ApplyDamage(strengh);
+
+            }
         }
-
     }
 
     private IEnumerator DeleteAfterAnimation(GameObject instance)

@@ -96,8 +96,14 @@ public class Boss : MonoBehaviour, IAttackable
 
     void Start()
     {
+        if (Select_Push_1.push_flg == true)
+        {
+            this.transform.position = new Vector2(Select_Push_1.Enemy_spawn_position.x, this.transform.position.y);
+        }
+
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        hp = 65536;
+        //hp = 65536;
+        hp = 100;
         hp_max = hp;
         strengh = 5;
         attack_frequency = 2;
@@ -127,13 +133,13 @@ public class Boss : MonoBehaviour, IAttackable
 
         GameObject target = FindNearestAllyInAttackRange();
 
-        //if (target != null && !attack_flag)
-        //{
-        //    Hitcount.SetActive(false);
-        //    ND.SetActive(false);
-        //    attack_count = 0;
-        //    StartCoroutine(ExecuteAttacksequence());
-        //}
+        if (target != null && !attack_flag)
+        {
+            Hitcount.SetActive(false);
+            ND.SetActive(false);
+            attack_count = 0;
+            StartCoroutine(ExecuteAttacksequence());
+        }
 
         if (Level >= 4)
         {
@@ -238,7 +244,9 @@ public class Boss : MonoBehaviour, IAttackable
             case "Attack":
 
                 animator.SetTrigger("Attack");
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                yield return new WaitForSeconds(1.0f);
+
+                StartCoroutine(AN_B());
 
                 AO = Instantiate(Bullet, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -276,7 +284,9 @@ public class Boss : MonoBehaviour, IAttackable
             case "Attack":
 
                 animator.SetTrigger("Attack");
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                yield return new WaitForSeconds(1.0f);
+
+                StartCoroutine(AN_B());
 
                 AO_b = Instantiate(Beam, transform.position + new Vector3(-9, -1, 0), Quaternion.identity);
 
@@ -325,7 +335,7 @@ public class Boss : MonoBehaviour, IAttackable
             case "Attack":
                 
                 animator.SetTrigger("Attack");
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                yield return new WaitForSeconds(0.5f);
 
                 AO = Instantiate(Meteor, transform.position + new Vector3(0, 7, 0), Quaternion.identity);
 
@@ -340,13 +350,10 @@ public class Boss : MonoBehaviour, IAttackable
 
                 StartCoroutine(AN_S(meteorite_place_1));
 
-                animator.SetTrigger("Idle");
+                
 
                 if (Level >= 6)
                 {
-                    animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-
                     AO = Instantiate(Meteor, transform.position + new Vector3(0, 7, 0), Quaternion.identity);
 
                     if (Level >= 7)
@@ -361,28 +368,14 @@ public class Boss : MonoBehaviour, IAttackable
                     StartCoroutine(AN_S(meteorite_place_2));
                 }
 
+
+                animator.SetTrigger("Idle");
                 break;
         }
 
-        animator.SetTrigger("Idle");
         currentMeteorIndex = (currentMeteorIndex + 1) % attackPattern.b_attacksequence.Count;
 
         meteor_flag = false;
-    }
-
-    IEnumerator AN_S(GameObject M)
-    {
-        GameObject AN_M;
-
-        Vector3 scale = new Vector3(10.0f, 3.0f, 1.0f);
-
-        AN_M = Instantiate(attack_notice, M.transform.position, Quaternion.identity);
-
-        AN_M.transform.localScale = scale;
-
-        yield return new WaitForSeconds(0.5f);
-
-        Destroy(AN_M);
     }
 
     IEnumerator ExecuteAttacksequence()
@@ -412,8 +405,6 @@ public class Boss : MonoBehaviour, IAttackable
 
                 for (int j = 0; j < normal; j++)
                 {
-                    
-
                     animator.SetTrigger("Pre");
 
                     yield return new WaitForSeconds(0.5f);
@@ -427,8 +418,6 @@ public class Boss : MonoBehaviour, IAttackable
                     Destroy(AN);
 
                     animator.SetTrigger("Exe");
-                    //Debug.Log("アニメーションが終了しました！");
-
 
                     animator.SetTrigger("After");
 
@@ -560,8 +549,6 @@ public class Boss : MonoBehaviour, IAttackable
 
             if (unit.hp <= 0)
             {
-                Debug.Log(unit.name_of_death);
-
                 experience++;
 
                 unit = target_i[i++].GetComponent<Unit>();
@@ -609,5 +596,35 @@ public class Boss : MonoBehaviour, IAttackable
 
         // オブジェクトを削除
         Destroy(instance);
+    }
+
+    IEnumerator AN_S(GameObject M)
+    {
+        GameObject AN_M;
+
+        Vector3 scale = new Vector3(10.0f, 3.0f, 1.0f);
+
+        AN_M = Instantiate(attack_notice, M.transform.position, Quaternion.identity);
+
+        AN_M.transform.localScale = scale;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(AN_M);
+    }
+
+    IEnumerator AN_B()
+    {
+        GameObject AN_M;
+
+        Vector3 scale = new Vector3(13.0f * 4, 3.0f, 1.0f);
+
+        AN_M = Instantiate(attack_notice, transform.position + new Vector3(13 * -1 / 2, 0, 0), Quaternion.identity);
+
+        AN_M.transform.localScale = scale;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(AN_M);
     }
 }

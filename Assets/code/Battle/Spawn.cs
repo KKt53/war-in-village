@@ -80,7 +80,7 @@ public class Spawn : MonoBehaviour
     private Unit movementScript;
     private Meteorite meteorite;
 
-    private float hp;//ヒットポイント
+    private int hp;//ヒットポイント
     private int strengh;//攻撃力
     private float speed;//素早さ
     private float attack_frequency;//攻撃頻度
@@ -88,6 +88,8 @@ public class Spawn : MonoBehaviour
     private float attack_scope;//攻撃範囲
     private float reaction_rate_min;//反応速度
     private float reaction_rate_max;//反応速度
+
+    private int e_hp;
 
     private List<string> characterNames_Rabbit;
     private List<string> characterNames_Cat;
@@ -111,6 +113,11 @@ public class Spawn : MonoBehaviour
 
     [SerializeField]
     private List<CharacterData> characterList;
+
+    [SerializeField]
+    private List<EnemyData> enemyList;
+
+    private bool enemy_flg;
 
     // Start is called before the first frame update
     void Start()
@@ -147,6 +154,7 @@ public class Spawn : MonoBehaviour
         pig_count = 0;
 
         characterList = LoadJsonData();
+        enemyList = LoadJsonData_E();
 
         characterNames_Rabbit = LoadNamesFromJson("Rabbit_name");
         characterNames_Cat = LoadNamesFromJson("Cat_name");
@@ -168,6 +176,8 @@ public class Spawn : MonoBehaviour
 
         Unit_position = GameObject.Find("Unit_Position");
         Enemy_position = GameObject.Find("Enemy_Position");
+
+        enemy_flg = Select_Push_1.enemy_flg;
     }
 
     void Update()
@@ -176,10 +186,10 @@ public class Spawn : MonoBehaviour
 
         Unit_spawn();
 
-        //if (!isSpawning_enemy)
-        //{
-        //    StartCoroutine(Enemy_spawn());
-        //}
+        if (enemy_flg == true)
+        {
+            Enemy_spawn();
+        }
     }
 
     private void Operation()
@@ -198,7 +208,6 @@ public class Spawn : MonoBehaviour
 
     private void Unit_spawn()
     {
-
         //List<string> features_point;
         //List<string> status;
 
@@ -222,7 +231,6 @@ public class Spawn : MonoBehaviour
             }
 
         }
-
 
         if (!isSpawning_chicken)
         {
@@ -287,31 +295,12 @@ public class Spawn : MonoBehaviour
 
     }
 
-    IEnumerator Enemy_spawn()
+    private void Enemy_spawn()
     {
-        isSpawning_enemy = true;
-
-        int table_max = enemyTable.spawnquence_e.Count;
-
-        random_value = UnityEngine.Random.Range(0, line_max);
-
-        float line = random_value * 0.3f;
-
-        unitIndex = UnityEngine.Random.Range(0, table_max);
-        string spawnunit = enemyTable.spawnquence_e[unitIndex];
-
-        switch (spawnunit)
+        if (!isSpawning_enemy)
         {
-            case "Enemy":
-
-                enemy();
-
-                yield return new WaitForSeconds(Interval_e);
-
-                break;
+            StartCoroutine(Enemy());
         }
-
-        isSpawning_enemy = false;
     }
 
     private void us(List<string> characterNames, GameObject characterPrefab, CharacterData cd, string name, List<string> characterComments)
@@ -336,6 +325,21 @@ public class Spawn : MonoBehaviour
         reaction_rate_min = cd.reaction_rate_min;
 
         movementScript.Initialize(name, randomName, hp, strengh, speed, attack_frequency, contact_range, attack_scope, reaction_rate_max, reaction_rate_min, characterComments);
+    }
+
+    private void enemies(GameObject enemyPrefab, EnemyData cd)
+    {
+        random_value = UnityEngine.Random.Range(0, line_max);
+
+        float line = random_value * 0.3f;
+
+        Enemy movementScript;
+
+        characterInstance = Instantiate(enemyPrefab, new Vector3(Enemy_position.transform.position.x, line, 0), Quaternion.identity);
+
+        movementScript = characterInstance.GetComponent<Enemy>();
+
+        movementScript.Initialize(3, 3f, 5, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
     }
 
     IEnumerator rabbit()
@@ -425,21 +429,20 @@ public class Spawn : MonoBehaviour
         isSpawning_pig = false;
     }
 
-
-
-    private void enemy()
+    IEnumerator Enemy()
     {
+        isSpawning_enemy = true;
+
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 0.3f;
 
-        Enemy movementScript;
 
-        characterInstance = Instantiate(enemyPrefab, new Vector3(Enemy_position.transform.position.x, line, 0), Quaternion.identity);
+        enemies(enemyPrefab, enemyList[0]);
 
-        movementScript = characterInstance.GetComponent<Enemy>();
+        yield return new WaitForSeconds(enemyList[0].wait);
 
-        movementScript.Initialize(3, 3f, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+        isSpawning_enemy = false;
     }
 
     public string GetUniqueRandomName(List<string> characterNames)
@@ -482,11 +485,6 @@ public class Spawn : MonoBehaviour
 
             return new List<CharacterData>(cd);
 
-            // デバッグで確認
-            //foreach (var character in characterList)
-            //{
-            //    Debug.Log($"hp: {character.hp}, strengh: {character.strengh}, speed: {character.speed}");
-            //}
         }
         else
         {
@@ -495,4 +493,22 @@ public class Spawn : MonoBehaviour
         }
     }
 
+    private List<EnemyData> LoadJsonData_E()
+    {
+        // ResourcesフォルダからJSONを読み込む
+        TextAsset jsonFile = Resources.Load<TextAsset>("EnemyData");
+        if (jsonFile != null)
+        {
+            // JSONデータをリストに変換
+            List<EnemyData> cd = JsonUtility.FromJson<EnemyDataList>("{\"enemies\":" + jsonFile.text + "}").enemies;
+
+            return new List<EnemyData>(cd);
+
+        }
+        else
+        {
+            Debug.LogError("JSONファイルが見つかりません！");
+            return new List<EnemyData>();
+        }
+    }
 }

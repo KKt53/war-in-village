@@ -9,13 +9,13 @@ public class Enemy : MonoBehaviour, IAttackable
 {
     private HashSet<GameObject> hitAttacks = new HashSet<GameObject>();//攻撃重複チェック
     public int hp { get; set; }//ヒットポイント
-    private float strengh;//攻撃力
+    private int strengh;//攻撃力
     private bool isPerformingAction = true;//移動フラグ
     private int direction = 1;//反転方向
     public bool knockback_flag = false;//のけぞりフラグ
     private float speed;//素早さ
     private float attack_frequency;//攻撃頻度
-    private int attack_scope = 5;//攻撃範囲
+    private int attack_scope;//攻撃範囲
     private bool attack_flag;//攻撃フラグ
 
     public UnitAttackPattern attackPattern;//パターン格納変数
@@ -37,10 +37,11 @@ public class Enemy : MonoBehaviour, IAttackable
     GameObject sp_guard;
     Special_Guard special_guard;
 
-    public void Initialize(int c_hp, float c_speed, float c_attack_frequency)
+    public void Initialize(int c_hp, float c_speed, int c_attack_scope, float c_attack_frequency)
     {
         hp = c_hp;
         speed = c_speed;
+        attack_scope = c_attack_scope;
         attack_frequency = c_attack_frequency;
     }
 
@@ -52,7 +53,6 @@ public class Enemy : MonoBehaviour, IAttackable
         attack_flag = false;
         isPerformingAction = true;
         direction = 1;
-        attack_scope = 5;
         left_edge = GameObject.Find("左端");
         right_edge = GameObject.Find("右端");
         sp_guard = GameObject.Find("スキル2");

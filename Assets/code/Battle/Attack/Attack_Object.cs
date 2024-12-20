@@ -12,5 +12,7 @@ public class Attack_Object : MonoBehaviour
     {
         attack_point = c_attack_point;
         features_point = c_features_point;
+
+        Debug.Log(this);
     }
 }

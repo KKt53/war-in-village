@@ -3,44 +3,28 @@
   "WorkspaceRootPath": "D:\\Unity\\war in village\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\spawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\spawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\ui\\times.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\ui\\times.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\chara\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\chara\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\enemy_position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\enemy_position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\left_edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\left_edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\ui\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\ui\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|D:\\Unity\\war in village\\assets\\code\\battle\\chara\\unit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\chara\\unit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\select_scene\\code\\select_push_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\ui\\comment_spawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\ui\\comment_spawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\ui\\comment_timedelete.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\ui\\comment_timedelete.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\ui\\uiloggerwithlimit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\ui\\uiloggerwithlimit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|D:\\Unity\\war in village\\assets\\code\\select_scene\\code\\select_push_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\select_scene\\code\\select_push_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\unit_position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\unit_position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|d:\\unity\\war in village\\assets\\code\\battle\\camela_operation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\camela_operation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|D:\\Unity\\war in village\\assets\\code\\battle\\right_edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA8B6195-85BB-2A84-5C45-34418F9082F8}|Assembly-CSharp.csproj|solutionrelative:assets\\code\\battle\\right_edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,37 +34,77 @@
       "DocumentGroups": [
         {
           "DockedWidth": 355,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Left_Edge.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Left_Edge.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Left_Edge.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Left_Edge.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Left_Edge.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwwAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T12:48:20.725Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Unit.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Chara\\Unit.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Battle\\Chara\\Unit.cs",
               "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Chara\\Unit.cs",
               "RelativeToolTip": "Assets\\code\\Battle\\Chara\\Unit.cs",
-              "ViewState": "AQIAAAMCAAAAAAAAAAAIwCYCAAAsAAAA",
+              "ViewState": "AQIAAGgCAAAAAAAAAAAgwHkCAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-20T06:22:15.812Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
+              "Title": "Comment.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\Battle\\UI\\Comment.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment.cs",
+              "RelativeToolTip": "Assets\\code\\Battle\\UI\\Comment.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvxAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T08:14:54.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Comment_Spawn.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment_Spawn.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\Battle\\UI\\Comment_Spawn.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment_Spawn.cs",
+              "RelativeToolTip": "Assets\\code\\Battle\\UI\\Comment_Spawn.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAswB4AAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T08:11:11.331Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Comment_timedelete.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment_timedelete.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\Battle\\UI\\Comment_timedelete.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Comment_timedelete.cs",
+              "RelativeToolTip": "Assets\\code\\Battle\\UI\\Comment_timedelete.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvxQAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T07:23:13.507Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UILoggerWithLimit.cs",
+              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\UILoggerWithLimit.cs",
+              "RelativeDocumentMoniker": "Assets\\code\\Battle\\UI\\UILoggerWithLimit.cs",
+              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\UILoggerWithLimit.cs",
+              "RelativeToolTip": "Assets\\code\\Battle\\UI\\UILoggerWithLimit.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T04:58:43.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Select_Push_1.cs",
               "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Select_Scene\\Code\\Select_Push_1.cs",
               "RelativeDocumentMoniker": "Assets\\code\\Select_Scene\\Code\\Select_Push_1.cs",
@@ -88,109 +112,17 @@
               "RelativeToolTip": "Assets\\code\\Select_Scene\\Code\\Select_Push_1.cs",
               "ViewState": "AQIAAAYAAAAAAAAAAAAAAAsAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T06:15:10.483Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T06:15:10.483Z"
             }
           ]
         },
         {
           "DockedWidth": 355,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Spawn.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Spawn.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Spawn.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Spawn.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Spawn.cs",
-              "ViewState": "AQIAAJYAAAAAAAAAAAAIwLIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T12:38:47.009Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Boss.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Chara\\Boss.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Chara\\Boss.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Chara\\Boss.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Chara\\Boss.cs",
-              "ViewState": "AQIAAEMAAAAAAAAAAAAAwGIAAAAqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:54:06.031Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Right_Edge.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Right_Edge.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Right_Edge.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Right_Edge.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Right_Edge.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAwAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:34:17.496Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Camela_operation.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Camela_operation.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Camela_operation.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Camela_operation.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Camela_operation.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvxIAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:46:37.187Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Enemy_Position.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Enemy_Position.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Enemy_Position.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Enemy_Position.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Enemy_Position.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwkAAAAqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:44:07.737Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Unit_Position.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Unit_Position.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\Unit_Position.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\Unit_Position.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\Unit_Position.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:41:16.289Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Times.cs",
-              "DocumentMoniker": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Times.cs",
-              "RelativeDocumentMoniker": "Assets\\code\\Battle\\UI\\Times.cs",
-              "ToolTip": "D:\\Unity\\war in village\\Assets\\code\\Battle\\UI\\Times.cs",
-              "RelativeToolTip": "Assets\\code\\Battle\\UI\\Times.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAADwvycAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T11:49:11.206Z",
-              "EditorCaption": ""
             }
           ]
         }

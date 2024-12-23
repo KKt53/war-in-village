@@ -1,17 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using TMPro;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
-using Unity.VisualScripting.ReorderableList;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static System.Collections.Specialized.BitVector32;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UI;
 
 public class Unit : MonoBehaviour

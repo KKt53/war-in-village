@@ -11,6 +11,8 @@ public class Comment : MonoBehaviour
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+
+
     }
 
     // Update is called once per frame

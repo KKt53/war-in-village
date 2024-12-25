@@ -5,10 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyData
 {
+    public int strengh;
     public int hp;
     public float speed;
-    public float attack_scope;
-    public int attack_frequency;
+    public int attack_scope;
+    public float attack_frequency;
     public int wait;
 }
 [System.Serializable]

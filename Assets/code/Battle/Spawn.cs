@@ -335,11 +335,17 @@ public class Spawn : MonoBehaviour
 
         Enemy movementScript;
 
+        int e_hp = cd.hp;
+        int e_strengh = cd.strengh;
+        float e_speed = cd.speed;
+        int e_attack_scope = cd.attack_scope;
+        float e_attack_frequency = cd.attack_frequency;
+
         characterInstance = Instantiate(enemyPrefab, new Vector3(Enemy_position.transform.position.x, line, 0), Quaternion.identity);
 
         movementScript = characterInstance.GetComponent<Enemy>();
 
-        movementScript.Initialize(3, 3f, 5, 1f); //ヒットポイント,攻撃力,ダメージ増減倍率,素早さ,反応速度,攻撃頻度,大きさ,攻撃範囲,かかりやすい状態
+        movementScript.Initialize(e_strengh, e_hp, e_speed, e_attack_scope, e_attack_frequency); //攻撃力,ヒットポイント,素早さ,攻撃範囲,攻撃頻度
     }
 
     IEnumerator rabbit()

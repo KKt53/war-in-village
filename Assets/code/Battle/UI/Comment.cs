@@ -1,17 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Comment : MonoBehaviour
 {
     private RectTransform rectTransform;
-    private float speed = 100f;
+    private float speed;
+    private int r_color;
 
     // Start is called before the first frame update
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
 
+        speed = UnityEngine.Random.Range(70f, 130f);
+
+        r_color = UnityEngine.Random.Range(1, 4);
+
+        TextMeshProUGUI this_color = this.GetComponent<TextMeshProUGUI>();
+
+        if (r_color == 2)
+        {
+            this_color.color = Color.red;
+        }
+        else if(r_color == 3)
+        {
+            this_color.color = Color.yellow;
+        }
+
+        
+    }
+
+    public void Initialize(string s)
+    { 
 
     }
 

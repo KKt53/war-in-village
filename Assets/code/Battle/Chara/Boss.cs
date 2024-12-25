@@ -16,6 +16,7 @@ public class Boss : MonoBehaviour, IAttackable
     private int strengh;//攻撃力
     private float attack_frequency;//攻撃頻度
     public float attack_scope;//攻撃範囲
+    public float search_scope;//攻撃範囲
     //private List<string> features_point;//ダメージ増減倍率
     private int Level_max;
     public int Level;//レベル
@@ -102,8 +103,7 @@ public class Boss : MonoBehaviour, IAttackable
         }
 
         //これらは仮のステータス後でコンストラクタで設定するのでそれを実装したら消す
-        //hp = 65536;
-        hp = 100;
+        hp = 65536;
         hp_max = hp;
         strengh = 5;
         attack_frequency = 2;
@@ -231,12 +231,12 @@ public class Boss : MonoBehaviour, IAttackable
 
                 if (Level >= 9)
                 {
-                    yield return new WaitForSeconds(9.0f);
+                    yield return new WaitForSeconds(10.0f);
                 }
                 else
                 {
                     // 行動ごとに異なる時間を待つ（仮に攻撃頻度を使用して待機時間を設定）
-                    yield return new WaitForSeconds(15.0f);
+                    yield return new WaitForSeconds(16.0f);
                 }
 
                 break;
@@ -462,7 +462,7 @@ public class Boss : MonoBehaviour, IAttackable
             float distance = Vector2.Distance(transform.position, ally.transform.position);
             
             // ユニットが攻撃範囲内にあるか確認
-            if (distance <= attack_scope && distance < shortestDistance)
+            if (distance <= search_scope && distance < shortestDistance)
             {
                 shortestDistance = distance;
                 nearestAlly = ally;
@@ -497,7 +497,7 @@ public class Boss : MonoBehaviour, IAttackable
             float distance = Vector2.Distance(transform.position, ally.transform.position);
 
             // ユニットが攻撃範囲内にあるか確認
-            if (distance <= attack_scope && distance < shortestDistance)
+            if (distance <= search_scope && distance < shortestDistance)
             {
                 shortestDistance = distance;
                 answer.Add(ally);
@@ -512,6 +512,8 @@ public class Boss : MonoBehaviour, IAttackable
     public void ApplyDamage(int damage)
     {
         Hp -= damage;
+
+        Debug.Log(Hp);
     }
 
     //ボスの通常攻撃
@@ -520,6 +522,8 @@ public class Boss : MonoBehaviour, IAttackable
         List<GameObject> target_i = SortAlliesByDistance();
 
         int count_a = 1;
+
+        int random_value = 0;
 
         if (Level >= 3)
         {
@@ -545,6 +549,20 @@ public class Boss : MonoBehaviour, IAttackable
             if (special_guard.skill_flag == false)
             {
                 unit.hp = unit.hp - strengh;
+
+                if (hp <= (hp_max * 0.5) && hp > (hp_max * 0.3))
+                {
+                    random_value = UnityEngine.Random.Range(3, 4);
+
+                    unit.Comment_spawn(unit.comments[random_value], 1);
+                }
+                else if (hp <= (hp_max * 0.3))
+                {
+                    random_value = UnityEngine.Random.Range(5, 6);
+
+                    unit.Comment_spawn(unit.comments[random_value], 2);
+                }
+
             }
 
             if (unit.hp <= 0)

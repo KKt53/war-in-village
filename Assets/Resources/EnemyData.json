@@ -1,8 +1,9 @@
 [
 	{
+		"strengh": 1,
 		"hp": 3,
 		"speed": 0.3,
-		"attack_scope": 0.5,
+		"attack_scope": 5,
 		"attack_frequency": 1,
 		"wait": 1
 	}

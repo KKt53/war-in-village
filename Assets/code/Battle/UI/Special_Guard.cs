@@ -16,6 +16,12 @@ public class Special_Guard : MonoBehaviour
     private float timer;
     private bool isOnCooldown;
 
+    public GameObject canvas;
+
+    public GameObject sq;
+
+    GameObject sq_instance;
+
     void Start()
     {
         if (targetButton != null)
@@ -50,6 +56,10 @@ public class Special_Guard : MonoBehaviour
             skill_flag = true;
             StartCooldown();
             StartCoroutine(effect_time());
+
+            sq_instance = Instantiate(sq, canvas.transform);
+            RectTransform rectTransform = sq_instance.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(-200, -250);
         }
     }
     IEnumerator effect_time()

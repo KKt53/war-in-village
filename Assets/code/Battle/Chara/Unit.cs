@@ -117,7 +117,7 @@ public class Unit : MonoBehaviour
 
         random_value = UnityEngine.Random.Range(1, 2);
 
-        Comment_spawn(comments[random_value]);
+        Comment_spawn(comments[random_value], 0);
     }
 
     void Start()
@@ -223,7 +223,7 @@ public class Unit : MonoBehaviour
             }
         }
 
-        GameObject target = FindNearestAllyInAttackRange();
+        GameObject target = FindNearestAllyInAttackRange_a();
 
         if (boss)
         {
@@ -272,7 +272,7 @@ public class Unit : MonoBehaviour
             {
                 uiLogger.AddLog(type + "の" + name_of_death + "が死亡");
 
-                Comment_spawn(comments[8]);
+                Comment_spawn(comments[8], 2);
 
                 Destroy(this.gameObject);
                 Destroy(attack_effect_i);
@@ -305,12 +305,12 @@ public class Unit : MonoBehaviour
                     {
                         random_value = UnityEngine.Random.Range(3, 4);
 
-                        Comment_spawn(comments[random_value]);
+                        Comment_spawn(comments[random_value], 1);
                     }else if (hp <= (hp_max * 0.3))
                     {
                         random_value = UnityEngine.Random.Range(5, 6);
 
-                        Comment_spawn(comments[random_value]);
+                        Comment_spawn(comments[random_value], 2);
                     }
 
                     // この攻撃オブジェクトを記録して、再度当たり判定が起きないようにする
@@ -545,14 +545,34 @@ public class Unit : MonoBehaviour
         }
     }
 
-    //１番近い敵を見つける
-    GameObject FindNearestAllyInAttackRange()
+    GameObject FindNearestAllyInAttackRange_a()
     {
         GameObject nearestAlly = null;
         float shortestDistance = Mathf.Infinity;
 
         Enemy = GameObject.FindGameObjectsWithTag("Enemy");
 
+        //前回までの攻撃判定
+        foreach (GameObject ally in Enemy)
+        {
+            // ボスと味方ユニット間の距離を計算
+            float distance = Vector2.Distance(transform.position, ally.transform.position);
+
+            // ユニットが攻撃範囲内にあるか確認
+            if (distance <= contact_range && distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestAlly = ally;
+            }
+        }
+
+        return nearestAlly;
+    }
+
+    //１番近い敵を見つける
+    GameObject FindNearestAllyInAttackRange()
+    {
+        Enemy = GameObject.FindGameObjectsWithTag("Enemy");
 
         // リストに変換して距離順にソート
         List<GameObject> sortedAllies = new List<GameObject>(Enemy);
@@ -569,28 +589,15 @@ public class Unit : MonoBehaviour
         // ボスと味方ユニット間の距離を計算
         float distance = Vector2.Distance(transform.position, sortedAllies[0].transform.position);
 
-        // ユニットが攻撃範囲内にあるか確認
-        if (distance <= contact_range && distance < shortestDistance)
-        {
-            shortestDistance = distance;
-            nearestAlly = sortedAllies[0];
-        }
-
-        ////前回までの攻撃判定
-        //foreach (GameObject ally in Enemy)
+        //// ユニットが攻撃範囲内にあるか確認
+        //if (distance <= contact_range && distance < shortestDistance)
         //{
-        //    // ボスと味方ユニット間の距離を計算
-        //    float distance = Vector2.Distance(transform.position, ally.transform.position);
-
-        //    // ユニットが攻撃範囲内にあるか確認
-        //    if (distance <= contact_range && distance < shortestDistance)
-        //    {
-        //        shortestDistance = distance;
-        //        nearestAlly = ally;
-        //    }
+        //    shortestDistance = distance;
+        //    nearestAlly = sortedAllies[0];
         //}
 
-        return nearestAlly;
+
+        return sortedAllies[0];
     }
 
     //通常単体攻撃
@@ -631,8 +638,10 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void Comment_spawn(string comment_text)
+    public void Comment_spawn(string comment_text, int c_judge)
     {
+        Comment comment_c;
+
         random_value = UnityEngine.Random.Range(0, line_max);
 
         float line = random_value * 30;
@@ -653,6 +662,19 @@ public class Unit : MonoBehaviour
         RectTransform rectTransform = comment_i.GetComponent<RectTransform>();
 
         rectTransform.anchoredPosition = new Vector2(Screen.width / 2, line);
+
+        comment_c = comment_i.GetComponent<Comment>();
+
+        if (c_judge == 1)
+        {
+
+        }
+        else if(c_judge == 2)
+        {
+
+        }
+
+        comment_c.Initialize("y");
     }
 
     void OnButtonClick_right()

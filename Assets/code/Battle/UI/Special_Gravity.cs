@@ -15,6 +15,12 @@ public class Special_Gravity : MonoBehaviour
     private float timer;
     private bool isOnCooldown;
 
+    public GameObject canvas;
+
+    public GameObject sq;
+
+    GameObject sq_instance;
+
     GameObject boss;//ボス用変数
 
     GameObject[] Enemy;//敵認識
@@ -67,6 +73,10 @@ public class Special_Gravity : MonoBehaviour
 
             skill_flag = true;
             StartCooldown();
+
+            sq_instance = Instantiate(sq, canvas.transform);
+            RectTransform rectTransform = sq_instance.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(30, -250);
         }
     }
 

@@ -37,8 +37,9 @@ public class Enemy : MonoBehaviour, IAttackable
     GameObject sp_guard;
     Special_Guard special_guard;
 
-    public void Initialize(int c_hp, float c_speed, int c_attack_scope, float c_attack_frequency)
+    public void Initialize(int c_strengh,int c_hp, float c_speed, int c_attack_scope, float c_attack_frequency)
     {
+        strengh = c_strengh;
         hp = c_hp;
         speed = c_speed;
         attack_scope = c_attack_scope;
@@ -48,7 +49,6 @@ public class Enemy : MonoBehaviour, IAttackable
     // Start is called before the first frame update
     void Start()
     {
-        strengh = 1;
         knockback_flag = false;
         attack_flag = false;
         isPerformingAction = true;
@@ -229,13 +229,13 @@ public class Enemy : MonoBehaviour, IAttackable
             {
                 int random_value = UnityEngine.Random.Range(2, 3);
 
-                unit.Comment_spawn(unit.comments[random_value]);
+                unit.Comment_spawn(unit.comments[random_value],1);
             }
             else if (unit.hp <= 30)
             {
                 int random_value = UnityEngine.Random.Range(4, 5);
 
-                unit.Comment_spawn(unit.comments[random_value]);
+                unit.Comment_spawn(unit.comments[random_value],2);
             }
 
             unit.knockback_flag = true;

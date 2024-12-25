@@ -612,6 +612,8 @@ MonoBehaviour:
   skill_flag: 0
   targetButton: {fileID: 64695650}
   cooldownTime: 30
+  canvas: {fileID: 1701682418}
+  sq: {fileID: 6984503368259040586, guid: 6597ffcc9df06314eb485d053197e0d4, type: 3}
 --- !u!1 &78879210
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,6 +750,8 @@ MonoBehaviour:
   skill_flag: 0
   targetButton: {fileID: 78879212}
   cooldownTime: 20
+  canvas: {fileID: 1701682418}
+  sq: {fileID: 6984503368259040586, guid: 9f08e8719e66e6147862356e4d3fdcec, type: 3}
 --- !u!1 &109369678
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,7 +938,7 @@ Transform:
   m_GameObject: {fileID: 166576061}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3202,6 +3206,8 @@ MonoBehaviour:
   skill_flag: 0
   targetButton: {fileID: 966210918}
   cooldownTime: 15
+  canvas: {fileID: 1701682418}
+  sq: {fileID: 6984503368259040586, guid: 49979b988e9605c4cb0332c9b05acbd3, type: 3}
 --- !u!1 &1020426281
 GameObject:
   m_ObjectHideFlags: 0
@@ -4946,7 +4952,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d3bdec867a8e84582cb4895be9d326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack_scope: 5
+  attack_scope: 2
+  search_scope: 3
   Level: 1
   attackPattern: {fileID: 11400000, guid: 4d53b8dc77a311c44ac4e51ab44abb3e, type: 2}
   meteorite_place_1: {fileID: 166576061}
@@ -5332,6 +5339,8 @@ MonoBehaviour:
   skill_flag: 0
   targetButton: {fileID: 1632832829}
   cooldownTime: 30
+  canvas: {fileID: 1701682418}
+  sq: {fileID: 6984503368259040586, guid: bb372bbcfbe258c4c935334dfef1ec8a, type: 3}
 --- !u!1 &1681030833
 GameObject:
   m_ObjectHideFlags: 0

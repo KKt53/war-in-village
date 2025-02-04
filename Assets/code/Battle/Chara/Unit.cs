@@ -667,14 +667,16 @@ public class Unit : MonoBehaviour
 
         if (c_judge == 1)
         {
-
+            comment_c.Initialize("y");
         }
         else if(c_judge == 2)
         {
-
+            comment_c.Initialize("r");
         }
-
-        comment_c.Initialize("y");
+        else
+        {
+            comment_c.Initialize("w");
+        }
     }
 
     void OnButtonClick_right()

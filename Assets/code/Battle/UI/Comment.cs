@@ -18,24 +18,20 @@ public class Comment : MonoBehaviour
         speed = UnityEngine.Random.Range(70f, 130f);
 
         r_color = UnityEngine.Random.Range(1, 4);
-
-        TextMeshProUGUI this_color = this.GetComponent<TextMeshProUGUI>();
-
-        if (r_color == 2)
-        {
-            this_color.color = Color.red;
-        }
-        else if(r_color == 3)
-        {
-            this_color.color = Color.yellow;
-        }
-
-        
     }
 
     public void Initialize(string s)
-    { 
+    {
+        TextMeshProUGUI this_color = this.GetComponent<TextMeshProUGUI>();
 
+        if (s == "y")
+        {
+            this_color.color = Color.yellow;
+        }
+        else if (s == "r")
+        {
+            this_color.color = Color.red;
+        }
     }
 
     // Update is called once per frame
